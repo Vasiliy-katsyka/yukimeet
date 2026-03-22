@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="oled">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>YukiChat Meet</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-base: #000000;
+            --bg-panel: #111111;
+            --primary: #ffffff;
+            --danger: #ef4444;
+            --success: #10b981;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border: #333333;
+            --glass-glow: rgba(255, 255, 255, 0.4);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-base); color: var(--text-main); height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+        button { cursor: pointer; border: none; background: transparent; color: inherit; }
+        input { font-family: inherit; }
+
+        /* Liquid Glass Effects (From YukiChat) */
+        .liquid-glass { position: relative; isolation: isolate; background: transparent !important; border: none !important; }
+        .liquid-glass::before {
+            content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+            box-shadow: inset 0 0 15px -5px var(--glass-glow);
+            background-color: color-mix(in srgb, var(--glass-glow) 8%, transparent);
+            pointer-events: none;
+        }
+        .liquid-glass::after {
+            content: ''; position: absolute; inset: 0; z-index: -2; border-radius: inherit;
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            filter: url(#glass-distortion); -webkit-filter: url(#glass-distortion); pointer-events: none;
+        }
+        .n-glass-border { border: 1px solid color-mix(in srgb, var(--text-main) 20%, transparent) !important; }
+
+        .btn { padding: 14px 24px; border-radius: 20px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; width: 100%; transition: 0.2s; background: var(--primary); color: #000; }
+        .btn:active { transform: scale(0.97); }
+        .input-field { width: 100%; background: var(--bg-panel); border: 1px solid var(--border); padding: 16px; border-radius: 16px; color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 12px; }
+
+        /* Screens */
+        #screen-landing, #screen-room { position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 10; transition: 0.3s; }
+        #screen-room { opacity: 0; pointer-events: none; z-index: 1; }
+        #screen-room.active { opacity: 1; pointer-events: auto; z-index: 20; }
+        
+        /* Landing Page */
+        .landing-box { margin: auto; max-width: 400px; width: 90%; text-align: center; padding: 40px 24px; border-radius: 32px; }
+        
+        /* Room Layout */
+        .header { position: absolute; top: var(--safe-top); left: 0; right: 0; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; pointer-events: none; }
+        .header > * { pointer-events: auto; }
+        
+        .video-grid { flex: 1; display: grid; gap: 12px; padding: calc(70px + var(--safe-top)) 12px calc(100px + var(--safe-bottom)); grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-content: center; justify-content: center; overflow-y: auto; }
+        @media (min-width: 768px) { .video-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
+        
+        .video-container { position: relative; width: 100%; height: 100%; min-height: 200px; border-radius: 24px; overflow: hidden; background: #1a1a1a; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+        .video-container video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .video-container.screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
+        
+        .video-label { position: absolute; bottom: 12px; left: 12px; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; z-index: 10; }
+        .admin-badge { background: var(--primary); color: #000; padding: 2px 6px; border-radius: 6px; font-size: 10px; }
+
+        /* Floating Controls */
+        .controls-bar { position: absolute; bottom: calc(24px + var(--safe-bottom)); left: 50%; transform: translateX(-50%); display: flex; gap: 16px; padding: 12px 24px; border-radius: 30px; z-index: 100; }
+        .ctrl-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-main); font-size: 20px; transition: 0.2s; }
+        .ctrl-btn.off { background: rgba(239, 68, 68, 0.8) !important; color: white !important; }
+        .ctrl-btn.end { background: var(--danger) !important; color: white !important; }
+        .ctrl-btn.active-tool { background: var(--primary) !important; color: #000 !important; }
+
+        /* Global Drawing Canvas Overlay */
+        #drawing-canvas { position: absolute; inset: 0; z-index: 50; pointer-events: none; width: 100%; height: 100%; }
+        #drawing-canvas.active { pointer-events: auto; cursor: crosshair; }
+
+        /* Context Menu for Admin */
+        #ctx-menu { position: fixed; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(20px); border-radius: 16px; z-index: 9000; display: none; flex-direction: column; min-width: 180px; border: 1px solid var(--border); padding: 8px 0; }
+        .ctx-item { padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; gap: 10px; }
+        .ctx-item:hover { background: rgba(255,255,255,0.1); }
+        .ctx-item.danger { color: var(--danger); }
+
+        .toast { position: fixed; top: calc(20px + var(--safe-top)); left: 50%; transform: translateX(-50%) translateY(-100px); background: var(--primary); color: #000; padding: 12px 24px; border-radius: 30px; z-index: 10000; font-weight: 600; font-size: 14px; transition: 0.4s; opacity: 0; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+    <!-- SVG Filter for Liquid Glass -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <defs>
+        <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="92" result="noise" />
+          <feGaussianBlur in="noise" stdDeviation="1.5" result="blurred" />
+          <feDisplacementMap in="SourceGraphic" in2="blurred" scale="50" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="toast" id="toast">Message</div>
+
+    <!-- LANDING SCREEN -->
+    <div id="screen-landing">
+        <div class="landing-box liquid-glass n-glass-border">
+            <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 8px;">YukiChat Meet</h1>
+            <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 14px;">Secure, peer-to-peer video meetings.</p>
+            
+            <input type="text" id="meet-id" class="input-field liquid-glass" placeholder="Meeting ID (e.g. daily-sync)">
+            <input type="text" id="guest-name" class="input-field liquid-glass" placeholder="Your Name (if guest)">
+            
+            <button class="btn liquid-glass n-glass-border" onclick="App.joinMeeting(true)" style="margin-bottom: 16px;">Join as Guest</button>
+            <button class="btn liquid-glass n-glass-border" onclick="App.ssoLogin()" id="btn-sso" style="background: rgba(255,255,255,0.1); color: white;">Sign in with YukiChat</button>
+            
+            <div id="auth-status" style="margin-top: 16px; font-size: 13px; color: var(--success); display: none;">✅ Authenticated via YukiChat</div>
+        </div>
+    </div>
+
+    <!-- MEETING ROOM -->
+    <div id="screen-room">
+        <!-- Transparent Header -->
+        <div class="header">
+            <div class="liquid-glass n-glass-border" style="padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px;" id="room-id-display">Room</div>
+            <div class="liquid-glass n-glass-border" style="padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+                👥 <span id="participant-count">1</span>
+            </div>
+        </div>
+
+        <!-- Drawing Overlay Canvas -->
+        <canvas id="drawing-canvas"></canvas>
+
+        <!-- Video Grid -->
+        <div class="video-grid" id="video-grid">
+            <!-- Local Video -->
+            <div class="video-container liquid-glass" id="container-local">
+                <video id="local-video" autoplay playsinline muted></video>
+                <div class="video-label liquid-glass n-glass-border">
+                    <span id="local-name">You</span>
+                    <span id="local-admin-badge" class="admin-badge" style="display:none;">Host</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Control Bar -->
+        <div class="controls-bar liquid-glass n-glass-border">
+            <button class="ctrl-btn liquid-glass n-glass-border" id="btn-mic" onclick="App.toggleMic()">🎤</button>
+            <button class="ctrl-btn liquid-glass n-glass-border" id="btn-cam" onclick="App.toggleCam()">📹</button>
+            <button class="ctrl-btn liquid-glass n-glass-border" id="btn-share" onclick="App.toggleScreenShare()">📺</button>
+            <button class="ctrl-btn liquid-glass n-glass-border" id="btn-draw" onclick="App.toggleDrawing()">🖌️</button>
+            <button class="ctrl-btn end" onclick="App.leaveMeeting()">✖</button>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="ctx-menu">
+        <div class="ctx-item" id="ctx-mute" onclick="App.adminAction('mute')">🔇 Force Mute</div>
+        <div class="ctx-item danger" id="ctx-kick" onclick="App.adminAction('kick')">👢 Kick from Meeting</div>
+    </div>
+
+    <script>
+        const API_URL = 'https://api.yukichat.lol'; // Change to your worker URL
+        
+        const State = {
+            token: localStorage.getItem('meet_t'),
+            roomId: null,
+            sessionId: 'sess-' + Math.random().toString(36).substr(2, 9),
+            isAdmin: false,
+            localStream: null,
+            screenStream: null,
+            peers: {}, // RTCPeerConnections
+            dataChannels: {}, // WebRTC DataChannels
+            participants: new Map(),
+            pollInterval: null,
+            lastSignalId: 0,
+            
+            // Drawing State
+            isDrawingMode: false,
+            isDrawing: false,
+            lastX: 0, lastY: 0,
+            ctxTarget: null // For admin context menu
+        };
+
+        const UI = {
+            toast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+        };
+
+        const api = async (path, body=null) => {
+            const opt = { method: body ? 'POST' : 'GET', headers: {} };
+            if (State.token) opt.headers['Authorization'] = `Bearer ${State.token}`;
+            if (body) { opt.headers['Content-Type']='application/json'; opt.body=JSON.stringify(body); }
+            const res = await fetch(API_URL + path, opt);
+            const d = await res.json();
+            if (!res.ok) throw new Error(d.error || 'API Error');
+            return d;
+        };
+
+        const App = {
+            init() {
+                // Check for SSO Token in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const ssoToken = urlParams.get('sso_token');
+                if (ssoToken) {
+                    State.token = ssoToken;
+                    localStorage.setItem('meet_t', ssoToken);
+                    window.history.replaceState({}, document.title, "/");
+                }
+                
+                if (State.token) {
+                    document.getElementById('auth-status').style.display = 'block';
+                    document.getElementById('btn-sso').textContent = 'Join with YukiChat Account';
+                    document.getElementById('btn-sso').onclick = () => App.joinMeeting(false);
+                }
+
+                this.initCanvas();
+            },
+
+            ssoLogin() {
+                // Redirect to main app to grab token
+                window.location.href = `https://yukichat.lol/?sso=meet`;
+            },
+
+            async joinMeeting(isGuest) {
+                const room = document.getElementById('meet-id').value.trim().toLowerCase();
+                const name = document.getElementById('guest-name').value.trim();
+                
+                if (!room) return UI.toast("Enter a Meeting ID");
+                if (isGuest && !name) return UI.toast("Enter your name");
+
+                try {
+                    // Initialize DB tables if they don't exist (Runs once)
+                    await fetch(API_URL + '/api/meet/init').catch(()=>{});
+
+                    // 1. Start Local Media
+                    State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                    document.getElementById('local-video').srcObject = State.localStream;
+                    
+                    // 2. Register in Database
+                    const res = await api('/api/meet/join', {
+                        meeting_id: room, session_id: State.sessionId, 
+                        is_guest: isGuest, guest_name: name
+                    });
+
+                    State.roomId = room;
+                    State.isAdmin = res.is_admin;
+                    if (State.isAdmin) document.getElementById('local-admin-badge').style.display = 'inline-block';
+                    
+                    document.getElementById('room-id-display').textContent = room;
+                    document.getElementById('screen-landing').style.opacity = '0';
+                    setTimeout(() => document.getElementById('screen-room').classList.add('active'), 300);
+
+                    // 3. Initiate WebRTC to existing participants
+                    for (let p of res.participants) {
+                        State.participants.set(p.session_id, p);
+                        RTC.createPeer(p.session_id, true); // We send the offer
+                    }
+                    this.updateGrid();
+
+                    // 4. Start Signaling & Heartbeat Loops
+                    this.startLoops();
+                    
+                } catch (e) {
+                    UI.toast("Camera/Mic access required: " + e.message);
+                }
+            },
+
+            startLoops() {
+                // Poll signals (Offers, Answers, ICE) every 2 seconds
+                State.pollInterval = setInterval(async () => {
+                    try {
+                        const signals = await api(`/api/meet/${State.roomId}/signals?session_id=${State.sessionId}&last_id=${State.lastSignalId}`);
+                        for (let s of signals) {
+                            State.lastSignalId = s.id;
+                            await RTC.handleSignal(s.sender_id, s.type, JSON.parse(s.data));
+                        }
+                    } catch(e){}
+                }, 2000);
+
+                // Heartbeat to stay alive in DB
+                setInterval(async () => {
+                    try {
+                        const res = await api(`/api/meet/${State.roomId}/heartbeat`, { session_id: State.sessionId });
+                        // Update participant list (handle people joining/leaving)
+                        const activeIds = new Set();
+                        res.participants.forEach(p => {
+                            if(p.session_id !== State.sessionId) {
+                                activeIds.add(p.session_id);
+                                if (!State.participants.has(p.session_id)) {
+                                    State.participants.set(p.session_id, p);
+                                    // If someone new joined, wait for their offer. We don't initiate here.
+                                }
+                            }
+                        });
+                        
+                        // Remove peers who timed out
+                        for (let [id, p] of State.participants) {
+                            if (!activeIds.has(id)) RTC.removePeer(id);
+                        }
+                        this.updateGrid();
+                    } catch(e){}
+                }, 5000);
+            },
+
+            async leaveMeeting() {
+                if (State.localStream) State.localStream.getTracks().forEach(t => t.stop());
+                if (State.screenStream) State.screenStream.getTracks().forEach(t => t.stop());
+                clearInterval(State.pollInterval);
+                
+                Object.values(State.peers).forEach(pc => pc.close());
+                await api(`/api/meet/${State.roomId}/leave`, { session_id: State.sessionId }).catch(()=>{});
+                
+                window.location.reload();
+            },
+
+            // --- MEDIA CONTROLS ---
+            toggleMic() {
+                const track = State.localStream.getAudioTracks()[0];
+                if(track) {
+                    track.enabled = !track.enabled;
+                    document.getElementById('btn-mic').classList.toggle('off', !track.enabled);
+                }
+            },
+            toggleCam() {
+                const track = State.localStream.getVideoTracks()[0];
+                if(track) {
+                    track.enabled = !track.enabled;
+                    document.getElementById('btn-cam').classList.toggle('off', !track.enabled);
+                }
+            },
+            async toggleScreenShare() {
+                const btn = document.getElementById('btn-share');
+                const localContainer = document.getElementById('container-local');
+                const localVideo = document.getElementById('local-video');
+
+                if (State.screenStream) {
+                    // Stop Sharing
+                    State.screenStream.getTracks().forEach(t => t.stop());
+                    State.screenStream = null;
+                    localContainer.classList.remove('screen-share');
+                    localVideo.srcObject = State.localStream;
+                    btn.classList.remove('active-tool');
+                    RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
+                } else {
+                    // Start Sharing
+                    try {
+                        State.screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                        localContainer.classList.add('screen-share');
+                        localVideo.srcObject = State.screenStream;
+                        btn.classList.add('active-tool');
+                        
+                        // When user clicks "Stop sharing" on browser native bar
+                        State.screenStream.getVideoTracks()[0].onended = () => this.toggleScreenShare();
+
+                        RTC.replaceVideoTrack(State.screenStream.getVideoTracks()[0]);
+                    } catch(e) { UI.toast("Screen share canceled"); }
+                }
+            },
+
+            updateGrid() {
+                document.getElementById('participant-count').textContent = State.participants.size + 1;
+            },
+
+            // --- ADMIN CONTEXT MENU ---
+            showCtxMenu(e, targetId) {
+                if (!State.isAdmin) return;
+                e.preventDefault();
+                State.ctxTarget = targetId;
+                const menu = document.getElementById('ctx-menu');
+                menu.style.display = 'flex';
+                menu.style.left = e.clientX + 'px';
+                menu.style.top = e.clientY + 'px';
+            },
+            adminAction(action) {
+                if(State.ctxTarget && State.dataChannels[State.ctxTarget]) {
+                    State.dataChannels[State.ctxTarget].send(JSON.stringify({ type: 'cmd', action: action }));
+                    UI.toast(`Command sent`);
+                }
+                document.getElementById('ctx-menu').style.display = 'none';
+            },
+
+            // --- DRAWING LOGIC ---
+            initCanvas() {
+                const canvas = document.getElementById('drawing-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Resize canvas to match window
+                const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+                window.addEventListener('resize', resize); resize();
+
+                const drawLine = (x0, y0, x1, y1, color) => {
+                    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+                    ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.stroke(); ctx.closePath();
+                };
+
+                // Expose for incoming DataChannel events
+                this.remoteDraw = (data) => {
+                    drawLine(data.x0 * canvas.width, data.y0 * canvas.height, data.x1 * canvas.width, data.y1 * canvas.height, data.color);
+                };
+
+                const getPos = (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const evt = e.touches ? e.touches[0] : e;
+                    return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+                };
+
+                const startDraw = (e) => {
+                    if (!State.isDrawingMode) return;
+                    State.isDrawing = true;
+                    const pos = getPos(e); State.lastX = pos.x; State.lastY = pos.y;
+                };
+
+                const draw = (e) => {
+                    if (!State.isDrawing || !State.isDrawingMode) return;
+                    e.preventDefault();
+                    const pos = getPos(e);
+                    const color = State.isAdmin ? '#ef4444' : '#3b82f6'; // Admins draw red, users blue
+                    drawLine(State.lastX, State.lastY, pos.x, pos.y, color);
+                    
+                    // Send normalized coordinates to peers (Percentages 0.0 - 1.0)
+                    const payload = JSON.stringify({
+                        type: 'draw', color: color,
+                        x0: State.lastX / canvas.width, y0: State.lastY / canvas.height,
+                        x1: pos.x / canvas.width, y1: pos.y / canvas.height
+                    });
+                    
+                    Object.values(State.dataChannels).forEach(dc => {
+                        if (dc.readyState === 'open') dc.send(payload);
+                    });
+
+                    State.lastX = pos.x; State.lastY = pos.y;
+                };
+
+                const stopDraw = () => { State.isDrawing = false; };
+
+                canvas.addEventListener('mousedown', startDraw);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDraw);
+                canvas.addEventListener('mouseout', stopDraw);
+                canvas.addEventListener('touchstart', startDraw);
+                canvas.addEventListener('touchmove', draw, {passive: false});
+                canvas.addEventListener('touchend', stopDraw);
+                
+                // Hide context menu on click anywhere
+                document.addEventListener('click', (e) => {
+                    if(!e.target.closest('#ctx-menu')) document.getElementById('ctx-menu').style.display = 'none';
+                });
+            },
+
+            toggleDrawing() {
+                State.isDrawingMode = !State.isDrawingMode;
+                const canvas = document.getElementById('drawing-canvas');
+                const btn = document.getElementById('btn-draw');
+                
+                if (State.isDrawingMode) {
+                    canvas.classList.add('active');
+                    btn.classList.add('active-tool');
+                    UI.toast("Drawing Mode Enabled (Everyone can see)");
+                } else {
+                    canvas.classList.remove('active');
+                    btn.classList.remove('active-tool');
+                    // Clear canvas
+                    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                    // Broadcast clear
+                    Object.values(State.dataChannels).forEach(dc => {
+                        if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'clear_draw' }));
+                    });
+                }
+            }
+        };
+
+        // --- WEBRTC ENGINE (FULL MESH) ---
+        const RTC = {
+            config: { iceServers:[{ urls: 'stun:stun.l.google.com:19302' }] },
+
+            createPeer(targetId, isInitiator) {
+                if (State.peers[targetId]) return State.peers[targetId];
+                
+                const pc = new RTCPeerConnection(this.config);
+                State.peers[targetId] = pc;
+
+                // 1. Add Local Tracks
+                State.localStream.getTracks().forEach(t => pc.addTrack(t, State.localStream));
+
+                // 2. Data Channel for Drawing & Commands
+                if (isInitiator) {
+                    const dc = pc.createDataChannel('meet_data');
+                    this.setupDataChannel(targetId, dc);
+                } else {
+                    pc.ondatachannel = (e) => this.setupDataChannel(targetId, e.channel);
+                }
+
+                // 3. Handle ICE Candidates
+                pc.onicecandidate = (e) => {
+                    if (e.candidate) {
+                        api(`/api/meet/${State.roomId}/signal`, {
+                            sender_id: State.sessionId, target_id: targetId, type: 'ice', data: e.candidate
+                        });
+                    }
+                };
+
+                // 4. Handle Incoming Video
+                pc.ontrack = (e) => {
+                    let vid = document.getElementById('video-' + targetId);
+                    if (!vid) {
+                        const pInfo = State.participants.get(targetId) || {name: 'Unknown'};
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'video-container liquid-glass';
+                        wrapper.id = 'wrapper-' + targetId;
+                        wrapper.oncontextmenu = (ev) => App.showCtxMenu(ev, targetId);
+
+                        wrapper.innerHTML = `
+                            <video id="video-${targetId}" autoplay playsinline></video>
+                            <div class="video-label liquid-glass n-glass-border">
+                                <span>${pInfo.name}</span>
+                                ${pInfo.is_admin ? '<span class="admin-badge">Host</span>' : ''}
+                            </div>
+                        `;
+                        document.getElementById('video-grid').appendChild(wrapper);
+                        vid = document.getElementById('video-' + targetId);
+                    }
+                    vid.srcObject = e.streams[0];
+                };
+
+                // 5. Create Offer if Initiator
+                if (isInitiator) {
+                    pc.createOffer().then(offer => {
+                        pc.setLocalDescription(offer);
+                        api(`/api/meet/${State.roomId}/signal`, { sender_id: State.sessionId, target_id: targetId, type: 'offer', data: offer });
+                    });
+                }
+
+                return pc;
+            },
+
+            setupDataChannel(targetId, dc) {
+                State.dataChannels[targetId] = dc;
+                dc.onmessage = (e) => {
+                    try {
+                        const data = JSON.parse(e.data);
+                        if (data.type === 'draw') {
+                            App.remoteDraw(data);
+                        } else if (data.type === 'cmd') {
+                            if (data.action === 'clear_draw') {
+                                const cvs = document.getElementById('drawing-canvas');
+                                cvs.getContext('2d').clearRect(0,0,cvs.width,cvs.height);
+                            }
+                            if (data.action === 'mute') {
+                                UI.toast("An Admin muted your microphone");
+                                const track = State.localStream.getAudioTracks()[0];
+                                if(track) track.enabled = false;
+                                document.getElementById('btn-mic').classList.add('off');
+                            }
+                            if (data.action === 'kick') {
+                                alert("You have been kicked from the meeting.");
+                                App.leaveMeeting();
+                            }
+                        }
+                    } catch(err){}
+                };
+            },
+
+            async handleSignal(senderId, type, data) {
+                // If we receive an offer, we are NOT the initiator for this connection
+                const pc = this.createPeer(senderId, type === 'offer' ? false : null);
+
+                if (type === 'offer') {
+                    await pc.setRemoteDescription(new RTCSessionDescription(data));
+                    const answer = await pc.createAnswer();
+                    await pc.setLocalDescription(answer);
+                    api(`/api/meet/${State.roomId}/signal`, { sender_id: State.sessionId, target_id: senderId, type: 'answer', data: answer });
+                } else if (type === 'answer') {
+                    await pc.setRemoteDescription(new RTCSessionDescription(data));
+                } else if (type === 'ice') {
+                    try { await pc.addIceCandidate(new RTCIceCandidate(data)); } catch(e){}
+                }
+            },
+
+            replaceVideoTrack(newTrack) {
+                // Hot-swap video track for screen sharing
+                Object.values(State.peers).forEach(pc => {
+                    const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                    if (sender) sender.replaceTrack(newTrack);
+                });
+            },
+
+            removePeer(targetId) {
+                if (State.peers[targetId]) {
+                    State.peers[targetId].close();
+                    delete State.peers[targetId];
+                }
+                if (State.dataChannels[targetId]) delete State.dataChannels[targetId];
+                State.participants.delete(targetId);
+                const wrapper = document.getElementById('wrapper-' + targetId);
+                if (wrapper) wrapper.remove();
+            }
+        };
+
+        // Boot
+        App.init();
+    </script>
+</body>
+</html>
