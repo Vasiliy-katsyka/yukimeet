@@ -210,6 +210,9 @@
                 <button onclick="App.setTool('arrow')" id="tool-arrow" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">north_east</span></button>
                 <button onclick="App.setTool('rect')" id="tool-rect" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">crop_square</span></button>
                 <button onclick="App.setTool('circle')" id="tool-circle" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">radio_button_unchecked</span></button>
+                <button onclick="App.setTool('eraser')" id="tool-eraser" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn">
+                    <span class="material-symbols-outlined text-[20px]">auto_fix_normal</span>
+                </button>
             </div>
             <!-- Colors -->
             <div class="flex flex-col gap-3 pt-2 pb-3 items-center border-b border-slate-200 dark:border-slate-700">
@@ -694,13 +697,22 @@
                     const s = toScreen(shape.x0, shape.y0);
                     const e = toScreen(shape.x1, shape.y1);
                     
-                    ctx.strokeStyle = shape.color;
-                    ctx.lineWidth = 4;
+                    ctx.save(); // Save state to handle eraser transparency
+                    
+                    if (shape.tool === 'eraser') {
+                        ctx.globalCompositeOperation = 'destination-out';
+                        ctx.lineWidth = 20; // Eraser is thicker
+                    } else {
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.strokeStyle = shape.color;
+                        ctx.lineWidth = 4;
+                    }
+
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
                     ctx.beginPath();
                     
-                    if (shape.tool === 'pen' || shape.tool === 'line') {
+                    if (shape.tool === 'pen' || shape.tool === 'line' || shape.tool === 'eraser') {
                         ctx.moveTo(s.x, s.y); ctx.lineTo(e.x, e.y); ctx.stroke();
                     } else if (shape.tool === 'rect') {
                         ctx.rect(s.x, s.y, e.x - s.x, e.y - s.y); ctx.stroke();
@@ -738,8 +750,8 @@
                     
                     State.tempShape = { tool: State.currentTool, color: State.currentColor, x0: State.startX, y0: State.startY, x1: pos.x, y1: pos.y };
                     
-                    if (State.currentTool === 'pen') {
-                        // Pen immediately commits segments
+                    // Commiting Pen AND Eraser segments immediately
+                    if (State.currentTool === 'pen' || State.currentTool === 'eraser') {
                         State.drawHistory.push(State.tempShape);
                         const payload = JSON.stringify({ type: 'draw_shape', shape: State.tempShape });
                         Object.values(State.dataChannels).forEach(dc => { if (dc.readyState === 'open') dc.send(payload); });
