@@ -39,35 +39,53 @@
             background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
         }
 
-        /* LIQUID GLASS IMPLEMENTATION */
+        /* EXACT LIQUID GLASS CSS REQUESTED */
         .liquid-glass {
             border-radius: 56px;
             position: relative;
             isolation: isolate;
             box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border: none;
             background: none;
+            padding: 0;
+            margin: 0;
+            text-decoration: none;
+        }
+        .liquid-glass:focus {
+            outline: none;
         }
         .liquid-glass::before {
-            content: ''; position: absolute; inset: 0; z-index: 0;
-            border-radius: inherit;
-            box-shadow: inset 0 0 8px -5px rgba(0,0,0,0.5);
-            background-color: rgba(255, 255, 255, 0.05); 
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            border-radius: 56px;
+            box-shadow: inset 0 0 8px -5px #000000;
+            background-color: rgba(255, 255, 255, 0);
         }
         .liquid-glass::after {
-            content: ''; position: absolute; inset: 0; z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            filter: url(#glass-distortion); -webkit-filter: url(#glass-distortion);
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: 56px;
+            backdrop-filter: blur(8px); /* Adjusted to 8px so the glass actually blurs the background */
+            -webkit-backdrop-filter: blur(8px);
+            filter: url(#glass-distortion);
+            -webkit-filter: url(#glass-distortion);
         }
 
         /* Video Grid Layout Transitions */
         #video-grid { transition: all 0.3s ease; }
         .video-wrapper { 
             position: relative; background: #000; border-radius: 20px; 
-            overflow: hidden; shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             cursor: pointer;
+            border: none; /* CREERPY WHITE BORDER REMOVED */
         }
         .video-wrapper video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); transition: 0.3s; }
         .video-wrapper.screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
@@ -75,7 +93,7 @@
         /* Pinned Layout */
         .video-wrapper.pinned {
             width: 100% !important; height: calc(100% - 100px) !important;
-            z-index: 10; order: -1; border-color: var(--primary);
+            z-index: 10; order: -1;
         }
         
         /* Drawing Canvas */
@@ -95,9 +113,9 @@
         .ctx-item:hover { background: rgba(0,0,0,0.05); }
         .dark .ctx-item:hover { background: rgba(255,255,255,0.1); }
         .ctx-item.danger { color: #ef4444; }
-
-        /* Drag & Drop Visuals */
-        .video-wrapper.drag-over { border: 2px dashed #3e76fe; opacity: 0.5; }
+        
+        .tool-btn.active { background: #0053dc !important; color: white !important; }
+        .color-btn.active { transform: scale(1.2); outline: 2px solid white; outline-offset: 2px; }
     </style>
 </head>
 <body class="font-body h-[100dvh] w-screen flex flex-col overflow-hidden text-slate-800 dark:text-slate-200 transition-colors duration-300">
@@ -127,7 +145,7 @@
         </div>
 
         <!-- Auth Card -->
-        <div class="w-full max-w-md liquid-glass p-1">
+        <div class="w-full max-w-md bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 p-1 rounded-[52px] shadow-2xl">
             <div class="relative z-10 w-full rounded-[52px] overflow-hidden flex flex-col">
                 <div class="p-8 pb-4">
                     <h2 class="font-headline font-bold text-2xl mb-2">Join a meeting</h2>
@@ -150,12 +168,12 @@
 
                 <div class="bg-slate-200 dark:bg-slate-700/50 h-px w-full my-1"></div>
 
+                <!-- Auth/SSO Button -->
                 <div class="px-8 py-6">
                     <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-sm">
                         <span class="material-symbols-outlined text-primary" id="sso-icon">account_circle</span>
                         <span class="font-semibold" id="sso-text">Sign in with YukiChat</span>
                     </button>
-                    <div id="auth-status" class="text-center mt-4 text-xs font-bold text-green-600 dark:text-green-400 hidden">✅ Authenticated via YukiChat</div>
                 </div>
             </div>
         </div>
@@ -182,13 +200,31 @@
 
         <!-- Drawing Canvas -->
         <canvas id="drawing-canvas"></canvas>
-        <div id="draw-tools" class="absolute top-4 right-4 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-2 rounded-2xl shadow-xl flex flex-col gap-2 hidden border border-slate-200 dark:border-slate-700">
-            <button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-            <button onclick="App.clearDraw()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+        
+        <!-- NEW: Advanced Drawing Tools -->
+        <div id="draw-tools" class="absolute top-4 right-4 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-2 rounded-2xl shadow-xl flex flex-col gap-2 hidden border border-slate-200 dark:border-slate-700 pointer-events-auto">
+            <!-- Tools -->
+            <div class="flex flex-col gap-1 border-b border-slate-200 dark:border-slate-700 pb-2">
+                <button onclick="App.setTool('pen')" id="tool-pen" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn active"><span class="material-symbols-outlined text-[20px]">edit</span></button>
+                <button onclick="App.setTool('line')" id="tool-line" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">horizontal_rule</span></button>
+                <button onclick="App.setTool('arrow')" id="tool-arrow" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">north_east</span></button>
+                <button onclick="App.setTool('rect')" id="tool-rect" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">crop_square</span></button>
+                <button onclick="App.setTool('circle')" id="tool-circle" class="w-10 h-10 rounded-xl bg-transparent text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 tool-btn"><span class="material-symbols-outlined text-[20px]">radio_button_unchecked</span></button>
+            </div>
+            <!-- Colors -->
+            <div class="flex flex-col gap-3 pt-2 pb-3 items-center border-b border-slate-200 dark:border-slate-700">
+                <button onclick="App.setColor('#3b82f6')" id="col-[#3b82f6]" class="w-6 h-6 rounded-full bg-[#3b82f6] color-btn active"></button>
+                <button onclick="App.setColor('#ef4444')" id="col-[#ef4444]" class="w-6 h-6 rounded-full bg-[#ef4444] color-btn"></button>
+                <button onclick="App.setColor('#22c55e')" id="col-[#22c55e]" class="w-6 h-6 rounded-full bg-[#22c55e] color-btn"></button>
+                <button onclick="App.setColor('#eab308')" id="col-[#eab308]" class="w-6 h-6 rounded-full bg-[#eab308] color-btn"></button>
+                <button onclick="App.setColor('#ffffff')" id="col-[#ffffff]" class="w-6 h-6 rounded-full bg-[#ffffff] border border-slate-300 color-btn"></button>
+            </div>
+            <!-- Clear -->
+            <button onclick="App.clearDraw()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-colors mt-1" title="Clear All Drawings"><span class="material-symbols-outlined text-[20px]">delete</span></button>
         </div>
 
         <!-- Dynamic Video Grid -->
-        <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center gap-2 md:gap-4 pb-24 md:pb-28">
+        <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center gap-2 md:gap-4 pb-24 md:pb-28 z-10">
             <!-- Local User -->
             <div id="wrapper-local" class="video-wrapper" draggable="true" onclick="App.pinVideo('wrapper-local')">
                 <video id="local-video" autoplay playsinline muted></video>
@@ -265,9 +301,15 @@
             pollInterval: null,
             lastSignalId: 0,
             
+            // Drawing State
             isDrawingMode: false,
             isDrawing: false,
-            lastX: 0, lastY: 0,
+            currentTool: 'pen',
+            currentColor: '#3b82f6',
+            drawHistory:[],
+            tempShape: null,
+            startX: 0, startY: 0,
+            
             ctxTarget: null,
             dragSrcEl: null
         };
@@ -316,14 +358,13 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
                 
-                // Auth UI Update (Req 1)
+                // Auth UI Update
                 if (State.token) {
                     document.getElementById('guest-name-container').style.display = 'none';
-                    document.getElementById('auth-status').classList.remove('hidden');
                     const ssoBtn = document.getElementById('btn-sso');
                     document.getElementById('sso-icon').textContent = 'logout';
                     document.getElementById('sso-icon').classList.replace('text-primary', 'text-error');
-                    document.getElementById('sso-text').textContent = 'Sign Out from YukiChat';
+                    document.getElementById('sso-text').textContent = 'Sign Out';
                     document.getElementById('sso-text').classList.add('text-error');
                     ssoBtn.onclick = App.ssoLogout;
                 }
@@ -335,8 +376,11 @@
                 this.initCanvas();
                 this.setupDragAndDrop();
                 
-                // Window resize triggers layout update
-                window.addEventListener('resize', () => this.updateLayout());
+                // Window resize triggers layout update and canvas resize
+                window.addEventListener('resize', () => {
+                    this.updateLayout();
+                    this.resizeCanvas();
+                });
             },
 
             ssoLogin() { window.location.href = `https://yukichat.lol/?sso=meet`; },
@@ -382,6 +426,7 @@
                         document.getElementById('screen-landing').style.display = 'none';
                         document.getElementById('screen-room').classList.add('active');
                         this.updateLayout();
+                        this.resizeCanvas();
                     }, 300);
 
                     for (let p of res.participants) {
@@ -431,7 +476,7 @@
                 window.location.href = '/';
             },
 
-            // --- LAYOUT ENGINE (Req 5) ---
+            // --- LAYOUT ENGINE ---
             updateLayout() {
                 const grid = document.getElementById('video-grid');
                 const wrappers = grid.querySelectorAll('.video-wrapper');
@@ -440,7 +485,6 @@
 
                 document.getElementById('participant-count').textContent = count;
 
-                // If a video is pinned, ignore grid and do custom layout
                 if (pinned) {
                     wrappers.forEach(w => {
                         if (w === pinned) {
@@ -454,7 +498,6 @@
                     return;
                 }
 
-                // Dynamic CSS Grid math based on count
                 let w = '100%', h = '100%';
                 const isMobile = window.innerWidth < 768;
 
@@ -486,7 +529,6 @@
                 const wrapper = document.getElementById(wrapperId);
                 if(!wrapper) return;
                 
-                // Toggle pin
                 if (wrapper.classList.contains('pinned')) {
                     wrapper.classList.remove('pinned');
                 } else {
@@ -519,7 +561,6 @@
                     const target = e.target.closest('.video-wrapper');
                     if(State.dragSrcEl && target && State.dragSrcEl !== target) {
                         target.classList.remove('drag-over');
-                        // Swap DOM positions
                         const srcNext = State.dragSrcEl.nextSibling;
                         const tgtNext = target.nextSibling;
                         grid.insertBefore(target, srcNext);
@@ -559,11 +600,10 @@
                     
                     RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
                     
-                    // Tell others to unpin
                     Object.values(State.dataChannels).forEach(dc => {
                         if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'unpin' }));
                     });
-                    this.pinVideo('wrapper-local'); // Unpin locally
+                    this.pinVideo('wrapper-local'); 
                 } else {
                     try {
                         State.screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
@@ -575,12 +615,10 @@
                         
                         RTC.replaceVideoTrack(State.screenStream.getVideoTracks()[0]);
                         
-                        // Tell others to Pin me
                         Object.values(State.dataChannels).forEach(dc => {
                             if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'pin', target: State.sessionId }));
                         });
                         
-                        // Pin locally to see it big
                         if (!localContainer.classList.contains('pinned')) this.pinVideo('wrapper-local');
                     } catch(e) { UI.toast("Screen share canceled"); }
                 }
@@ -608,57 +646,118 @@
                 document.getElementById('ctx-menu').style.display = 'none';
             },
 
-            // --- DRAWING LOGIC (Req 3 Fixed) ---
+            // --- FLAWLESS DRAWING ENGINE ---
+            setTool(tool) {
+                State.currentTool = tool;
+                document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`tool-${tool}`).classList.add('active');
+            },
+            setColor(color) {
+                State.currentColor = color;
+                document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`col-[${color}]`).classList.add('active');
+            },
+
+            resizeCanvas() {
+                const canvas = document.getElementById('drawing-canvas');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                this.redrawCanvas();
+            },
+
             initCanvas() {
                 const canvas = document.getElementById('drawing-canvas');
                 const ctx = canvas.getContext('2d');
-                
-                const resize = () => { 
-                    canvas.width = window.innerWidth; 
-                    canvas.height = window.innerHeight; 
-                };
-                window.addEventListener('resize', resize); resize();
+                this.resizeCanvas();
 
-                const drawLine = (x0, y0, x1, y1, color) => {
-                    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
-                    ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.stroke(); ctx.closePath();
-                };
-
-                // Expose remote draw function
-                App.remoteDraw = (data) => {
-                    drawLine(data.x0 * canvas.width, data.y0 * canvas.height, data.x1 * canvas.width, data.y1 * canvas.height, data.color);
-                };
-
+                // Advanced Coordinate Mapping (Perfect Aspect Ratio anywhere)
                 const getPos = (e) => {
-                    const rect = canvas.getBoundingClientRect();
                     const evt = e.touches ? e.touches[0] : e;
-                    return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+                    const cx = window.innerWidth / 2;
+                    const cy = window.innerHeight / 2;
+                    const scale = Math.min(window.innerWidth, window.innerHeight);
+                    return { x: (evt.clientX - cx) / scale, y: (evt.clientY - cy) / scale };
+                };
+
+                const toScreen = (vx, vy) => {
+                    const cx = window.innerWidth / 2;
+                    const cy = window.innerHeight / 2;
+                    const scale = Math.min(window.innerWidth, window.innerHeight);
+                    return { x: (vx * scale) + cx, y: (vy * scale) + cy };
+                };
+
+                // The Universal Renderer
+                App.drawShape = (shape) => {
+                    const s = toScreen(shape.x0, shape.y0);
+                    const e = toScreen(shape.x1, shape.y1);
+                    
+                    ctx.strokeStyle = shape.color;
+                    ctx.lineWidth = 4;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    ctx.beginPath();
+                    
+                    if (shape.tool === 'pen' || shape.tool === 'line') {
+                        ctx.moveTo(s.x, s.y); ctx.lineTo(e.x, e.y); ctx.stroke();
+                    } else if (shape.tool === 'rect') {
+                        ctx.rect(s.x, s.y, e.x - s.x, e.y - s.y); ctx.stroke();
+                    } else if (shape.tool === 'circle') {
+                        const r = Math.hypot(e.x - s.x, e.y - s.y);
+                        ctx.arc(s.x, s.y, r, 0, 2 * Math.PI); ctx.stroke();
+                    } else if (shape.tool === 'arrow') {
+                        const headlen = 15; 
+                        const angle = Math.atan2(e.y - s.y, e.x - s.x);
+                        ctx.moveTo(s.x, s.y); ctx.lineTo(e.x, e.y);
+                        ctx.lineTo(e.x - headlen * Math.cos(angle - Math.PI / 6), e.y - headlen * Math.sin(angle - Math.PI / 6));
+                        ctx.moveTo(e.x, e.y);
+                        ctx.lineTo(e.x - headlen * Math.cos(angle + Math.PI / 6), e.y - headlen * Math.sin(angle + Math.PI / 6));
+                        ctx.stroke();
+                    }
+                };
+
+                App.redrawCanvas = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    State.drawHistory.forEach(shape => App.drawShape(shape));
+                    if (State.tempShape) App.drawShape(State.tempShape);
                 };
 
                 const startDraw = (e) => {
                     if (!State.isDrawingMode) return;
                     State.isDrawing = true;
-                    const pos = getPos(e); State.lastX = pos.x; State.lastY = pos.y;
+                    const pos = getPos(e); 
+                    State.startX = pos.x; State.startY = pos.y;
                 };
 
                 const draw = (e) => {
                     if (!State.isDrawing || !State.isDrawingMode) return;
                     e.preventDefault();
                     const pos = getPos(e);
-                    const color = State.isAdmin ? '#0053dc' : '#f59e0b';
-                    drawLine(State.lastX, State.lastY, pos.x, pos.y, color);
                     
-                    const payload = JSON.stringify({
-                        type: 'draw', color: color,
-                        x0: State.lastX / canvas.width, y0: State.lastY / canvas.height,
-                        x1: pos.x / canvas.width, y1: pos.y / canvas.height
-                    });
+                    State.tempShape = { tool: State.currentTool, color: State.currentColor, x0: State.startX, y0: State.startY, x1: pos.x, y1: pos.y };
                     
-                    Object.values(State.dataChannels).forEach(dc => { if (dc.readyState === 'open') dc.send(payload); });
-                    State.lastX = pos.x; State.lastY = pos.y;
+                    if (State.currentTool === 'pen') {
+                        // Pen immediately commits segments
+                        State.drawHistory.push(State.tempShape);
+                        const payload = JSON.stringify({ type: 'draw_shape', shape: State.tempShape });
+                        Object.values(State.dataChannels).forEach(dc => { if (dc.readyState === 'open') dc.send(payload); });
+                        State.startX = pos.x; State.startY = pos.y;
+                        State.tempShape = null;
+                    }
+                    
+                    App.redrawCanvas();
                 };
 
-                const stopDraw = () => { State.isDrawing = false; };
+                const stopDraw = () => { 
+                    if (!State.isDrawing) return;
+                    State.isDrawing = false; 
+                    if (State.tempShape && State.currentTool !== 'pen') {
+                        State.drawHistory.push(State.tempShape);
+                        const payload = JSON.stringify({ type: 'draw_shape', shape: State.tempShape });
+                        Object.values(State.dataChannels).forEach(dc => { if (dc.readyState === 'open') dc.send(payload); });
+                        State.tempShape = null;
+                        App.redrawCanvas();
+                    }
+                };
 
                 canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw);
                 canvas.addEventListener('mouseup', stopDraw); canvas.addEventListener('mouseout', stopDraw);
@@ -672,8 +771,9 @@
             },
 
             clearDraw() {
-                const cvs = document.getElementById('drawing-canvas');
-                cvs.getContext('2d').clearRect(0,0,cvs.width,cvs.height);
+                State.drawHistory =[];
+                State.tempShape = null;
+                App.redrawCanvas();
                 Object.values(State.dataChannels).forEach(dc => {
                     if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'clear_draw' }));
                 });
@@ -693,7 +793,7 @@
                     canvas.classList.remove('active', 'canvas-overlay-grid');
                     tools.classList.add('hidden');
                     UI.toggleBtnStyle('btn-draw', false, 'draw', 'draw');
-                    this.clearDraw();
+                    // Removed clearDraw() from here so exiting doesn't erase!
                 }
             }
         };
@@ -708,7 +808,6 @@
                 const pc = new RTCPeerConnection(this.config);
                 State.peers[targetId] = pc;
 
-                // Send whichever track is currently active (Cam or Screen)
                 const streamToSend = State.screenStream || State.localStream;
                 streamToSend.getTracks().forEach(t => pc.addTrack(t, streamToSend));
 
@@ -732,11 +831,9 @@
                         wrapper.id = 'wrapper-' + targetId;
                         wrapper.draggable = true;
                         
-                        // Events for Context Menu & Pinning
                         wrapper.onclick = () => App.pinVideo(wrapper.id);
                         wrapper.oncontextmenu = (ev) => App.showCtxMenu(ev, targetId);
                         
-                        // Mobile Long Press for context menu
                         let pressTimer;
                         wrapper.addEventListener('touchstart', (ev) => { pressTimer = setTimeout(() => App.showCtxMenu(ev, targetId), 600); });
                         wrapper.addEventListener('touchend', () => clearTimeout(pressTimer));
@@ -751,7 +848,7 @@
                         `;
                         document.getElementById('video-grid').appendChild(wrapper);
                         vid = document.getElementById('video-' + targetId);
-                        App.setupDragAndDrop(); // Reattach drag events
+                        App.setupDragAndDrop(); 
                         App.updateLayout();
                     }
                     vid.srcObject = e.streams[0];
@@ -771,31 +868,30 @@
                 dc.onmessage = (e) => {
                     try {
                         const data = JSON.parse(e.data);
-                        if (data.type === 'draw') App.remoteDraw(data);
-                        else if (data.type === 'cmd') {
+                        if (data.type === 'draw_shape') {
+                            State.drawHistory.push(data.shape);
+                            App.redrawCanvas();
+                        } else if (data.type === 'cmd') {
                             if (data.action === 'clear_draw') {
-                                const cvs = document.getElementById('drawing-canvas');
-                                cvs.getContext('2d').clearRect(0,0,cvs.width,cvs.height);
+                                State.drawHistory =[];
+                                App.redrawCanvas();
                             }
                             if (data.action === 'mute') {
                                 UI.toast("An Admin muted your microphone");
                                 const track = State.localStream.getAudioTracks()[0];
-                                if(track) { track.enabled = false; App.toggleMic(); App.toggleMic(); track.enabled = false; } // Force UI refresh
+                                if(track) { track.enabled = false; App.toggleMic(); App.toggleMic(); track.enabled = false; } 
                             }
                             if (data.action === 'kick') {
                                 alert("You have been kicked from the meeting.");
                                 App.leaveMeeting();
                             }
                             if (data.action === 'pin' && data.target) {
-                                // Auto-pin screen share
                                 const wrap = document.getElementById('wrapper-' + data.target);
                                 if(wrap && !wrap.classList.contains('pinned')) App.pinVideo(wrap.id);
                                 wrap.classList.add('screen-share');
                             }
                             if (data.action === 'unpin') {
-                                document.querySelectorAll('.video-wrapper').forEach(w => {
-                                    w.classList.remove('pinned', 'screen-share');
-                                });
+                                document.querySelectorAll('.video-wrapper').forEach(w => { w.classList.remove('pinned', 'screen-share'); });
                                 App.updateLayout();
                             }
                         }
