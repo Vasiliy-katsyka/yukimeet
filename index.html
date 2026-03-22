@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" class="dark">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
     <title>YukiMeet</title>
     
-    <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -16,16 +15,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "surface-container-lowest": "#ffffff",
-                        "surface": "#f7f9fb",
-                        "primary-container": "#3e76fe",
                         "primary": "#0053dc",
-                        "error": "#a83836",
-                        "on-surface": "#2c3437",
-                        "on-surface-variant": "#596064",
-                        "outline-variant": "#acb3b7",
-                        "surface-container-high": "#e3e9ed",
-                        "surface-container-low": "#f0f4f7",
+                        "primary-container": "#3e76fe",
+                        "error": "#ef4444",
                     },
                     fontFamily: { "headline": ["Manrope"], "body": ["Inter"] }
                 }
@@ -38,41 +30,58 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Your Exact Liquid Glass Implementation */
+        /* Global Background Gradient */
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            background-attachment: fixed;
+        }
+        .dark body {
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+        }
+
+        /* LIQUID GLASS IMPLEMENTATION */
         .liquid-glass {
             border-radius: 56px;
             position: relative;
             isolation: isolate;
             box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             border: none;
             background: none;
-            text-decoration: none;
         }
-        .liquid-glass:focus { outline: none; }
         .liquid-glass::before {
             content: ''; position: absolute; inset: 0; z-index: 0;
-            border-radius: 56px;
-            box-shadow: inset 0 0 8px -5px #000000;
-            background-color: rgba(255, 255, 255, 0.1); /* Slight tint for visibility */
+            border-radius: inherit;
+            box-shadow: inset 0 0 8px -5px rgba(0,0,0,0.5);
+            background-color: rgba(255, 255, 255, 0.05); 
         }
         .liquid-glass::after {
             content: ''; position: absolute; inset: 0; z-index: -1;
-            border-radius: 56px;
-            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            border-radius: inherit;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             filter: url(#glass-distortion); -webkit-filter: url(#glass-distortion);
         }
 
-        /* Video Styles */
-        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-        .screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
+        /* Video Grid Layout Transitions */
+        #video-grid { transition: all 0.3s ease; }
+        .video-wrapper { 
+            position: relative; background: #000; border-radius: 20px; 
+            overflow: hidden; shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+        }
+        .video-wrapper video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); transition: 0.3s; }
+        .video-wrapper.screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
+        
+        /* Pinned Layout */
+        .video-wrapper.pinned {
+            width: 100% !important; height: calc(100% - 100px) !important;
+            z-index: 10; order: -1; border-color: var(--primary);
+        }
         
         /* Drawing Canvas */
-        #drawing-canvas { position: absolute; inset: 0; z-index: 40; pointer-events: none; width: 100%; height: 100%; }
+        #drawing-canvas { position: absolute; inset: 0; z-index: 40; pointer-events: none; width: 100%; height: 100%; touch-action: none; }
         #drawing-canvas.active { pointer-events: auto; cursor: crosshair; }
-        .canvas-overlay-grid { background-image: radial-gradient(circle, rgba(0,83,220,0.1) 20%, transparent 20%); background-size: 20px 20px; }
+        .canvas-overlay-grid { background-image: radial-gradient(circle, rgba(0,83,220,0.2) 2px, transparent 2px); background-size: 30px 30px; }
 
         /* Screens */
         #screen-landing, #screen-room { position: absolute; inset: 0; transition: opacity 0.3s; }
@@ -85,10 +94,13 @@
         .ctx-item { padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; gap: 10px; }
         .ctx-item:hover { background: rgba(0,0,0,0.05); }
         .dark .ctx-item:hover { background: rgba(255,255,255,0.1); }
-        .ctx-item.danger { color: #e11d48; }
+        .ctx-item.danger { color: #ef4444; }
+
+        /* Drag & Drop Visuals */
+        .video-wrapper.drag-over { border: 2px dashed #3e76fe; opacity: 0.5; }
     </style>
 </head>
-<body class="bg-surface dark:bg-slate-950 font-body text-on-surface dark:text-slate-200 h-[100dvh] w-screen flex flex-col overflow-hidden selection:bg-primary-container selection:text-white transition-colors duration-300">
+<body class="font-body h-[100dvh] w-screen flex flex-col overflow-hidden text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
     <!-- REQUIRED SVG FILTER FOR LIQUID GLASS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -102,47 +114,48 @@
     </svg>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-full shadow-2xl z-[10000] font-semibold text-sm transition-all duration-300 opacity-0 pointer-events-none">Message</div>
+    <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900 dark:bg-white dark:text-black text-white px-6 py-3 rounded-full shadow-2xl z-[10000] font-semibold text-sm transition-all duration-300 opacity-0 pointer-events-none">Message</div>
 
     <!-- ========================================== -->
     <!-- LANDING SCREEN -->
     <!-- ========================================== -->
-    <main id="screen-landing" class="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
-        <!-- Atmospheric Background -->
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-container/10 blur-[120px] rounded-full"></div>
+    <main id="screen-landing" class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6 relative overflow-hidden z-10">
         
-        <!-- Brand -->
         <div class="mb-10 flex flex-col items-center gap-2 relative z-10">
-            <h1 class="font-headline font-extrabold text-5xl tracking-tight text-primary">YukiMeet</h1>
-            <p class="text-on-surface-variant font-medium tracking-wide text-sm">Where clarity meets connection.</p>
+            <h1 class="font-headline font-extrabold text-5xl tracking-tight text-primary drop-shadow-md">YukiMeet</h1>
+            <p class="font-medium tracking-wide text-sm opacity-80">Where clarity meets connection.</p>
         </div>
 
-        <!-- Auth Card (With Liquid Glass) -->
+        <!-- Auth Card -->
         <div class="w-full max-w-md liquid-glass p-1">
             <div class="relative z-10 w-full rounded-[52px] overflow-hidden flex flex-col">
                 <div class="p-8 pb-4">
-                    <h2 class="font-headline font-bold text-2xl text-on-surface mb-2 dark:text-white">Join a meeting</h2>
-                    <p class="text-on-surface-variant text-sm dark:text-slate-400">Enter details to join as a guest or sign in to your workspace.</p>
+                    <h2 class="font-headline font-bold text-2xl mb-2">Join a meeting</h2>
+                    <p class="text-sm opacity-70">Enter details to join your workspace.</p>
                 </div>
                 
                 <div class="px-8 py-6 space-y-5">
                     <div class="space-y-4">
-                        <input id="meet-id" class="w-full bg-white/50 dark:bg-black/50 border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-on-surface dark:text-white placeholder:text-outline-variant focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all" placeholder="Meeting ID (e.g. daily-sync)" type="text"/>
-                        <input id="guest-name" class="w-full bg-white/50 dark:bg-black/50 border border-outline-variant/30 rounded-2xl px-4 py-3.5 text-on-surface dark:text-white placeholder:text-outline-variant focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all" placeholder="Your Name" type="text"/>
+                        <input id="meet-id" class="w-full bg-white/50 dark:bg-black/40 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all font-semibold" placeholder="Meeting ID (e.g. daily-sync)" type="text"/>
+                        
+                        <!-- Guest Name (Hides if Logged In) -->
+                        <div id="guest-name-container">
+                            <input id="guest-name" class="w-full bg-white/50 dark:bg-black/40 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all" placeholder="Your Name" type="text"/>
+                        </div>
                     </div>
-                    <button onclick="App.joinMeeting(true)" class="w-full bg-gradient-to-br from-primary to-blue-500 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/30">
+                    <button onclick="App.joinMeeting()" class="w-full bg-gradient-to-br from-primary to-blue-500 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/30">
                         Join Meeting <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
                     </button>
                 </div>
 
-                <div class="bg-surface-container-high/50 h-px w-full my-1"></div>
+                <div class="bg-slate-200 dark:bg-slate-700/50 h-px w-full my-1"></div>
 
                 <div class="px-8 py-6">
-                    <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white dark:bg-slate-800 border border-outline-variant/20 hover:bg-slate-50 dark:hover:bg-slate-700 py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-sm">
-                        <span class="material-symbols-outlined text-primary">account_circle</span>
-                        <span class="text-on-surface dark:text-white font-semibold" id="sso-text">Sign in with YukiChat Account</span>
+                    <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-primary" id="sso-icon">account_circle</span>
+                        <span class="font-semibold" id="sso-text">Sign in with YukiChat</span>
                     </button>
-                    <div id="auth-status" class="text-center mt-4 text-xs font-semibold text-green-600 dark:text-green-400 hidden">✅ Authenticated via YukiChat</div>
+                    <div id="auth-status" class="text-center mt-4 text-xs font-bold text-green-600 dark:text-green-400 hidden">✅ Authenticated via YukiChat</div>
                 </div>
             </div>
         </div>
@@ -151,84 +164,77 @@
     <!-- ========================================== -->
     <!-- MEETING ROOM -->
     <!-- ========================================== -->
-    <main id="screen-room" class="flex-1 p-2 md:p-6 relative overflow-hidden bg-surface-container-low dark:bg-slate-900 h-full flex flex-col">
+    <main id="screen-room" class="flex-1 p-2 md:p-4 relative overflow-hidden h-full flex flex-col z-20">
         
         <!-- Top Info Overlay -->
-        <div class="absolute top-4 left-4 md:top-8 md:left-8 z-30 bg-surface-container-lowest/80 dark:bg-slate-800/80 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-outline-variant/20">
-            <h1 id="room-id-display" class="font-headline font-bold text-sm md:text-base leading-tight text-on-surface dark:text-white">Loading...</h1>
-            <p class="text-[10px] text-on-surface-variant dark:text-slate-400 font-medium flex items-center gap-1 uppercase tracking-wider mt-1">
-                <span class="material-symbols-outlined text-[12px]">group</span>
-                <span id="participant-count">1</span> Participants
-            </p>
+        <div class="absolute top-4 left-4 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-4">
+            <div>
+                <h1 id="room-id-display" class="font-headline font-bold text-sm md:text-base leading-tight uppercase">Room</h1>
+                <p class="text-[10px] opacity-70 font-bold flex items-center gap-1 mt-0.5">
+                    <span class="material-symbols-outlined text-[12px]">group</span>
+                    <span id="participant-count">1</span> Participants
+                </p>
+            </div>
+            <button onclick="App.copyInvite()" class="bg-primary/10 text-primary hover:bg-primary/20 p-2 rounded-xl transition-colors flex items-center justify-center" title="Copy Invite Link">
+                <span class="material-symbols-outlined text-[18px]">person_add</span>
+            </button>
         </div>
 
         <!-- Drawing Canvas -->
         <canvas id="drawing-canvas"></canvas>
-        <div id="draw-tools" class="absolute top-4 right-4 md:top-8 md:right-8 bg-surface-container-lowest/90 dark:bg-slate-800/90 backdrop-blur-md p-3 rounded-2xl shadow-xl flex flex-col gap-3 z-50 pointer-events-auto hidden border border-outline-variant/20 transition-all">
+        <div id="draw-tools" class="absolute top-4 right-4 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-2 rounded-2xl shadow-xl flex flex-col gap-2 hidden border border-slate-200 dark:border-slate-700">
             <button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-            <button onclick="App.clearDraw()" class="w-10 h-10 rounded-xl bg-surface-container-high dark:bg-slate-700 text-on-surface-variant dark:text-white flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+            <button onclick="App.clearDraw()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center hover:bg-red-100 hover:text-red-500 transition-colors"><span class="material-symbols-outlined text-[20px]">delete</span></button>
         </div>
 
-        <!-- Video Grid -->
-        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 h-full pt-16 md:pt-0 pb-28 md:pb-32 overflow-y-auto no-scrollbar content-center">
+        <!-- Dynamic Video Grid -->
+        <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center gap-2 md:gap-4 pb-24 md:pb-28">
             <!-- Local User -->
-            <div id="wrapper-local" class="relative bg-black rounded-2xl overflow-hidden shadow-lg aspect-video md:aspect-auto h-full min-h-[200px] border border-white/10">
+            <div id="wrapper-local" class="video-wrapper" draggable="true" onclick="App.pinVideo('wrapper-local')">
                 <video id="local-video" autoplay playsinline muted></video>
-                <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-black/50 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-medium border border-white/10">
-                    <span id="local-mic-icon" class="material-symbols-outlined text-[14px] text-primary-container" style="font-variation-settings: 'FILL' 1;">mic</span>
+                <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-medium border border-white/10">
+                    <span id="local-mic-icon" class="material-symbols-outlined text-[14px] text-green-400" style="font-variation-settings: 'FILL' 1;">mic</span>
                     You <span id="local-admin-badge" class="ml-1 bg-primary px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider hidden">Host</span>
                 </div>
             </div>
             <!-- Remote Videos Inject Here -->
         </div>
 
-        <!-- Unified Liquid Glass Navigation Bar (Optimized for Mobile) -->
-        <nav class="liquid-glass absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center z-50 px-2 py-2 w-[95%] md:w-max max-w-2xl overflow-x-auto no-scrollbar">
+        <!-- Unified Liquid Glass Navigation Bar -->
+        <nav class="liquid-glass absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex items-center z-50 px-2 py-1 md:py-2 w-[95%] md:w-max max-w-2xl">
             <div class="flex gap-1 md:gap-2 items-center relative z-10 w-full justify-between md:justify-center">
                 
-                <!-- Theme -->
-                <button onclick="document.documentElement.classList.toggle('dark')" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-slate-300 p-2 md:p-3 hover:bg-white/20 rounded-2xl transition-all active:scale-95 min-w-[60px]">
+                <button onclick="document.documentElement.classList.toggle('dark')" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px] dark:hidden">light_mode</span>
-                    <span class="material-symbols-outlined text-[22px] hidden dark:block text-yellow-300">dark_mode</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">Theme</span>
+                    <span class="material-symbols-outlined text-[22px] hidden dark:block text-yellow-400">dark_mode</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Theme</span>
                 </button>
                 
-                <div class="h-8 w-[1px] bg-white/20 mx-1"></div>
+                <div class="h-8 w-[1px] bg-slate-300 dark:bg-slate-600 mx-0.5"></div>
 
-                <!-- Mic -->
-                <button id="btn-mic" onclick="App.toggleMic()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-white/20 rounded-2xl transition-all active:scale-95 min-w-[60px]">
-                    <span class="material-symbols-outlined text-[22px] icon-fill">mic</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">Mic</span>
+                <button id="btn-mic" onclick="App.toggleMic()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                    <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">mic</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Mic</span>
                 </button>
 
-                <!-- Cam -->
-                <button id="btn-cam" onclick="App.toggleCam()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-white/20 rounded-2xl transition-all active:scale-95 min-w-[60px]">
-                    <span class="material-symbols-outlined text-[22px] icon-fill">videocam</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">Camera</span>
+                <button id="btn-cam" onclick="App.toggleCam()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                    <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">videocam</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Camera</span>
                 </button>
 
-                <!-- Share -->
-                <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-slate-300 p-2 md:p-3 hover:bg-white/20 rounded-2xl transition-all active:scale-95 min-w-[60px]">
+                <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]">present_to_all</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">Share</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Share</span>
                 </button>
 
-                <!-- Draw -->
-                <button id="btn-draw" onclick="App.toggleDrawing()" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-slate-300 p-2 md:p-3 hover:bg-white/20 rounded-2xl transition-all active:scale-95 min-w-[60px]">
+                <button id="btn-draw" onclick="App.toggleDrawing()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]">draw</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">Draw</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Draw</span>
                 </button>
 
-                <!-- Chat/People (UI Placed in Nav as requested) -->
-                <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-slate-300 p-2 md:p-3 hover:bg-white/20 rounded-2xl transition-all active:scale-95 min-w-[60px] hidden md:flex" onclick="UI.toast('Chat/Members opening soon')">
-                    <span class="material-symbols-outlined text-[22px]">group</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter">People</span>
-                </button>
+                <div class="h-8 w-[1px] bg-slate-300 dark:bg-slate-600 mx-0.5"></div>
 
-                <div class="h-8 w-[1px] bg-white/20 mx-1"></div>
-
-                <!-- Leave -->
-                <button onclick="App.leaveMeeting()" class="flex flex-col items-center justify-center text-error p-2 md:p-3 hover:bg-red-500/20 rounded-2xl transition-all active:scale-95 min-w-[60px]">
+                <button onclick="App.leaveMeeting()" class="flex flex-col items-center justify-center text-error p-2 md:p-3 hover:bg-red-500/20 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">call_end</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter text-error">Leave</span>
                 </button>
@@ -262,26 +268,27 @@
             isDrawingMode: false,
             isDrawing: false,
             lastX: 0, lastY: 0,
-            ctxTarget: null
+            ctxTarget: null,
+            dragSrcEl: null
         };
 
         const UI = {
             toast(m) { 
                 const t = document.getElementById('toast'); 
-                t.textContent = m; t.classList.add('opacity-100', '-translate-y-2'); 
-                setTimeout(() => t.classList.remove('opacity-100', '-translate-y-2'), 3000); 
+                t.textContent = m; t.classList.add('opacity-100', 'translate-y-4'); 
+                setTimeout(() => t.classList.remove('opacity-100', 'translate-y-4'), 3000); 
             },
             toggleBtnStyle(id, active, icon, iconOff, isDanger = false) {
                 const btn = document.getElementById(id);
                 const span = btn.querySelector('span');
                 if(!active) {
                     btn.classList.remove('text-primary', 'dark:text-blue-400');
-                    btn.classList.add(isDanger ? 'text-error' : 'text-on-surface-variant', isDanger ? '' : 'dark:text-slate-400');
+                    if (isDanger) btn.classList.add('text-error');
                     span.textContent = iconOff;
                     span.style.fontVariationSettings = "'FILL' 0";
                 } else {
                     btn.classList.add('text-primary', 'dark:text-blue-400');
-                    btn.classList.remove('text-on-surface-variant', 'dark:text-slate-400', 'text-error');
+                    btn.classList.remove('text-error');
                     span.textContent = icon;
                     span.style.fontVariationSettings = "'FILL' 1";
                 }
@@ -300,6 +307,7 @@
 
         const App = {
             init() {
+                // Check SSO Token
                 const urlParams = new URLSearchParams(window.location.search);
                 const ssoToken = urlParams.get('sso_token');
                 if (ssoToken) {
@@ -308,28 +316,52 @@
                     window.history.replaceState({}, document.title, window.location.pathname);
                 }
                 
+                // Auth UI Update (Req 1)
                 if (State.token) {
+                    document.getElementById('guest-name-container').style.display = 'none';
                     document.getElementById('auth-status').classList.remove('hidden');
-                    document.getElementById('sso-text').textContent = 'Join with YukiChat Account';
-                    document.getElementById('btn-sso').onclick = () => App.joinMeeting(false);
+                    const ssoBtn = document.getElementById('btn-sso');
+                    document.getElementById('sso-icon').textContent = 'logout';
+                    document.getElementById('sso-icon').classList.replace('text-primary', 'text-error');
+                    document.getElementById('sso-text').textContent = 'Sign Out from YukiChat';
+                    document.getElementById('sso-text').classList.add('text-error');
+                    ssoBtn.onclick = App.ssoLogout;
                 }
 
+                // If room ID in URL, auto-fill
+                const pathRoom = window.location.pathname.split('/').pop();
+                if(pathRoom && pathRoom.length > 2) document.getElementById('meet-id').value = pathRoom;
+
                 this.initCanvas();
+                this.setupDragAndDrop();
+                
+                // Window resize triggers layout update
+                window.addEventListener('resize', () => this.updateLayout());
             },
 
-            ssoLogin() {
-                window.location.href = `https://yukichat.lol/?sso=meet`;
+            ssoLogin() { window.location.href = `https://yukichat.lol/?sso=meet`; },
+            ssoLogout() {
+                localStorage.removeItem('meet_t');
+                State.token = null;
+                window.location.reload();
             },
 
-            async joinMeeting(isGuest) {
+            copyInvite() {
+                const link = `${window.location.origin}/${State.roomId}`;
+                navigator.clipboard.writeText(link);
+                UI.toast("Invite Link Copied!");
+            },
+
+            async joinMeeting() {
                 const room = document.getElementById('meet-id').value.trim().toLowerCase();
                 const name = document.getElementById('guest-name').value.trim();
+                const isGuest = !State.token;
                 
                 if (!room) return UI.toast("Enter a Meeting ID");
                 if (isGuest && !name) return UI.toast("Enter your name");
 
                 try {
-                    await api('/api/meet/init').catch(()=>{}); // Init DB if needed
+                    await api('/api/meet/init').catch(()=>{}); 
                     State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
                     document.getElementById('local-video').srcObject = State.localStream;
                     
@@ -343,19 +375,22 @@
                     if (State.isAdmin) document.getElementById('local-admin-badge').classList.remove('hidden');
                     
                     document.getElementById('room-id-display').textContent = room.toUpperCase();
+                    window.history.replaceState({}, document.title, `/${room}`);
+
                     document.getElementById('screen-landing').style.opacity = '0';
-                    setTimeout(() => document.getElementById('screen-room').classList.add('active'), 300);
+                    setTimeout(() => {
+                        document.getElementById('screen-landing').style.display = 'none';
+                        document.getElementById('screen-room').classList.add('active');
+                        this.updateLayout();
+                    }, 300);
 
                     for (let p of res.participants) {
                         State.participants.set(p.session_id, p);
                         RTC.createPeer(p.session_id, true);
                     }
-                    this.updateGrid();
                     this.startLoops();
                     
-                } catch (e) {
-                    UI.toast("Access denied: " + e.message);
-                }
+                } catch (e) { UI.toast("Camera Access Denied"); }
             },
 
             startLoops() {
@@ -382,7 +417,7 @@
                         for (let [id, p] of State.participants) {
                             if (!activeIds.has(id)) RTC.removePeer(id);
                         }
-                        this.updateGrid();
+                        this.updateLayout();
                     } catch(e){}
                 }, 5000);
             },
@@ -393,7 +428,104 @@
                 clearInterval(State.pollInterval);
                 Object.values(State.peers).forEach(pc => pc.close());
                 await api(`/api/meet/${State.roomId}/leave`, { session_id: State.sessionId }).catch(()=>{});
-                window.location.reload();
+                window.location.href = '/';
+            },
+
+            // --- LAYOUT ENGINE (Req 5) ---
+            updateLayout() {
+                const grid = document.getElementById('video-grid');
+                const wrappers = grid.querySelectorAll('.video-wrapper');
+                const count = wrappers.length;
+                const pinned = grid.querySelector('.pinned');
+
+                document.getElementById('participant-count').textContent = count;
+
+                // If a video is pinned, ignore grid and do custom layout
+                if (pinned) {
+                    wrappers.forEach(w => {
+                        if (w === pinned) {
+                            w.style.width = '100%'; 
+                            w.style.height = window.innerWidth < 768 ? 'calc(100% - 90px)' : 'calc(100% - 120px)';
+                        } else {
+                            w.style.width = window.innerWidth < 768 ? '80px' : '160px'; 
+                            w.style.height = window.innerWidth < 768 ? '80px' : '100px';
+                        }
+                    });
+                    return;
+                }
+
+                // Dynamic CSS Grid math based on count
+                let w = '100%', h = '100%';
+                const isMobile = window.innerWidth < 768;
+
+                if (count === 1) { w = '100%'; h = '100%'; }
+                else if (count === 2) { 
+                    w = isMobile ? '100%' : 'calc(50% - 8px)'; 
+                    h = isMobile ? 'calc(50% - 8px)' : '100%'; 
+                }
+                else if (count === 3) { 
+                    w = isMobile ? '100%' : 'calc(33.33% - 11px)'; 
+                    h = isMobile ? 'calc(33.33% - 6px)' : '50%'; 
+                }
+                else if (count === 4) { 
+                    w = 'calc(50% - 8px)'; 
+                    h = 'calc(50% - 8px)'; 
+                }
+                else { 
+                    w = isMobile ? 'calc(50% - 4px)' : 'calc(33.33% - 11px)'; 
+                    h = isMobile ? '150px' : '33.33%'; 
+                }
+
+                wrappers.forEach(wrap => {
+                    wrap.style.width = w;
+                    wrap.style.height = h;
+                });
+            },
+
+            pinVideo(wrapperId) {
+                const wrapper = document.getElementById(wrapperId);
+                if(!wrapper) return;
+                
+                // Toggle pin
+                if (wrapper.classList.contains('pinned')) {
+                    wrapper.classList.remove('pinned');
+                } else {
+                    document.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('pinned'));
+                    wrapper.classList.add('pinned');
+                }
+                this.updateLayout();
+            },
+
+            setupDragAndDrop() {
+                const grid = document.getElementById('video-grid');
+                grid.addEventListener('dragstart', (e) => {
+                    if(e.target.classList.contains('video-wrapper')) {
+                        State.dragSrcEl = e.target;
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/html', e.target.innerHTML);
+                    }
+                });
+                grid.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const target = e.target.closest('.video-wrapper');
+                    if(target && target !== State.dragSrcEl) target.classList.add('drag-over');
+                });
+                grid.addEventListener('dragleave', (e) => {
+                    const target = e.target.closest('.video-wrapper');
+                    if(target) target.classList.remove('drag-over');
+                });
+                grid.addEventListener('drop', (e) => {
+                    e.stopPropagation();
+                    const target = e.target.closest('.video-wrapper');
+                    if(State.dragSrcEl && target && State.dragSrcEl !== target) {
+                        target.classList.remove('drag-over');
+                        // Swap DOM positions
+                        const srcNext = State.dragSrcEl.nextSibling;
+                        const tgtNext = target.nextSibling;
+                        grid.insertBefore(target, srcNext);
+                        grid.insertBefore(State.dragSrcEl, tgtNext);
+                    }
+                });
             },
 
             // --- MEDIA CONTROLS ---
@@ -402,8 +534,9 @@
                 if(track) {
                     track.enabled = !track.enabled;
                     UI.toggleBtnStyle('btn-mic', track.enabled, 'mic', 'mic_off', !track.enabled);
-                    document.getElementById('local-mic-icon').textContent = track.enabled ? 'mic' : 'mic_off';
-                    document.getElementById('local-mic-icon').style.color = track.enabled ? 'var(--primary-container)' : '#ef4444';
+                    const icon = document.getElementById('local-mic-icon');
+                    icon.textContent = track.enabled ? 'mic' : 'mic_off';
+                    icon.style.color = track.enabled ? '#4ade80' : '#ef4444';
                 }
             },
             toggleCam() {
@@ -420,35 +553,48 @@
                 if (State.screenStream) {
                     State.screenStream.getTracks().forEach(t => t.stop());
                     State.screenStream = null;
-                    localContainer.classList.remove('screen-share', 'md:col-span-2', 'md:row-span-2');
+                    localContainer.classList.remove('screen-share');
                     localVideo.srcObject = State.localStream;
                     UI.toggleBtnStyle('btn-share', false, 'present_to_all', 'present_to_all');
+                    
                     RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
+                    
+                    // Tell others to unpin
+                    Object.values(State.dataChannels).forEach(dc => {
+                        if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'unpin' }));
+                    });
+                    this.pinVideo('wrapper-local'); // Unpin locally
                 } else {
                     try {
                         State.screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-                        localContainer.classList.add('screen-share', 'md:col-span-2', 'md:row-span-2'); // Make screen share big
+                        localContainer.classList.add('screen-share');
                         localVideo.srcObject = State.screenStream;
                         UI.toggleBtnStyle('btn-share', true, 'stop_screen_share', 'present_to_all');
+                        
                         State.screenStream.getVideoTracks()[0].onended = () => this.toggleScreenShare();
+                        
                         RTC.replaceVideoTrack(State.screenStream.getVideoTracks()[0]);
+                        
+                        // Tell others to Pin me
+                        Object.values(State.dataChannels).forEach(dc => {
+                            if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'pin', target: State.sessionId }));
+                        });
+                        
+                        // Pin locally to see it big
+                        if (!localContainer.classList.contains('pinned')) this.pinVideo('wrapper-local');
                     } catch(e) { UI.toast("Screen share canceled"); }
                 }
-            },
-
-            updateGrid() {
-                document.getElementById('participant-count').textContent = State.participants.size + 1;
             },
 
             // --- ADMIN CONTEXT MENU ---
             showCtxMenu(e, targetId) {
                 if (!State.isAdmin) return;
-                e.preventDefault();
+                e.preventDefault(); e.stopPropagation();
                 State.ctxTarget = targetId;
                 const menu = document.getElementById('ctx-menu');
                 menu.style.display = 'flex';
-                // Boundary check
-                let x = e.clientX; let y = e.clientY;
+                let x = e.clientX || (e.touches && e.touches[0].clientX); 
+                let y = e.clientY || (e.touches && e.touches[0].clientY);
                 if(x + 180 > window.innerWidth) x -= 180;
                 if(y + 100 > window.innerHeight) y -= 100;
                 menu.style.left = x + 'px';
@@ -457,25 +603,31 @@
             adminAction(action) {
                 if(State.ctxTarget && State.dataChannels[State.ctxTarget]) {
                     State.dataChannels[State.ctxTarget].send(JSON.stringify({ type: 'cmd', action: action }));
-                    UI.toast(`Action executed`);
+                    UI.toast(`Command executed`);
                 }
                 document.getElementById('ctx-menu').style.display = 'none';
             },
 
-            // --- DRAWING LOGIC ---
+            // --- DRAWING LOGIC (Req 3 Fixed) ---
             initCanvas() {
                 const canvas = document.getElementById('drawing-canvas');
                 const ctx = canvas.getContext('2d');
                 
-                const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+                const resize = () => { 
+                    canvas.width = window.innerWidth; 
+                    canvas.height = window.innerHeight; 
+                };
                 window.addEventListener('resize', resize); resize();
 
                 const drawLine = (x0, y0, x1, y1, color) => {
                     ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
-                    ctx.strokeStyle = color; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.stroke(); ctx.closePath();
+                    ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.stroke(); ctx.closePath();
                 };
 
-                this.remoteDraw = (data) => drawLine(data.x0 * canvas.width, data.y0 * canvas.height, data.x1 * canvas.width, data.y1 * canvas.height, data.color);
+                // Expose remote draw function
+                App.remoteDraw = (data) => {
+                    drawLine(data.x0 * canvas.width, data.y0 * canvas.height, data.x1 * canvas.width, data.y1 * canvas.height, data.color);
+                };
 
                 const getPos = (e) => {
                     const rect = canvas.getBoundingClientRect();
@@ -493,7 +645,7 @@
                     if (!State.isDrawing || !State.isDrawingMode) return;
                     e.preventDefault();
                     const pos = getPos(e);
-                    const color = State.isAdmin ? '#0053dc' : '#f59e0b'; // Admin blue, users orange
+                    const color = State.isAdmin ? '#0053dc' : '#f59e0b';
                     drawLine(State.lastX, State.lastY, pos.x, pos.y, color);
                     
                     const payload = JSON.stringify({
@@ -510,7 +662,9 @@
 
                 canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw);
                 canvas.addEventListener('mouseup', stopDraw); canvas.addEventListener('mouseout', stopDraw);
-                canvas.addEventListener('touchstart', startDraw); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stopDraw);
+                canvas.addEventListener('touchstart', startDraw, {passive: false}); 
+                canvas.addEventListener('touchmove', draw, {passive: false}); 
+                canvas.addEventListener('touchend', stopDraw);
                 
                 document.addEventListener('click', (e) => {
                     if(!e.target.closest('#ctx-menu')) document.getElementById('ctx-menu').style.display = 'none';
@@ -554,7 +708,9 @@
                 const pc = new RTCPeerConnection(this.config);
                 State.peers[targetId] = pc;
 
-                State.localStream.getTracks().forEach(t => pc.addTrack(t, State.localStream));
+                // Send whichever track is currently active (Cam or Screen)
+                const streamToSend = State.screenStream || State.localStream;
+                streamToSend.getTracks().forEach(t => pc.addTrack(t, streamToSend));
 
                 if (isInitiator) {
                     const dc = pc.createDataChannel('meet_data');
@@ -564,9 +720,7 @@
                 }
 
                 pc.onicecandidate = (e) => {
-                    if (e.candidate) {
-                        api(`/api/meet/${State.roomId}/signal`, { sender_id: State.sessionId, target_id: targetId, type: 'ice', data: e.candidate });
-                    }
+                    if (e.candidate) api(`/api/meet/${State.roomId}/signal`, { sender_id: State.sessionId, target_id: targetId, type: 'ice', data: e.candidate });
                 };
 
                 pc.ontrack = (e) => {
@@ -574,9 +728,19 @@
                     if (!vid) {
                         const pInfo = State.participants.get(targetId) || {name: 'Unknown'};
                         const wrapper = document.createElement('div');
-                        wrapper.className = 'relative bg-black rounded-2xl overflow-hidden shadow-lg aspect-video md:aspect-auto h-full min-h-[200px] border border-white/10 transition-all';
+                        wrapper.className = 'video-wrapper';
                         wrapper.id = 'wrapper-' + targetId;
+                        wrapper.draggable = true;
+                        
+                        // Events for Context Menu & Pinning
+                        wrapper.onclick = () => App.pinVideo(wrapper.id);
                         wrapper.oncontextmenu = (ev) => App.showCtxMenu(ev, targetId);
+                        
+                        // Mobile Long Press for context menu
+                        let pressTimer;
+                        wrapper.addEventListener('touchstart', (ev) => { pressTimer = setTimeout(() => App.showCtxMenu(ev, targetId), 600); });
+                        wrapper.addEventListener('touchend', () => clearTimeout(pressTimer));
+                        wrapper.addEventListener('touchmove', () => clearTimeout(pressTimer));
 
                         wrapper.innerHTML = `
                             <video id="video-${targetId}" autoplay playsinline></video>
@@ -587,6 +751,8 @@
                         `;
                         document.getElementById('video-grid').appendChild(wrapper);
                         vid = document.getElementById('video-' + targetId);
+                        App.setupDragAndDrop(); // Reattach drag events
+                        App.updateLayout();
                     }
                     vid.srcObject = e.streams[0];
                 };
@@ -614,11 +780,23 @@
                             if (data.action === 'mute') {
                                 UI.toast("An Admin muted your microphone");
                                 const track = State.localStream.getAudioTracks()[0];
-                                if(track) { track.enabled = false; UI.toggleBtnStyle('btn-mic', false, 'mic', 'mic_off', true); }
+                                if(track) { track.enabled = false; App.toggleMic(); App.toggleMic(); track.enabled = false; } // Force UI refresh
                             }
                             if (data.action === 'kick') {
                                 alert("You have been kicked from the meeting.");
                                 App.leaveMeeting();
+                            }
+                            if (data.action === 'pin' && data.target) {
+                                // Auto-pin screen share
+                                const wrap = document.getElementById('wrapper-' + data.target);
+                                if(wrap && !wrap.classList.contains('pinned')) App.pinVideo(wrap.id);
+                                wrap.classList.add('screen-share');
+                            }
+                            if (data.action === 'unpin') {
+                                document.querySelectorAll('.video-wrapper').forEach(w => {
+                                    w.classList.remove('pinned', 'screen-share');
+                                });
+                                App.updateLayout();
                             }
                         }
                     } catch(err){}
@@ -652,6 +830,7 @@
                 State.participants.delete(targetId);
                 const wrapper = document.getElementById('wrapper-' + targetId);
                 if (wrapper) wrapper.remove();
+                App.updateLayout();
             }
         };
 
