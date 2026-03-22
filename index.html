@@ -662,7 +662,10 @@
                 const canvas = document.getElementById('drawing-canvas');
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
-                this.redrawCanvas();
+                // Only redraw if the function has been initialized
+                if (typeof this.redrawCanvas === 'function') {
+                    this.redrawCanvas();
+                }
             },
 
             initCanvas() {
