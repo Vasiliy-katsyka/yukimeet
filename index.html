@@ -164,44 +164,102 @@
     <!-- ========================================== -->
     <!-- LANDING SCREEN -->
     <!-- ========================================== -->
-    <main id="screen-landing" class="min-h-screen flex flex-col items-center justify-center p-4 md:p-6 relative overflow-hidden z-10">
+    <main id="screen-landing" class="min-h-screen w-full flex items-center justify-center p-6 md:p-12 relative overflow-hidden z-10">
         
-        <div class="mb-10 flex flex-col items-center gap-2 relative z-10">
-            <h1 class="font-headline font-extrabold text-5xl tracking-tight text-primary drop-shadow-md">YukiMeet</h1>
-            <p class="font-medium tracking-wide text-sm opacity-80">Where clarity meets connection.</p>
-        </div>
+        <!-- Ambient Background Glows -->
+        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-primary/20 dark:bg-primary/30 blur-[100px] rounded-full pointer-events-none"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-blue-400/20 dark:bg-blue-500/20 blur-[100px] rounded-full pointer-events-none"></div>
 
-        <!-- Auth Card -->
-        <div class="w-full max-w-md bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 p-1 rounded-[52px] shadow-2xl">
-            <div class="relative z-10 w-full rounded-[52px] overflow-hidden flex flex-col">
-                <div class="p-8 pb-4">
-                    <h2 class="font-headline font-bold text-2xl mb-2">Join a meeting</h2>
-                    <p class="text-sm opacity-70">Enter details to join your workspace.</p>
+        <!-- Main Content Grid -->
+        <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
+            
+            <!-- Left Side: Hero Copy & Features -->
+            <div class="flex flex-col items-start text-left order-2 lg:order-1">
+                
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 dark:bg-slate-800/60 backdrop-blur-md border border-white/40 dark:border-slate-700 text-primary dark:text-blue-400 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">lock</span>
+                    100% Secure & P2P
                 </div>
                 
-                <div class="px-8 py-6 space-y-5">
-                    <div class="space-y-4">
-                        <input id="meet-id" class="w-full bg-white/50 dark:bg-black/40 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all font-semibold" placeholder="Meeting ID (e.g. daily-sync)" type="text"/>
-                        
-                        <!-- Guest Name (Hides if Logged In) -->
-                        <div id="guest-name-container">
-                            <input id="guest-name" class="w-full bg-white/50 dark:bg-black/40 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all" placeholder="Your Name" type="text"/>
+                <!-- Headlines -->
+                <h1 class="font-headline font-extrabold text-5xl md:text-6xl lg:text-7xl tracking-tight text-slate-900 dark:text-white leading-[1.1] mb-6 drop-shadow-sm">
+                    Clarity Meets <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-500">Connection.</span>
+                </h1>
+                
+                <p class="font-medium text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-lg mb-10 leading-relaxed">
+                    High-quality video calls with real-time drawing, screen sharing, and a beautiful liquid glass interface. Join instantly—no account required.
+                </p>
+
+                <!-- Feature Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
+                    <div class="flex items-center gap-4 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md p-4 rounded-3xl border border-white/30 dark:border-slate-700/50 shadow-sm transition-transform hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-primary dark:text-blue-400">
+                            <span class="material-symbols-outlined text-[24px]">draw</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-white">Live Drawing</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Draw on the screen</p>
                         </div>
                     </div>
-                    <button onclick="App.joinMeeting()" class="w-full bg-gradient-to-br from-primary to-blue-500 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/30">
-                        Join Meeting <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
-                    </button>
+                    <div class="flex items-center gap-4 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md p-4 rounded-3xl border border-white/30 dark:border-slate-700/50 shadow-sm transition-transform hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                            <span class="material-symbols-outlined text-[24px]">present_to_all</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-white">Screen Share</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Present seamlessly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Auth Card -->
+            <div class="flex justify-center lg:justify-end order-1 lg:order-2 w-full relative">
+                
+                <!-- Card Container -->
+                <div class="w-full max-w-md bg-white/20 dark:bg-black/20 backdrop-blur-2xl border border-white/40 dark:border-white/10 p-2 rounded-[52px] shadow-2xl shadow-primary/10 relative z-10">
+                    <div class="relative z-10 w-full rounded-[44px] bg-white/70 dark:bg-slate-900/70 overflow-hidden flex flex-col border border-white/50 dark:border-slate-700/50">
+                        
+                        <div class="p-8 pb-4 text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-primary to-blue-500 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-primary/30">
+                                <span class="material-symbols-outlined text-white text-[32px]">video_camera_front</span>
+                            </div>
+                            <h2 class="font-headline font-bold text-2xl mb-1 text-slate-900 dark:text-white">Join a meeting</h2>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Enter details to join your workspace.</p>
+                        </div>
+                        
+                        <div class="px-8 py-4 space-y-4">
+                            <div class="space-y-3">
+                                <input id="meet-id" class="w-full bg-white/60 dark:bg-black/40 border border-slate-200 dark:border-slate-700/80 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all font-bold text-slate-800 dark:text-white placeholder:text-slate-400" placeholder="Meeting ID (e.g. daily-sync)" type="text"/>
+                                
+                                <!-- Guest Name (Hides if Logged In) -->
+                                <div id="guest-name-container">
+                                    <input id="guest-name" class="w-full bg-white/60 dark:bg-black/40 border border-slate-200 dark:border-slate-700/80 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary/40 outline-none backdrop-blur-md transition-all font-semibold text-slate-800 dark:text-white placeholder:text-slate-400" placeholder="Your Name" type="text"/>
+                                </div>
+                            </div>
+                            <button onclick="App.joinMeeting()" class="w-full bg-gradient-to-br from-primary to-blue-600 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all">
+                                Join Meeting <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-4 px-8 py-2">
+                            <div class="h-[1px] w-full bg-slate-200 dark:bg-slate-700/50"></div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">OR</span>
+                            <div class="h-[1px] w-full bg-slate-200 dark:bg-slate-700/50"></div>
+                        </div>
+
+                        <!-- Auth/SSO Button -->
+                        <div class="px-8 pt-2 pb-8">
+                            <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-primary dark:text-blue-400" id="sso-icon">account_circle</span>
+                                <span class="font-bold text-slate-700 dark:text-slate-200" id="sso-text">Sign in with YukiChat</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-slate-200 dark:bg-slate-700/50 h-px w-full my-1"></div>
-
-                <!-- Auth/SSO Button -->
-                <div class="px-8 py-6">
-                    <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-sm">
-                        <span class="material-symbols-outlined text-primary" id="sso-icon">account_circle</span>
-                        <span class="font-semibold" id="sso-text">Sign in with YukiChat</span>
-                    </button>
-                </div>
             </div>
         </div>
     </main>
