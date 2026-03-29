@@ -505,18 +505,66 @@
             },
 
             async joinMeeting() {
-                const room = document.getElementById('meet-id').value.trim().toLowerCase();
-                const name = document.getElementById('guest-name').value.trim();
+                // Find the button to add a loading state
+                const btn = document.querySelector('button[onclick="App.joinMeeting()"]');
+                const originalText = btn.innerHTML;
+                
+                const roomInput = document.getElementById('meet-id');
+                const nameInput = document.getElementById('guest-name');
+                
+                const room = roomInput.value.trim().toLowerCase();
+                const name = nameInput.value.trim();
                 const isGuest = !State.token;
                 
-                if (!room) return UI.toast("Enter a Meeting ID");
-                if (isGuest && !name) return UI.toast("Enter your name");
+                // Form Validation with fallback alerts
+                if (!room) {
+                    roomInput.focus();
+                    UI.toast("Please enter a Meeting ID");
+                    return;
+                }
+                if (isGuest && !name) {
+                    nameInput.focus();
+                    UI.toast("Please enter your name");
+                    return;
+                }
+
+                // 1. Show Visual Loading State
+                btn.innerHTML = `<span class="material-symbols-outlined animate-spin" style="animation: spin 1s linear infinite;">progress_activity</span> Connecting...`;
+                btn.disabled = true;
+                btn.classList.add('opacity-80', 'cursor-not-allowed');
 
                 try {
-                    await api('/api/meet/init').catch(()=>{}); 
-                    State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                    // 2. Initialize Database Ping
+                    await api('/api/meet/init').catch(e => console.warn("Init skipped:", e)); 
+
+                    // 3. Safely Request Media (Handles Mobile HTTP limitations)
+                    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                        try {
+                            // Try requesting both Video & Audio
+                            State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                        } catch (camErr) {
+                            console.warn("Video failed, trying audio only...", camErr);
+                            try {
+                                // Try Audio Only
+                                State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                                UI.toast("Joined without video (Camera missing/blocked)");
+                            } catch (micErr) {
+                                console.warn("Audio failed, joining as view-only...", micErr);
+                                // Fallback to blank stream (View Only)
+                                State.localStream = new MediaStream();
+                                UI.toast("Joined as View-Only");
+                            }
+                        }
+                    } else {
+                        // Browser strictly blocks media (Usually because it's HTTP, not HTTPS)
+                        console.warn("HTTPS required for Camera/Mic access");
+                        State.localStream = new MediaStream();
+                        alert("⚠️ Warning: Camera and Microphone require a secure HTTPS connection. Joining as View-Only.");
+                    }
+
                     document.getElementById('local-video').srcObject = State.localStream;
                     
+                    // 4. Connect to API
                     const res = await api('/api/meet/join', {
                         meeting_id: room, session_id: State.sessionId, 
                         is_guest: isGuest, guest_name: name
@@ -529,6 +577,7 @@
                     document.getElementById('room-id-display').textContent = room.toUpperCase();
                     window.history.replaceState({}, document.title, `/${room}`);
 
+                    // 5. Smooth Screen Transition
                     document.getElementById('screen-landing').style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('screen-landing').style.display = 'none';
@@ -537,13 +586,23 @@
                         this.resizeCanvas();
                     }, 300);
 
+                    // 6. Connect to other users
                     for (let p of res.participants) {
                         State.participants.set(p.session_id, p);
                         RTC.createPeer(p.session_id, true);
                     }
                     this.startLoops();
                     
-                } catch (e) { UI.toast("Camera Access Denied"); }
+                } catch (e) { 
+                    console.error("Join Error:", e);
+                    // Force an alert so you know EXACTLY why it failed instead of "doing nothing"
+                    alert("❌ Failed to join meeting: " + (e.message || "Network API Error. Check your Cloudflare Worker."));
+                } finally {
+                    // Reset Button UI
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
+                }
             },
 
             startLoops() {
