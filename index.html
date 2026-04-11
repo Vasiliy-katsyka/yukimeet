@@ -624,14 +624,15 @@
                             if(p.session_id !== State.sessionId) {
                                 activeIds.add(p.session_id);
                                 
-                                // CORRECTION HERE: Initiate WebRTC for newly discovered users
+                                // Add to state if missing
                                 if (!State.participants.has(p.session_id)) {
                                     State.participants.set(p.session_id, p);
-                                    
-                                    // Only the one with the higher session string initiates to prevent double-offers
-                                    if (State.sessionId > p.session_id) {
-                                        RTC.createPeer(p.session_id, true);
-                                    }
+                                }
+                        
+                                // CORRECTION: Dynamically update the name in the UI if it's currently "Unknown"
+                                const nameEl = document.getElementById('name-' + p.session_id);
+                                if (nameEl && nameEl.textContent === 'Unknown' && p.name) {
+                                    nameEl.textContent = p.name;
                                 }
                             }
                         });
@@ -1041,7 +1042,7 @@
                         wrapper.innerHTML = `
                             <video id="video-${targetId}" autoplay playsinline></video>
                             <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-black/50 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-xs font-medium border border-white/10">
-                                <span>${pInfo.name}</span>
+                                <span id="name-${targetId}">${pInfo.name}</span>
                                 ${pInfo.is_admin ? '<span class="ml-1 bg-primary px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider">Host</span>' : ''}
                             </div>
                         `;
