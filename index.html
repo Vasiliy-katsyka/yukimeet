@@ -623,7 +623,16 @@
                         res.participants.forEach(p => {
                             if(p.session_id !== State.sessionId) {
                                 activeIds.add(p.session_id);
-                                if (!State.participants.has(p.session_id)) State.participants.set(p.session_id, p);
+                                
+                                // CORRECTION HERE: Initiate WebRTC for newly discovered users
+                                if (!State.participants.has(p.session_id)) {
+                                    State.participants.set(p.session_id, p);
+                                    
+                                    // Only the one with the higher session string initiates to prevent double-offers
+                                    if (State.sessionId > p.session_id) {
+                                        RTC.createPeer(p.session_id, true);
+                                    }
+                                }
                             }
                         });
                         for (let [id, p] of State.participants) {
@@ -979,7 +988,18 @@
 
         // --- WEBRTC ENGINE ---
         const RTC = {
-            config: { iceServers:[{ urls: 'stun:stun.l.google.com:19302' }] },
+            config: { 
+                iceServers:[
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    // You MUST add a TURN server here for 100% reliability. 
+                    // (You can get free/cheap ones from Metered, Twilio, or self-host Coturn)
+                    { 
+                        urls: 'turn:free.expressturn.com:3478', 
+                        username: '000000002091297326', 
+                        credential: 'kWKRxkpaa42S9D5C3q6yB8i+0rY=' 
+                    }
+                ] 
+            },
 
             createPeer(targetId, isInitiator) {
                 if (State.peers[targetId]) return State.peers[targetId];
@@ -1077,18 +1097,39 @@
                     } catch(err){}
                 };
             },
-
+            // 1. Add this to the top of your RTC object:
+            iceQueues: {},
+            
+            // 2. Modify handleSignal() to queue and process candidates safely:
             async handleSignal(senderId, type, data) {
                 const pc = this.createPeer(senderId, type === 'offer' ? false : null);
+                
+                // Initialize queue
+                if (!this.iceQueues[senderId]) this.iceQueues[senderId] =[];
+            
                 if (type === 'offer') {
                     await pc.setRemoteDescription(new RTCSessionDescription(data));
                     const answer = await pc.createAnswer();
                     await pc.setLocalDescription(answer);
                     api(`/api/meet/${State.roomId}/signal`, { sender_id: State.sessionId, target_id: senderId, type: 'answer', data: answer });
+                    
+                    // Process queued ICE candidates now that remote description is set
+                    for (let ice of this.iceQueues[senderId]) await pc.addIceCandidate(ice);
+                    this.iceQueues[senderId] =[];
+                    
                 } else if (type === 'answer') {
                     await pc.setRemoteDescription(new RTCSessionDescription(data));
+                    for (let ice of this.iceQueues[senderId]) await pc.addIceCandidate(ice);
+                    this.iceQueues[senderId] =[];
+                    
                 } else if (type === 'ice') {
-                    try { await pc.addIceCandidate(new RTCIceCandidate(data)); } catch(e){}
+                    const candidate = new RTCIceCandidate(data);
+                    if (pc.remoteDescription && pc.remoteDescription.type) {
+                        try { await pc.addIceCandidate(candidate); } catch(e){}
+                    } else {
+                        // Push to queue instead of throwing it away
+                        this.iceQueues[senderId].push(candidate);
+                    }
                 }
             },
 
