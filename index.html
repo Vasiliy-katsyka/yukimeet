@@ -367,9 +367,9 @@
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Camera</span>
                 </button>
                 
-                <button id="btn-blur" onclick="App.toggleBlur()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
-                    <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 0;">blur_on</span>
-                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Blur</span>
+                <button id="btn-bg" onclick="App.openBgModal()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                    <span id="bg-icon" class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 0;">blur_on</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">AI BG</span>
                 </button>
                 
                 <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
@@ -398,6 +398,39 @@
         <div class="ctx-item danger" onclick="App.adminAction('kick')"><span class="material-symbols-outlined text-[18px]">person_remove</span> Kick User</div>
     </div>
 
+    <!-- AI Background Modal -->
+    <div id="bg-modal" class="fixed inset-0 bg-black/60 z-[9999] hidden items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl w-[90%] max-w-md shadow-2xl border border-slate-200 dark:border-slate-700 transform scale-95 transition-transform duration-300" id="bg-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold font-headline">Background Setup</h2>
+                <button onclick="App.closeBgModal()" class="material-symbols-outlined text-slate-500 hover:text-error bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full">close</button>
+            </div>
+            
+            <!-- Main Actions -->
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                <button onclick="App.setBgMode('none')" class="bg-slate-100 dark:bg-slate-800 text-sm font-bold p-3 rounded-xl flex flex-col items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-slate-500 text-[24px]">block</span> None
+                </button>
+                <button onclick="App.setBgMode('blur')" class="bg-primary/10 text-primary dark:bg-primary/20 text-sm font-bold p-3 rounded-xl flex flex-col items-center gap-2 hover:bg-primary/20 active:scale-95 transition-all">
+                    <span class="material-symbols-outlined text-[24px]">blur_on</span> Blur
+                </button>
+                <label class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-sm font-bold p-3 rounded-xl flex flex-col items-center gap-2 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 active:scale-95 transition-all cursor-pointer">
+                    <span class="material-symbols-outlined text-[24px]">upload</span> Upload
+                    <input type="file" accept="image/*" class="hidden" onchange="App.uploadBg(event)">
+                </label>
+            </div>
+    
+            <!-- Presets -->
+            <p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Office & Studio Presets</p>
+            <div class="grid grid-cols-4 gap-2">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1600607688969-a5bfcd64bd40?w=600&q=80')" src="https://images.unsplash.com/photo-1600607688969-a5bfcd64bd40?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=600&q=80')" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80')" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80')" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+            </div>
+        </div>
+    </div>
+    
     <!-- Application Logic -->
     <script>
         const API_URL = 'https://api.yukichat.lol'; // Set your Worker URL
@@ -410,12 +443,152 @@
             localStream: null,
             screenStream: null,
             peers: {}, 
-            dataChannels: {}, 
+            dataChannels: {}, // --- AI BACKGROUND UI & MODAL ---
+            openBgModal() {
+                const modal = document.getElementById('bg-modal');
+                const content = document.getElementById('bg-modal-content');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    content.classList.remove('scale-95');
+                }, 10);
+            },
+            closeBgModal() {
+                const modal = document.getElementById('bg-modal');
+                const content = document.getElementById('bg-modal-content');
+                modal.classList.remove('opacity-100');
+                content.classList.add('scale-95');
+                setTimeout(() => { modal.style.display = 'none'; }, 300);
+            },
+
+            // --- AI BACKGROUND LOGIC ---
+            setBgMode(mode) {
+                State.bgMode = mode;
+                if (mode === 'none') {
+                    State.isAiRunning = false;
+                    document.getElementById('local-video').srcObject = State.localStream;
+                    RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
+                    UI.toggleBtnStyle('btn-bg', false, 'blur_on', 'blur_on');
+                } else {
+                    if (mode === 'blur') State.bgImage = null;
+                    UI.toggleBtnStyle('btn-bg', true, 'wallpaper', 'blur_on');
+                    this.startAiEngine();
+                }
+                this.closeBgModal();
+            },
+            
+            uploadBg(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => this.setPresetBg(e.target.result);
+                reader.readAsDataURL(file);
+            },
+
+            setPresetBg(src) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    State.bgImage = img;
+                    this.setBgMode('image');
+                };
+                img.src = src;
+            },
+
+            startAiEngine() {
+                if (State.isAiRunning) return; // Already running, just changed mode
+
+                UI.toast("Loading AI Engine...");
+                State.isAiRunning = true;
+
+                if (!State.rawVideo) {
+                    State.rawVideo = document.createElement('video');
+                    State.rawVideo.autoplay = true;
+                    State.rawVideo.playsInline = true;
+                    
+                    State.blurCanvas = document.createElement('canvas');
+                    State.blurCtx = State.blurCanvas.getContext('2d', { willReadFrequently: true });
+                    State.processedStream = State.blurCanvas.captureStream(30); 
+                }
+
+                State.rawVideo.srcObject = State.localStream;
+
+                if (!State.blurSegmenter) {
+                    State.blurSegmenter = new SelfieSegmentation({
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+                    });
+                    
+                    // 0 = HIGH ACCURACY MODEL (100x smarter edge detection, hair mapping)
+                    State.blurSegmenter.setOptions({ modelSelection: 0 });
+                    State.blurSegmenter.onResults(this.onAiResults);
+                }
+
+                document.getElementById('local-video').srcObject = State.processedStream;
+                RTC.replaceVideoTrack(State.processedStream.getVideoTracks()[0]);
+
+                const processFrame = async () => {
+                    if (!State.isAiRunning) return;
+                    if (State.rawVideo.readyState >= 2) {
+                        if (State.blurCanvas.width !== State.rawVideo.videoWidth) {
+                            State.blurCanvas.width = State.rawVideo.videoWidth;
+                            State.blurCanvas.height = State.rawVideo.videoHeight;
+                        }
+                        await State.blurSegmenter.send({ image: State.rawVideo });
+                    }
+                    requestAnimationFrame(processFrame);
+                };
+                processFrame();
+            },
+
+            onAiResults(results) {
+                const ctx = State.blurCtx;
+                const canvas = State.blurCanvas;
+                
+                ctx.save();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 1. Draw the AI Human Mask
+                ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
+                
+                // 2. Keep the human sharp
+                ctx.globalCompositeOperation = 'source-in';
+                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                
+                // 3. Draw what goes BEHIND the human
+                ctx.globalCompositeOperation = 'destination-over';
+                
+                if (State.bgMode === 'blur') {
+                    ctx.filter = 'blur(15px)';
+                    ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                } else if (State.bgMode === 'image' && State.bgImage) {
+                    ctx.filter = 'none';
+                    // object-cover logic for Canvas so images don't look stretched
+                    const imgRatio = State.bgImage.width / State.bgImage.height;
+                    const canvasRatio = canvas.width / canvas.height;
+                    let dWidth, dHeight, dx, dy;
+
+                    if (canvasRatio > imgRatio) {
+                        dWidth = canvas.width;
+                        dHeight = canvas.width / imgRatio;
+                        dx = 0; dy = (canvas.height - dHeight) / 2;
+                    } else {
+                        dHeight = canvas.height;
+                        dWidth = canvas.height * imgRatio;
+                        dy = 0; dx = (canvas.width - dWidth) / 2;
+                    }
+                    ctx.drawImage(State.bgImage, dx, dy, dWidth, dHeight);
+                }
+                
+                ctx.restore();
+            },
             participants: new Map(),
             pollInterval: null,
             lastSignalId: 0,
 
-            isBlurred: false,
+            bgMode: 'none', // 'none', 'blur', 'image'
+            bgImage: null,  // Holds the Image object
+            isAiRunning: false,
             blurSegmenter: null,
             blurCanvas: null,
             blurCtx: null,
@@ -777,56 +950,93 @@
                     UI.toggleBtnStyle('btn-cam', track.enabled, 'videocam', 'videocam_off', !track.enabled);
                 }
             },
-            async toggleBlur() {
-                if (State.isBlurred) {
-                    // TURN OFF BLUR
-                    State.isBlurred = false;
-                    UI.toggleBtnStyle('btn-blur', false, 'blur_on', 'blur_on');
-                    
+            // --- AI BACKGROUND UI & MODAL ---
+            openBgModal() {
+                const modal = document.getElementById('bg-modal');
+                const content = document.getElementById('bg-modal-content');
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    content.classList.remove('scale-95');
+                }, 10);
+            },
+            closeBgModal() {
+                const modal = document.getElementById('bg-modal');
+                const content = document.getElementById('bg-modal-content');
+                modal.classList.remove('opacity-100');
+                content.classList.add('scale-95');
+                setTimeout(() => { modal.style.display = 'none'; }, 300);
+            },
+
+            // --- AI BACKGROUND LOGIC ---
+            setBgMode(mode) {
+                State.bgMode = mode;
+                if (mode === 'none') {
+                    State.isAiRunning = false;
                     document.getElementById('local-video').srcObject = State.localStream;
                     RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
-                    return;
+                    UI.toggleBtnStyle('btn-bg', false, 'blur_on', 'blur_on');
+                } else {
+                    if (mode === 'blur') State.bgImage = null;
+                    UI.toggleBtnStyle('btn-bg', true, 'wallpaper', 'blur_on');
+                    this.startAiEngine();
                 }
+                this.closeBgModal();
+            },
+            
+            uploadBg(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => this.setPresetBg(e.target.result);
+                reader.readAsDataURL(file);
+            },
 
-                UI.toast("Loading AI Background Blur...");
-                State.isBlurred = true;
-                UI.toggleBtnStyle('btn-blur', true, 'blur_on', 'blur_on');
+            setPresetBg(src) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    State.bgImage = img;
+                    this.setBgMode('image');
+                };
+                img.src = src;
+            },
 
-                // 1. Initialize the hidden raw video and canvas
+            startAiEngine() {
+                if (State.isAiRunning) return; // Already running, just changed mode
+
+                UI.toast("Loading AI Engine...");
+                State.isAiRunning = true;
+
                 if (!State.rawVideo) {
                     State.rawVideo = document.createElement('video');
                     State.rawVideo.autoplay = true;
                     State.rawVideo.playsInline = true;
                     
                     State.blurCanvas = document.createElement('canvas');
-                    State.blurCtx = State.blurCanvas.getContext('2d');
-                    // Capture the canvas as a video stream (30 FPS)
+                    State.blurCtx = State.blurCanvas.getContext('2d', { willReadFrequently: true });
                     State.processedStream = State.blurCanvas.captureStream(30); 
                 }
 
-                // Feed the raw camera stream into our hidden video element
                 State.rawVideo.srcObject = State.localStream;
 
-                // 2. Initialize Google MediaPipe Segmenter
                 if (!State.blurSegmenter) {
                     State.blurSegmenter = new SelfieSegmentation({
                         locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
                     });
                     
-                    // Model 1 is the "Fast/Landscape" model, best for real-time video calls
-                    State.blurSegmenter.setOptions({ modelSelection: 1 });
-                    State.blurSegmenter.onResults(this.onBlurResults);
+                    // 0 = HIGH ACCURACY MODEL (100x smarter edge detection, hair mapping)
+                    State.blurSegmenter.setOptions({ modelSelection: 0 });
+                    State.blurSegmenter.onResults(this.onAiResults);
                 }
 
-                // 3. Switch the UI and WebRTC to use the new Processed Canvas stream
                 document.getElementById('local-video').srcObject = State.processedStream;
                 RTC.replaceVideoTrack(State.processedStream.getVideoTracks()[0]);
 
-                // 4. Start the processing loop
                 const processFrame = async () => {
-                    if (!State.isBlurred) return;
+                    if (!State.isAiRunning) return;
                     if (State.rawVideo.readyState >= 2) {
-                        // Match canvas size to video size
                         if (State.blurCanvas.width !== State.rawVideo.videoWidth) {
                             State.blurCanvas.width = State.rawVideo.videoWidth;
                             State.blurCanvas.height = State.rawVideo.videoHeight;
@@ -838,25 +1048,44 @@
                 processFrame();
             },
 
-            // Callback when MediaPipe finishes calculating a frame
-            onBlurResults(results) {
+            onAiResults(results) {
                 const ctx = State.blurCtx;
                 const canvas = State.blurCanvas;
                 
                 ctx.save();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Draw the mask (White where the human is, transparent elsewhere)
+                // 1. Draw the AI Human Mask
                 ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
                 
-                // Draw the raw camera feed ONLY over the human mask
+                // 2. Keep the human sharp
                 ctx.globalCompositeOperation = 'source-in';
                 ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
                 
-                // Draw the blurred background BEHIND the human
+                // 3. Draw what goes BEHIND the human
                 ctx.globalCompositeOperation = 'destination-over';
-                ctx.filter = 'blur(15px)'; // <--- Change this to increase/decrease blur strength
-                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                
+                if (State.bgMode === 'blur') {
+                    ctx.filter = 'blur(15px)';
+                    ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                } else if (State.bgMode === 'image' && State.bgImage) {
+                    ctx.filter = 'none';
+                    // object-cover logic for Canvas so images don't look stretched
+                    const imgRatio = State.bgImage.width / State.bgImage.height;
+                    const canvasRatio = canvas.width / canvas.height;
+                    let dWidth, dHeight, dx, dy;
+
+                    if (canvasRatio > imgRatio) {
+                        dWidth = canvas.width;
+                        dHeight = canvas.width / imgRatio;
+                        dx = 0; dy = (canvas.height - dHeight) / 2;
+                    } else {
+                        dHeight = canvas.height;
+                        dWidth = canvas.height * imgRatio;
+                        dy = 0; dx = (canvas.width - dWidth) / 2;
+                    }
+                    ctx.drawImage(State.bgImage, dx, dy, dWidth, dHeight);
+                }
                 
                 ctx.restore();
             },
