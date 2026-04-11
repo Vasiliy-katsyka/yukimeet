@@ -32,6 +32,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <link rel="icon" type="image/png" href="https://yukichat.lol/icon-192.png">
@@ -365,7 +366,12 @@
                     <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">videocam</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Camera</span>
                 </button>
-
+                
+                <button id="btn-blur" onclick="App.toggleBlur()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                    <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 0;">blur_on</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Blur</span>
+                </button>
+                
                 <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]">present_to_all</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Share</span>
@@ -408,6 +414,13 @@
             participants: new Map(),
             pollInterval: null,
             lastSignalId: 0,
+
+            isBlurred: false,
+            blurSegmenter: null,
+            blurCanvas: null,
+            blurCtx: null,
+            processedStream: null,
+            rawVideo: null,
             
             // Drawing State
             isDrawingMode: false,
@@ -763,6 +776,89 @@
                     track.enabled = !track.enabled;
                     UI.toggleBtnStyle('btn-cam', track.enabled, 'videocam', 'videocam_off', !track.enabled);
                 }
+            },
+            async toggleBlur() {
+                if (State.isBlurred) {
+                    // TURN OFF BLUR
+                    State.isBlurred = false;
+                    UI.toggleBtnStyle('btn-blur', false, 'blur_on', 'blur_on');
+                    
+                    document.getElementById('local-video').srcObject = State.localStream;
+                    RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
+                    return;
+                }
+
+                UI.toast("Loading AI Background Blur...");
+                State.isBlurred = true;
+                UI.toggleBtnStyle('btn-blur', true, 'blur_on', 'blur_on');
+
+                // 1. Initialize the hidden raw video and canvas
+                if (!State.rawVideo) {
+                    State.rawVideo = document.createElement('video');
+                    State.rawVideo.autoplay = true;
+                    State.rawVideo.playsInline = true;
+                    
+                    State.blurCanvas = document.createElement('canvas');
+                    State.blurCtx = State.blurCanvas.getContext('2d');
+                    // Capture the canvas as a video stream (30 FPS)
+                    State.processedStream = State.blurCanvas.captureStream(30); 
+                }
+
+                // Feed the raw camera stream into our hidden video element
+                State.rawVideo.srcObject = State.localStream;
+
+                // 2. Initialize Google MediaPipe Segmenter
+                if (!State.blurSegmenter) {
+                    State.blurSegmenter = new SelfieSegmentation({
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+                    });
+                    
+                    // Model 1 is the "Fast/Landscape" model, best for real-time video calls
+                    State.blurSegmenter.setOptions({ modelSelection: 1 });
+                    State.blurSegmenter.onResults(this.onBlurResults);
+                }
+
+                // 3. Switch the UI and WebRTC to use the new Processed Canvas stream
+                document.getElementById('local-video').srcObject = State.processedStream;
+                RTC.replaceVideoTrack(State.processedStream.getVideoTracks()[0]);
+
+                // 4. Start the processing loop
+                const processFrame = async () => {
+                    if (!State.isBlurred) return;
+                    if (State.rawVideo.readyState >= 2) {
+                        // Match canvas size to video size
+                        if (State.blurCanvas.width !== State.rawVideo.videoWidth) {
+                            State.blurCanvas.width = State.rawVideo.videoWidth;
+                            State.blurCanvas.height = State.rawVideo.videoHeight;
+                        }
+                        await State.blurSegmenter.send({ image: State.rawVideo });
+                    }
+                    requestAnimationFrame(processFrame);
+                };
+                processFrame();
+            },
+
+            // Callback when MediaPipe finishes calculating a frame
+            onBlurResults(results) {
+                const ctx = State.blurCtx;
+                const canvas = State.blurCanvas;
+                
+                ctx.save();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the mask (White where the human is, transparent elsewhere)
+                ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
+                
+                // Draw the raw camera feed ONLY over the human mask
+                ctx.globalCompositeOperation = 'source-in';
+                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                
+                // Draw the blurred background BEHIND the human
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.filter = 'blur(15px)'; // <--- Change this to increase/decrease blur strength
+                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+                
+                ctx.restore();
             },
             async toggleScreenShare() {
                 const localContainer = document.getElementById('wrapper-local');
