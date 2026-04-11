@@ -306,7 +306,7 @@
 
         <!-- Drawing Canvas -->
         <canvas id="drawing-canvas"></canvas>
-        
+        <video id="pip-dummy" autoplay playsinline muted class="absolute opacity-0 pointer-events-none w-[1px] h-[1px]"></video>
         <!-- NEW: Advanced Drawing Tools -->
         <div id="draw-tools" class="absolute top-4 right-4 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-2 rounded-2xl shadow-xl flex flex-col gap-2 hidden border border-slate-200 dark:border-slate-700 pointer-events-auto">
             <!-- Tools -->
@@ -381,7 +381,12 @@
                     <span class="material-symbols-outlined text-[22px]">draw</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Draw</span>
                 </button>
-
+                
+                <button id="btn-pip" onclick="App.toggleSmartPiP()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                    <span class="material-symbols-outlined text-[22px]">picture_in_picture_alt</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">PiP</span>
+                </button>
+                
                 <div class="h-8 w-[1px] bg-slate-300 dark:bg-slate-600 mx-0.5"></div>
 
                 <button onclick="App.leaveMeeting()" class="flex flex-col items-center justify-center text-error p-2 md:p-3 hover:bg-red-500/20 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
@@ -423,13 +428,14 @@
             <!-- Presets -->
             <p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Office & Studio Presets</p>
             <div class="grid grid-cols-4 gap-2">
-                <img onclick="App.setPresetBg('https://i.pinimg.com/736x/10/e2/51/10e25192f5555c284d49d90fadba5855.jpg')" src="https://i.pinimg.com/736x/10/e2/51/10e25192f5555c284d49d90fadba5855.jpg" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
-                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=600&q=80')" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
-                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80')" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
-                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80')" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
-                <img onclick="App.setPresetBg('https://krisp.ai/blog/wp-content/uploads/2024/10/zoom13.jpg')" src="https://krisp.ai/blog/wp-content/uploads/2024/10/zoom13.jpg" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
-                <img onclick="App.setPresetBg('https://png.pngtree.com/thumb_back/fh260/background/20210323/pngtree-mountain-setting-zoom-virtual-background-image_591548.jpg')" src="https://png.pngtree.com/thumb_back/fh260/background/20210323/pngtree-mountain-setting-zoom-virtual-background-image_591548.jpg" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
-                
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80')" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1600607688969-a5bfcd64bd40?w=800&q=80')" src="https://images.unsplash.com/photo-1600607688969-a5bfcd64bd40?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80')" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80')" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80')" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&q=80')" src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&q=80')" src="https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
+                <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80')" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&q=80" class="w-full h-16 object-cover rounded-xl cursor-pointer hover:ring-4 ring-primary/50 transition-all active:scale-90">
             </div>
         </div>
     </div>
@@ -446,145 +452,7 @@
             localStream: null,
             screenStream: null,
             peers: {}, 
-            dataChannels: {}, // --- AI BACKGROUND UI & MODAL ---
-            openBgModal() {
-                const modal = document.getElementById('bg-modal');
-                const content = document.getElementById('bg-modal-content');
-                modal.classList.remove('hidden');
-                modal.style.display = 'flex';
-                setTimeout(() => {
-                    modal.classList.add('opacity-100');
-                    content.classList.remove('scale-95');
-                }, 10);
-            },
-            closeBgModal() {
-                const modal = document.getElementById('bg-modal');
-                const content = document.getElementById('bg-modal-content');
-                modal.classList.remove('opacity-100');
-                content.classList.add('scale-95');
-                setTimeout(() => { modal.style.display = 'none'; }, 300);
-            },
-
-            // --- AI BACKGROUND LOGIC ---
-            setBgMode(mode) {
-                State.bgMode = mode;
-                if (mode === 'none') {
-                    State.isAiRunning = false;
-                    document.getElementById('local-video').srcObject = State.localStream;
-                    RTC.replaceVideoTrack(State.localStream.getVideoTracks()[0]);
-                    UI.toggleBtnStyle('btn-bg', false, 'blur_on', 'blur_on');
-                } else {
-                    if (mode === 'blur') State.bgImage = null;
-                    UI.toggleBtnStyle('btn-bg', true, 'wallpaper', 'blur_on');
-                    this.startAiEngine();
-                }
-                this.closeBgModal();
-            },
-            
-            uploadBg(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (e) => this.setPresetBg(e.target.result);
-                reader.readAsDataURL(file);
-            },
-
-            setPresetBg(src) {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = () => {
-                    State.bgImage = img;
-                    this.setBgMode('image');
-                };
-                img.src = src;
-            },
-
-            startAiEngine() {
-                if (State.isAiRunning) return; // Already running, just changed mode
-
-                UI.toast("Loading AI Engine...");
-                State.isAiRunning = true;
-
-                if (!State.rawVideo) {
-                    State.rawVideo = document.createElement('video');
-                    State.rawVideo.autoplay = true;
-                    State.rawVideo.playsInline = true;
-                    
-                    State.blurCanvas = document.createElement('canvas');
-                    State.blurCtx = State.blurCanvas.getContext('2d', { willReadFrequently: true });
-                    State.processedStream = State.blurCanvas.captureStream(30); 
-                }
-
-                State.rawVideo.srcObject = State.localStream;
-
-                if (!State.blurSegmenter) {
-                    State.blurSegmenter = new SelfieSegmentation({
-                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
-                    });
-                    
-                    // 0 = HIGH ACCURACY MODEL (100x smarter edge detection, hair mapping)
-                    State.blurSegmenter.setOptions({ modelSelection: 0 });
-                    State.blurSegmenter.onResults(this.onAiResults);
-                }
-
-                document.getElementById('local-video').srcObject = State.processedStream;
-                RTC.replaceVideoTrack(State.processedStream.getVideoTracks()[0]);
-
-                const processFrame = async () => {
-                    if (!State.isAiRunning) return;
-                    if (State.rawVideo.readyState >= 2) {
-                        if (State.blurCanvas.width !== State.rawVideo.videoWidth) {
-                            State.blurCanvas.width = State.rawVideo.videoWidth;
-                            State.blurCanvas.height = State.rawVideo.videoHeight;
-                        }
-                        await State.blurSegmenter.send({ image: State.rawVideo });
-                    }
-                    requestAnimationFrame(processFrame);
-                };
-                processFrame();
-            },
-
-            onAiResults(results) {
-                const ctx = State.blurCtx;
-                const canvas = State.blurCanvas;
-                
-                ctx.save();
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // 1. Draw the AI Human Mask
-                ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
-                
-                // 2. Keep the human sharp
-                ctx.globalCompositeOperation = 'source-in';
-                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-                
-                // 3. Draw what goes BEHIND the human
-                ctx.globalCompositeOperation = 'destination-over';
-                
-                if (State.bgMode === 'blur') {
-                    ctx.filter = 'blur(15px)';
-                    ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-                } else if (State.bgMode === 'image' && State.bgImage) {
-                    ctx.filter = 'none';
-                    // object-cover logic for Canvas so images don't look stretched
-                    const imgRatio = State.bgImage.width / State.bgImage.height;
-                    const canvasRatio = canvas.width / canvas.height;
-                    let dWidth, dHeight, dx, dy;
-
-                    if (canvasRatio > imgRatio) {
-                        dWidth = canvas.width;
-                        dHeight = canvas.width / imgRatio;
-                        dx = 0; dy = (canvas.height - dHeight) / 2;
-                    } else {
-                        dHeight = canvas.height;
-                        dWidth = canvas.height * imgRatio;
-                        dy = 0; dx = (canvas.width - dWidth) / 2;
-                    }
-                    ctx.drawImage(State.bgImage, dx, dy, dWidth, dHeight);
-                }
-                
-                ctx.restore();
-            },
+            dataChannels: {}, 
             participants: new Map(),
             pollInterval: null,
             lastSignalId: 0,
@@ -597,7 +465,10 @@
             blurCtx: null,
             processedStream: null,
             rawVideo: null,
-            
+            audioCtx: null,
+            isTalking: false,
+            activeSpeaker: null,
+            screenShareId: null,
             // Drawing State
             isDrawingMode: false,
             isDrawing: false,
@@ -692,7 +563,114 @@
                 navigator.clipboard.writeText(link);
                 UI.toast("Invite Link Copied!");
             },
+            // --- SMART PICTURE-IN-PICTURE LOGIC ---
+            async toggleSmartPiP() {
+                const pipVid = document.getElementById('pip-dummy');
+                
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                    UI.toggleBtnStyle('btn-pip', false, 'picture_in_picture_alt', 'picture_in_picture_alt');
+                } else {
+                    this.updateSmartPiP(true); // Force an initial stream check
+                    if (pipVid.srcObject) {
+                        try {
+                            await pipVid.requestPictureInPicture();
+                            UI.toggleBtnStyle('btn-pip', true, 'picture_in_picture_alt', 'picture_in_picture_alt');
+                        } catch(e) { UI.toast("PiP blocked by browser"); }
+                    } else {
+                        UI.toast("No video available for PiP yet");
+                    }
+                }
+            },
 
+            updateSmartPiP(force = false) {
+                // Only change streams if PiP is currently open (or we are forcing initialization)
+                if (!document.pictureInPictureElement && !force) return;
+                
+                const pipVid = document.getElementById('pip-dummy');
+                let targetStream = null;
+                let targetId = null;
+
+                // Priority 1: Screen Sharing
+                if (State.screenShareId) {
+                    targetId = State.screenShareId;
+                } 
+                // Priority 2: Active Speaker (Who isn't you)
+                else if (State.activeSpeaker && State.activeSpeaker !== State.sessionId && State.peers[State.activeSpeaker]) {
+                    targetId = State.activeSpeaker;
+                }
+                // Priority 3: 1-on-1 Meeting (Always show the opponent)
+                else if (Object.keys(State.peers).length === 1) {
+                    targetId = Object.keys(State.peers)[0];
+                }
+                // Priority 4: Fallback to the first connected person
+                else if (Object.keys(State.peers).length > 1) {
+                    targetId = Object.keys(State.peers)[0];
+                }
+
+                // Map target ID to actual MediaStream
+                if (targetId && targetId !== State.sessionId) {
+                    const vid = document.getElementById('video-' + targetId);
+                    if (vid && vid.srcObject) targetStream = vid.srcObject;
+                } else if (targetId === State.sessionId && State.screenStream) {
+                    targetStream = State.screenStream; // Local screen share
+                }
+
+                // Swap PiP video source seamlessly without closing PiP window
+                if (targetStream && pipVid.srcObject !== targetStream) {
+                    pipVid.srcObject = targetStream;
+                }
+            },
+
+            // --- ACTIVE SPEAKER MICROPHONE DETECTOR ---
+            startVolumeMeter(stream) {
+                try {
+                    if (!State.audioCtx) State.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    if (State.audioCtx.state === 'suspended') State.audioCtx.resume();
+                    
+                    // Only analyze the audio track so video changes don't break it
+                    const source = State.audioCtx.createMediaStreamSource(new MediaStream([stream.getAudioTracks()[0]]));
+                    const analyser = State.audioCtx.createAnalyser();
+                    analyser.fftSize = 512;
+                    source.connect(analyser);
+                    
+                    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                    
+                    setInterval(() => {
+                        const track = State.localStream.getAudioTracks()[0];
+                        if (!track || !track.enabled) {
+                            if (State.isTalking) { State.isTalking = false; this.broadcastTalking(false); }
+                            return;
+                        }
+                        
+                        analyser.getByteFrequencyData(dataArray);
+                        let sum = 0;
+                        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                        const avg = sum / dataArray.length;
+                        
+                        const talkingNow = avg > 20; // Volume Threshold
+                        if (talkingNow !== State.isTalking) {
+                            State.isTalking = talkingNow;
+                            this.broadcastTalking(talkingNow);
+                        }
+                    }, 300);
+                } catch(e) { console.warn("Volume meter unavailable", e); }
+            },
+
+            broadcastTalking(isTalking) {
+                const wrap = document.getElementById('wrapper-local');
+                // Make Local Video Glow!
+                if (isTalking) wrap?.classList.add('ring-4', 'ring-primary', 'shadow-[0_0_20px_rgba(0,83,220,0.5)]');
+                else wrap?.classList.remove('ring-4', 'ring-primary', 'shadow-[0_0_20px_rgba(0,83,220,0.5)]');
+                
+                // Send signal to peers
+                Object.values(State.dataChannels).forEach(dc => {
+                    if (dc.readyState === 'open') dc.send(JSON.stringify({ type: 'cmd', action: 'talking', state: isTalking }));
+                });
+                
+                if (isTalking) State.activeSpeaker = State.sessionId;
+                this.updateSmartPiP();
+            },
             async joinMeeting() {
                 // Find the button to add a loading state
                 const btn = document.querySelector('button[onclick="App.joinMeeting()"]');
@@ -731,11 +709,13 @@
                         try {
                             // Try requesting both Video & Audio
                             State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                            this.startVolumeMeter(State.localStream);
                         } catch (camErr) {
                             console.warn("Video failed, trying audio only...", camErr);
                             try {
                                 // Try Audio Only
                                 State.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                                this.startVolumeMeter(State.localStream);
                                 UI.toast("Joined without video (Camera missing/blocked)");
                             } catch (micErr) {
                                 console.warn("Audio failed, joining as view-only...", micErr);
@@ -997,11 +977,20 @@
             },
 
             setPresetBg(src) {
+                UI.toast("Downloading High-Res Background...");
+                // Pre-activate AI so the UI responds immediately 
+                if (State.bgMode === 'none') this.setBgMode('blur'); 
+                
                 const img = new Image();
                 img.crossOrigin = "anonymous";
                 img.onload = () => {
                     State.bgImage = img;
                     this.setBgMode('image');
+                    UI.toast("Background Applied!");
+                };
+                img.onerror = () => {
+                    UI.toast("Failed to load background image.");
+                    this.setBgMode('blur'); // Fallback to blur
                 };
                 img.src = src;
             },
@@ -1413,12 +1402,28 @@
                                 alert("You have been kicked from the meeting.");
                                 App.leaveMeeting();
                             }
+                            if (data.action === 'talking') {
+                                const wrap = document.getElementById('wrapper-' + targetId);
+                                if (data.state) {
+                                    // Make Remote Video Glow!
+                                    wrap?.classList.add('ring-4', 'ring-primary', 'shadow-[0_0_20px_rgba(0,83,220,0.5)]');
+                                    State.activeSpeaker = targetId;
+                                    App.updateSmartPiP();
+                                } else {
+                                    wrap?.classList.remove('ring-4', 'ring-primary', 'shadow-[0_0_20px_rgba(0,83,220,0.5)]');
+                                    if (State.activeSpeaker === targetId) State.activeSpeaker = null;
+                                }
+                            }
                             if (data.action === 'pin' && data.target) {
+                                State.screenShareId = data.target; // Tracker for PiP
+                                App.updateSmartPiP();
                                 const wrap = document.getElementById('wrapper-' + data.target);
                                 if(wrap && !wrap.classList.contains('pinned')) App.pinVideo(wrap.id);
                                 wrap.classList.add('screen-share');
                             }
                             if (data.action === 'unpin') {
+                                State.screenShareId = null; // Tracker for PiP
+                                App.updateSmartPiP();
                                 document.querySelectorAll('.video-wrapper').forEach(w => { w.classList.remove('pinned', 'screen-share'); });
                                 App.updateLayout();
                             }
