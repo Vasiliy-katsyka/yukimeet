@@ -500,6 +500,9 @@
             isTalking: false,
             activeSpeaker: null,
             screenShareId: null,
+
+            isCopilotOpen: false,
+            
             // Drawing State
             isDrawingMode: false,
             isDrawing: false,
@@ -631,8 +634,6 @@
                     }
                 }
             },
-            // Add to State object
-            State.isCopilotOpen = false;
             
             // Add these functions inside the App object:
             toggleCopilot() {
