@@ -570,24 +570,6 @@
                     document.getElementById('sso-text').classList.add('text-error');
                     ssoBtn.onclick = App.ssoLogout;
                 }
-
-                // Add to App.init() function:
-                State.tiltX = 0;
-                State.tiltY = 0;
-                
-                // Track Mouse (Desktop)
-                window.addEventListener('mousemove', (e) => {
-                    State.tiltX = (e.clientX / window.innerWidth - 0.5) * 2; // Range: -1 to 1
-                    State.tiltY = (e.clientY / window.innerHeight - 0.5) * 2;
-                });
-                
-                // Track Device Orientation (Mobile Gyroscope)
-                window.addEventListener('deviceorientation', (e) => {
-                    if (e.gamma && e.beta) {
-                        State.tiltX = Math.max(-1, Math.min(1, e.gamma / 45)); 
-                        State.tiltY = Math.max(-1, Math.min(1, (e.beta - 45) / 45));
-                    }
-                });
                 
                 // If room ID in URL, auto-fill
                 const pathRoom = window.location.pathname.split('/').pop();
@@ -1138,68 +1120,6 @@
                 ctx.save();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Calculate Parallax Offsets
-                const maxOffset = 25; // How many pixels the background moves
-                const offsetX = State.tiltX * maxOffset;
-                const offsetY = State.tiltY * maxOffset;
-                
-                // 1. Draw the AI Human Mask
-                ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
-                
-                // 2. Keep the human sharp (Source In)
-                ctx.globalCompositeOperation = 'source-in';
-                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
-            
-                // 3. Optional: Add a 3D "Glass Reflection" overlaid on the human
-                // This makes the human look like they are behind a liquid glass panel
-                ctx.globalCompositeOperation = 'source-atop';
-                const gradient = ctx.createLinearGradient(
-                    canvas.width/2 + (offsetX*10), 0, 
-                    canvas.width/2 - (offsetX*10), canvas.height
-                );
-                gradient.addColorStop(0, `rgba(255, 255, 255, ${Math.abs(State.tiltX) * 0.15})`);
-                gradient.addColorStop(0.5, "rgba(255, 255, 255, 0)");
-                gradient.addColorStop(1, `rgba(0, 83, 220, ${Math.abs(State.tiltY) * 0.1})`); // Primary color reflection
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // 4. Draw what goes BEHIND the human (Destination Over)
-                ctx.globalCompositeOperation = 'destination-over';
-                
-                if (State.bgMode === 'blur') {
-                    ctx.filter = 'blur(15px)';
-                    // Draw slightly scaled up to prevent edges showing during parallax
-                    ctx.drawImage(results.image, -30 + offsetX, -30 + offsetY, canvas.width + 60, canvas.height + 60);
-                } else if (State.bgMode === 'image' && State.bgImage) {
-                    ctx.filter = 'none';
-                    const imgRatio = State.bgImage.width / State.bgImage.height;
-                    const canvasRatio = canvas.width / canvas.height;
-                    let dWidth, dHeight, dx, dy;
-            
-                    // Scale up by 1.1x to allow room for parallax shifting without seeing black borders
-                    if (canvasRatio > imgRatio) {
-                        dWidth = canvas.width * 1.1;
-                        dHeight = (canvas.width * 1.1) / imgRatio;
-                    } else {
-                        dHeight = canvas.height * 1.1;
-                        dWidth = (canvas.height * 1.1) * imgRatio;
-                    }
-                    
-                    dx = (canvas.width - dWidth) / 2 + offsetX;
-                    dy = (canvas.height - dHeight) / 2 + offsetY;
-                    
-                    ctx.drawImage(State.bgImage, dx, dy, dWidth, dHeight);
-                }
-                
-                ctx.restore();
-            },
-            /*onAiResults(results) {
-                const ctx = State.blurCtx;
-                const canvas = State.blurCanvas;
-                
-                ctx.save();
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
                 // 1. Draw the AI Human Mask
                 ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
                 
@@ -1233,7 +1153,7 @@
                 }
                 
                 ctx.restore();
-            },*/
+            },
             async toggleScreenShare() {
                 const localContainer = document.getElementById('wrapper-local');
                 const localVideo = document.getElementById('local-video');
