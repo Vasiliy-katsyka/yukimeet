@@ -146,7 +146,7 @@
         .color-btn.active { transform: scale(1.2); outline: 2px solid white; outline-offset: 2px; }
     </style>
 </head>
-<body class="font-body h-[100dvh] w-screen flex flex-col overflow-hidden text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<body class="font-body h-[100dvh] w-full flex flex-col overflow-y-auto overflow-x-hidden text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
     <!-- REQUIRED SVG FILTER FOR LIQUID GLASS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -202,7 +202,7 @@
                 </div>-->
 
                 <!-- Headlines -->
-                <h1 class="font-headline font-black text-6xl md:text-7xl lg:text-[80px] tracking-tighter text-slate-900 dark:text-white leading-[1.05] mb-6 drop-shadow-sm relative z-10">
+                <h1 class="font-headline font-black text-5xl md:text-7xl lg:text-[80px] tracking-tighter text-slate-900 dark:text-white leading-[1.05] mb-6 drop-shadow-sm relative z-10">
                     Clarity <br>
                     Meets <br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Connection.</span>
@@ -344,10 +344,36 @@
             </div>
             <!-- Remote Videos Inject Here -->
         </div>
-
+        
+        <!-- Gemini Copilot Panel -->
+        <div id="ai-copilot" class="absolute right-4 top-4 bottom-28 w-[90%] md:w-[350px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl z-[60] flex flex-col transition-transform duration-300 translate-x-[120%]">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-t-3xl">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-purple-500">temp_preferences_custom</span>
+                    <h3 class="font-headline font-bold text-sm">Meeting Helper AI</h3>
+                </div>
+                <button onclick="App.toggleCopilot()" class="text-slate-500 hover:text-red-500"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            
+            <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 space-y-3 text-sm flex flex-col">
+                <div class="bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-100 p-3 rounded-2xl rounded-tl-sm self-start max-w-[85%]">
+                    How can I help you? Ask me anything secretly!
+                </div>
+            </div>
+            
+            <div class="p-3 border-t border-slate-200 dark:border-slate-700">
+                <div class="relative">
+                    <input id="ai-input" type="text" placeholder="Type secretly..." class="w-full bg-slate-100 dark:bg-black/50 border-none rounded-xl pl-4 pr-10 py-3 text-sm focus:ring-2 focus:ring-purple-500 outline-none" onkeypress="if(event.key==='Enter') App.askGemini()">
+                    <button onclick="App.askGemini()" class="absolute right-2 top-1/2 -translate-y-1/2 text-purple-500 hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined">send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
         <!-- Unified Liquid Glass Navigation Bar -->
-        <nav class="liquid-glass absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex items-center z-50 px-2 py-1 md:py-2 w-[95%] md:w-max max-w-2xl">
-            <div class="flex gap-1 md:gap-2 items-center relative z-10 w-full justify-between md:justify-center">
+        <nav class="liquid-glass absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex items-center z-50 px-2 py-1 md:py-2 w-[95vw] md:w-max max-w-2xl overflow-x-auto no-scrollbar shadow-2xl">
+            <div class="flex gap-1 md:gap-2 items-center relative z-10 w-max md:w-full justify-start md:justify-center shrink-0 px-2">
                 
                 <button onclick="document.documentElement.classList.toggle('dark')" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px] dark:hidden">light_mode</span>
@@ -370,6 +396,11 @@
                 <button id="btn-bg" onclick="App.openBgModal()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span id="bg-icon" class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 0;">blur_on</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">AI BG</span>
+                </button>
+                
+                <button id="btn-copilot" onclick="App.toggleCopilot()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[50px] md:min-w-[65px]">
+                    <span class="material-symbols-outlined text-[22px] text-purple-500" style="font-variation-settings: 'FILL' 1;">temp_preferences_custom</span>
+                    <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Helper</span>
                 </button>
                 
                 <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
@@ -537,6 +568,24 @@
                     ssoBtn.onclick = App.ssoLogout;
                 }
 
+                // Add to App.init() function:
+                State.tiltX = 0;
+                State.tiltY = 0;
+                
+                // Track Mouse (Desktop)
+                window.addEventListener('mousemove', (e) => {
+                    State.tiltX = (e.clientX / window.innerWidth - 0.5) * 2; // Range: -1 to 1
+                    State.tiltY = (e.clientY / window.innerHeight - 0.5) * 2;
+                });
+                
+                // Track Device Orientation (Mobile Gyroscope)
+                window.addEventListener('deviceorientation', (e) => {
+                    if (e.gamma && e.beta) {
+                        State.tiltX = Math.max(-1, Math.min(1, e.gamma / 45)); 
+                        State.tiltY = Math.max(-1, Math.min(1, (e.beta - 45) / 45));
+                    }
+                });
+                
                 // If room ID in URL, auto-fill
                 const pathRoom = window.location.pathname.split('/').pop();
                 if(pathRoom && pathRoom.length > 2) document.getElementById('meet-id').value = pathRoom;
@@ -582,7 +631,49 @@
                     }
                 }
             },
-
+            // Add to State object
+            State.isCopilotOpen = false;
+            
+            // Add these functions inside the App object:
+            toggleCopilot() {
+                State.isCopilotOpen = !State.isCopilotOpen;
+                const panel = document.getElementById('ai-copilot');
+                if (State.isCopilotOpen) {
+                    panel.classList.remove('translate-x-[120%]');
+                    UI.toggleBtnStyle('btn-copilot', true, 'temp_preferences_custom', 'temp_preferences_custom');
+                } else {
+                    panel.classList.add('translate-x-[120%]');
+                    UI.toggleBtnStyle('btn-copilot', false, 'temp_preferences_custom', 'temp_preferences_custom');
+                }
+            },
+            
+            async askGemini() {
+                const input = document.getElementById('ai-input');
+                const box = document.getElementById('ai-chat-box');
+                const text = input.value.trim();
+                if (!text) return;
+            
+                // Add user message
+                box.innerHTML += `<div class="bg-primary text-white p-3 rounded-2xl rounded-tr-sm self-end max-w-[85%] ml-auto">${text}</div>`;
+                input.value = '';
+                box.scrollTop = box.scrollHeight;
+            
+                // Add thinking indicator
+                const thinkingId = 'think-' + Date.now();
+                box.innerHTML += `<div id="${thinkingId}" class="text-slate-400 text-xs mt-1 ml-2 flex items-center gap-1"><span class="material-symbols-outlined animate-spin text-[14px]">progress_activity</span> AI is thinking...</div>`;
+                box.scrollTop = box.scrollHeight;
+            
+                try {
+                    // Calling a lightweight stateless endpoint on your worker
+                    const res = await api('/api/meet/ai', { prompt: text });
+                    document.getElementById(thinkingId).remove();
+                    
+                    box.innerHTML += `<div class="bg-purple-100 dark:bg-purple-500/20 text-purple-900 dark:text-purple-100 p-3 rounded-2xl rounded-tl-sm self-start max-w-[85%] border border-purple-500/20 mt-2">${res.reply}</div>`;
+                    box.scrollTop = box.scrollHeight;
+                } catch(e) {
+                    document.getElementById(thinkingId).innerText = "❌ Failed to connect to AI.";
+                }
+            },
             updateSmartPiP(force = false) {
                 // Only change streams if PiP is currently open (or we are forcing initialization)
                 if (!document.pictureInPictureElement && !force) return;
@@ -1039,8 +1130,69 @@
                 };
                 processFrame();
             },
-
             onAiResults(results) {
+                const ctx = State.blurCtx;
+                const canvas = State.blurCanvas;
+                
+                ctx.save();
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Calculate Parallax Offsets
+                const maxOffset = 25; // How many pixels the background moves
+                const offsetX = State.tiltX * maxOffset;
+                const offsetY = State.tiltY * maxOffset;
+                
+                // 1. Draw the AI Human Mask
+                ctx.drawImage(results.segmentationMask, 0, 0, canvas.width, canvas.height);
+                
+                // 2. Keep the human sharp (Source In)
+                ctx.globalCompositeOperation = 'source-in';
+                ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+            
+                // 3. Optional: Add a 3D "Glass Reflection" overlaid on the human
+                // This makes the human look like they are behind a liquid glass panel
+                ctx.globalCompositeOperation = 'source-atop';
+                const gradient = ctx.createLinearGradient(
+                    canvas.width/2 + (offsetX*10), 0, 
+                    canvas.width/2 - (offsetX*10), canvas.height
+                );
+                gradient.addColorStop(0, `rgba(255, 255, 255, ${Math.abs(State.tiltX) * 0.15})`);
+                gradient.addColorStop(0.5, "rgba(255, 255, 255, 0)");
+                gradient.addColorStop(1, `rgba(0, 83, 220, ${Math.abs(State.tiltY) * 0.1})`); // Primary color reflection
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // 4. Draw what goes BEHIND the human (Destination Over)
+                ctx.globalCompositeOperation = 'destination-over';
+                
+                if (State.bgMode === 'blur') {
+                    ctx.filter = 'blur(15px)';
+                    // Draw slightly scaled up to prevent edges showing during parallax
+                    ctx.drawImage(results.image, -30 + offsetX, -30 + offsetY, canvas.width + 60, canvas.height + 60);
+                } else if (State.bgMode === 'image' && State.bgImage) {
+                    ctx.filter = 'none';
+                    const imgRatio = State.bgImage.width / State.bgImage.height;
+                    const canvasRatio = canvas.width / canvas.height;
+                    let dWidth, dHeight, dx, dy;
+            
+                    // Scale up by 1.1x to allow room for parallax shifting without seeing black borders
+                    if (canvasRatio > imgRatio) {
+                        dWidth = canvas.width * 1.1;
+                        dHeight = (canvas.width * 1.1) / imgRatio;
+                    } else {
+                        dHeight = canvas.height * 1.1;
+                        dWidth = (canvas.height * 1.1) * imgRatio;
+                    }
+                    
+                    dx = (canvas.width - dWidth) / 2 + offsetX;
+                    dy = (canvas.height - dHeight) / 2 + offsetY;
+                    
+                    ctx.drawImage(State.bgImage, dx, dy, dWidth, dHeight);
+                }
+                
+                ctx.restore();
+            }
+            /*onAiResults(results) {
                 const ctx = State.blurCtx;
                 const canvas = State.blurCanvas;
                 
@@ -1080,7 +1232,7 @@
                 }
                 
                 ctx.restore();
-            },
+            },*/
             async toggleScreenShare() {
                 const localContainer = document.getElementById('wrapper-local');
                 const localVideo = document.getElementById('local-video');
