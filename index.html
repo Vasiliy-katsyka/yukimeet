@@ -63,8 +63,9 @@
             background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
             background-attachment: fixed;
         }
+        /* A much calmer, near-black slate gradient */
         .dark body {
-            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            background: linear-gradient(135deg, #09090b 0%, #18181b 100%);
         }
 
         /* EXACT LIQUID GLASS CSS REQUESTED */
@@ -152,6 +153,14 @@
         
         .tool-btn.active { background: #0053dc !important; color: white !important; }
         .color-btn.active { transform: scale(1.2); outline: 2px solid white; outline-offset: 2px; }
+
+        #screen-room {
+            /* Pure dark neutral background for the meeting */
+            background-color: transparent; 
+        }
+        .dark #screen-room.active {
+            background-color: #0f0f11; /* Very deep gray, essentially black */
+        }
     </style>
 </head>
 <body class="font-body h-[100dvh] w-full flex flex-col overflow-hidden text-slate-800 dark:text-slate-200 transition-colors duration-300">
@@ -542,7 +551,7 @@
                     span.textContent = iconOff;
                     span.style.fontVariationSettings = "'FILL' 0";
                 } else {
-                    btn.classList.add('text-primary', 'dark:text-blue-400');
+                    btn.classList.add('text-primary', 'dark:text-white');
                     btn.classList.remove('text-error');
                     span.textContent = icon;
                     span.style.fontVariationSettings = "'FILL' 1";
@@ -745,7 +754,7 @@
             broadcastTalking(isTalking) {
                 const wrap = document.getElementById('wrapper-local');
                 // Make Local Video Glow!
-                if (isTalking) wrap?.classList.add('ring-4', 'ring-primary', 'shadow-[0_0_20px_rgba(0,83,220,0.5)]');
+                if (isTalking) wrap?.classList.add('ring-2', 'ring-white/80', 'dark:ring-white/50');
                 else wrap?.classList.remove('ring-4', 'ring-primary', 'shadow-[0_0_20px_rgba(0,83,220,0.5)]');
                 
                 // Send signal to peers
