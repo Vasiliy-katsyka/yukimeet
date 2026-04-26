@@ -394,7 +394,7 @@
         <nav class="liquid-glass absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex items-center z-50 px-2 py-1 md:py-2 w-[95vw] md:w-max max-w-2xl overflow-x-auto no-scrollbar shadow-2xl">
             <div class="flex gap-1 md:gap-2 items-center relative z-10 w-max md:w-full justify-start md:justify-center shrink-0 px-2">
                 
-                <button onclick="document.documentElement.classList.toggle('dark')" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button onclick="document.documentElement.classList.toggle('dark')" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px] dark:hidden">light_mode</span>
                     <span class="material-symbols-outlined text-[22px] hidden dark:block text-yellow-400">dark_mode</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Theme</span>
@@ -402,38 +402,38 @@
                 
                 <div class="h-8 w-[1px] bg-slate-300 dark:bg-slate-600 mx-0.5"></div>
 
-                <button id="btn-mic" onclick="App.toggleMic()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button id="btn-mic" onclick="App.toggleMic()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">mic</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Mic</span>
                 </button>
 
-                <button id="btn-cam" onclick="App.toggleCam()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button id="btn-cam" onclick="App.toggleCam()" class="flex flex-col items-center justify-center text-primary dark:text-blue-400 p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">videocam</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Camera</span>
                 </button>
                 
-                <button id="btn-bg" onclick="App.openBgModal()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button id="btn-bg" onclick="App.openBgModal()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span id="bg-icon" class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 0;">blur_on</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">AI BG</span>
                 </button>
                 
-                <button id="btn-copilot" onclick="App.toggleCopilot()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[50px] md:min-w-[65px]">
+                <button id="btn-copilot" onclick="App.toggleCopilot()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[50px] md:min-w-[65px]">
                     <!-- Removed text-purple-500, set FILL to 0 -->
                     <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 0;">temp_preferences_custom</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Helper</span>
                 </button>
                 
-                <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button id="btn-share" onclick="App.toggleScreenShare()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]">present_to_all</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Share</span>
                 </button>
 
-                <button id="btn-draw" onclick="App.toggleDrawing()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button id="btn-draw" onclick="App.toggleDrawing()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]">draw</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">Draw</span>
                 </button>
                 
-                <button id="btn-pip" onclick="App.toggleSmartPiP()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/60 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
+                <button id="btn-pip" onclick="App.toggleSmartPiP()" class="flex flex-col items-center justify-center p-2 md:p-3 hover:bg-black/10 dark:hover:bg-white/10 rounded-[20px] transition-all active:scale-95 min-w-[55px] md:min-w-[65px]">
                     <span class="material-symbols-outlined text-[22px]">picture_in_picture_alt</span>
                     <span class="text-[9px] font-bold mt-1 uppercase tracking-tighter opacity-70">PiP</span>
                 </button>
