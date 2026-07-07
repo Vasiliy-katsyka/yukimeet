@@ -1035,10 +1035,16 @@
             async uploadMeetAvatar(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-
+            
+                // Guard: Prevent guest users from attempting authenticated uploads
+                if (!State.token) {
+                    UI.toast("Please sign in with YukiChat to upload a custom profile photo.");
+                    return;
+                }
+            
                 const formData = new FormData();
                 formData.append('file', file);
-
+            
                 try {
                     UI.toast("Uploading target profile photo...");
                     const res = await fetch(`${API_URL}/api/upload`, {
@@ -1046,13 +1052,27 @@
                         headers: { 'Authorization': `Bearer ${State.token}` },
                         body: formData
                     });
+                    
+                    // Handle expired or invalidated sessions gracefully
+                    if (res.status === 401) {
+                        localStorage.removeItem('meet_t');
+                        State.token = null;
+                        UI.toast("Session expired. Please sign in again.");
+                        setTimeout(() => window.location.reload(), 1500);
+                        return;
+                    }
+            
                     const d = await res.json();
                     if (d.success) {
                         State.profileAvatar = d.url;
                         document.getElementById('profile-pfp-preview').src = d.url;
                         UI.toast("Profile Photo uploaded successfully");
+                    } else {
+                        UI.toast(d.error || "Media upload failed");
                     }
-                } catch(e) { UI.toast("Media upload failed"); }
+                } catch(e) { 
+                    UI.toast("Media upload failed"); 
+                }
             },
 
             // --- SCHEDULER & INVITE ---
