@@ -501,7 +501,7 @@
                     <!-- Avatar Upload -->
                     <div class="flex items-center gap-4 mb-6">
                         <div class="relative w-20 h-20 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-300 dark:border-slate-700">
-                            <img id="profile-pfp-preview" src="https://via.placeholder.com/150/0053dc/FFFFFF?text=Y" class="w-full h-full object-cover">
+                            <img id="profile-pfp-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-full h-full object-cover">
                         </div>
                         <div>
                             <label class="bg-primary text-white text-xs font-bold py-2 px-4 rounded-xl cursor-pointer hover:bg-primary-container transition-colors inline-block mb-1">
@@ -536,9 +536,10 @@
                             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">forum</span>
                             <input id="sched-title" class="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-slate-700/80 rounded-xl pl-12 pr-5 py-3 focus:ring-2 focus:ring-primary/50 outline-none transition-all font-semibold text-slate-800 dark:text-white shadow-sm" placeholder="Meeting Name/Topic" type="text"/>
                         </div>
+                        <!-- Replace your current scheduler datetime-local input container with this: -->
                         <div class="relative">
-                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">schedule</span>
-                            <input id="sched-datetime" class="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-slate-700/80 rounded-xl pl-12 pr-5 py-3 focus:ring-2 focus:ring-primary/50 outline-none transition-all font-semibold text-slate-800 dark:text-white shadow-sm" type="datetime-local"/>
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">schedule</span>
+                            <input id="sched-datetime" onclick="this.showPicker()" class="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-slate-700/80 rounded-xl pl-12 pr-10 py-3 focus:ring-2 focus:ring-primary/50 outline-none transition-all font-semibold text-slate-800 dark:text-white shadow-sm cursor-pointer" type="datetime-local"/>
                         </div>
                         <button onclick="App.generateScheduledInvite()" class="bg-primary text-white font-bold py-3 px-6 rounded-xl text-sm w-full hover:shadow-lg hover:scale-105 active:scale-95 transition-all">Generate Invitation Link</button>
                     </div>
@@ -1014,9 +1015,9 @@
 
             loadProfilePage() {
                 document.getElementById('profile-name').value = State.profileName;
-                if (State.profileAvatar) {
-                    document.getElementById('profile-pfp-preview').src = State.profileAvatar;
-                }
+                const pfpImg = document.getElementById('profile-pfp-preview');
+                const placeholder = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
+                pfpImg.src = State.profileAvatar || placeholder;
             },
 
             async saveMeetProfile() {
