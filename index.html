@@ -829,11 +829,21 @@
             }
         };
 
+        // Replace your existing "const api" block with this:
         const api = async (path, body=null) => {
             const opt = { method: body ? 'POST' : 'GET', headers: {} };
             if (State.token) opt.headers['Authorization'] = `Bearer ${State.token}`;
             if (body) { opt.headers['Content-Type']='application/json'; opt.body=JSON.stringify(body); }
             const res = await fetch(API_URL + path, opt);
+            
+            // Automatically clear expired/invalid sessions and refresh the page
+            if (res.status === 401) {
+                localStorage.removeItem('meet_t');
+                State.token = null;
+                window.location.reload();
+                throw new Error('Session expired. Please sign in again.');
+            }
+        
             const d = await res.json();
             if (!res.ok) throw new Error(d.error || 'API Error');
             return d;
