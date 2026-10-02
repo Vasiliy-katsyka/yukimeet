@@ -56,21 +56,22 @@
             user-select: none;
         }
 
-        /* Ambient 3D Perspective Ground Grid (Concept 4 Background) */
+        /* Ambient 3D Perspective Ground Grid */
         .spatial-grid-floor {
             position: absolute;
-            bottom: -10%;
-            left: -20%;
-            right: -20%;
-            height: 70vh;
+            bottom: -5%;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 60vh;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 54px 54px;
-            transform: perspective(600px) rotateX(62deg);
+                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            transform: perspective(500px) rotateX(60deg);
             transform-origin: bottom center;
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 90%, black 15%, transparent 85%);
-            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 90%, black 15%, transparent 85%);
+            mask-image: radial-gradient(ellipse 65% 50% at 50% 90%, black 15%, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse 65% 50% at 50% 90%, black 15%, transparent 85%);
             pointer-events: none;
             z-index: 1;
         }
@@ -78,71 +79,101 @@
         /* Ambient Core Light Aura */
         .ambient-core-glow {
             position: absolute;
-            top: 48%;
+            top: 45%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70vw;
-            max-width: 900px;
-            height: 60vh;
-            max-height: 600px;
-            background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.06) 40%, transparent 75%);
+            width: 80vw;
+            max-width: 800px;
+            height: 50vh;
+            max-height: 500px;
+            background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.04) 45%, transparent 75%);
             filter: blur(80px);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Concept 4 Floating Squircle Video Cards */
+        /* Responsive Video Tiles */
         .video-wrapper { 
             position: relative; 
             background: #0d0e15; 
-            border-radius: 28px; 
+            border-radius: 20px; 
             overflow: hidden; 
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 25px 50px -12px rgba(0, 0, 0, 0.85);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             cursor: pointer;
-            aspect-ratio: 4/3;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (min-width: 768px) {
+            .video-wrapper { border-radius: 24px; }
         }
         .video-wrapper video { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-            transition: 0.3s ease; 
+            transition: 0.2s ease; 
         }
         .video-wrapper video.mirrored { transform: scaleX(-1); }
         .video-wrapper.screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
         
         /* Active Speaker Halo */
         .video-wrapper.is-speaking {
-            box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.8), 0 0 40px rgba(99, 102, 241, 0.3), 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.9), 0 0 30px rgba(99, 102, 241, 0.35);
         }
 
-        /* Pinned Layout */
-        .video-wrapper.pinned {
-            width: 100% !important; 
-            height: calc(100% - 110px) !important;
-            aspect-ratio: auto;
-            z-index: 10; 
-            order: -1;
+        /* Pinned Spotlight State */
+        #video-grid.is-pinned {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+        #video-grid.is-pinned .video-wrapper.pinned {
+            flex: 1 1 0% !important;
+            width: 100% !important;
+            max-height: calc(100% - 100px) !important;
+            order: 1 !important;
+        }
+        #video-grid.is-pinned .video-wrapper:not(.pinned) {
+            flex: 0 0 85px !important;
+            width: 120px !important;
+            height: 85px !important;
+            border-radius: 14px !important;
+        }
+        #video-grid.is-pinned .thumbs-strip {
+            order: 2 !important;
+            display: flex !important;
+            gap: 10px !important;
+            overflow-x: auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-bottom: 4px !important;
+            justify-content: center !important;
         }
 
-        /* Concept 4 Kinetic Floating Dock */
+        /* Mobile-Optimized Floating Dock */
         .kinetic-dock {
-            background: rgba(13, 14, 21, 0.72);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            background: rgba(13, 14, 21, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
             border-radius: 9999px;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: calc(100vw - 24px);
+            overflow-x: auto;
         }
         
         .kinetic-dock.idle-dim {
-            opacity: 0.25;
-            transform: translateY(8px) scale(0.96);
+            opacity: 0.35;
+            transform: translateY(6px);
         }
         .kinetic-dock:hover {
             opacity: 1 !important;
-            transform: translateY(0) scale(1) !important;
+            transform: translateY(0) !important;
         }
 
         .kinetic-btn {
@@ -150,30 +181,35 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
             border-radius: 9999px;
-            color: rgba(255, 255, 255, 0.65);
+            color: rgba(255, 255, 255, 0.7);
             background: transparent;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        @media (min-width: 640px) {
+            .kinetic-btn { width: 44px; height: 44px; min-width: 44px; }
+        }
         .kinetic-btn:hover {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.09);
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
         }
         .kinetic-btn:active {
             transform: scale(0.92);
         }
         .kinetic-btn.active {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.15);
         }
         .kinetic-btn.is-danger {
             color: #f43f5e;
+            background: rgba(244, 63, 94, 0.12);
         }
         .kinetic-btn.is-danger:hover {
-            background: rgba(244, 63, 94, 0.15);
+            background: rgba(244, 63, 94, 0.25);
+            color: #ffffff;
         }
 
         /* Screen States */
@@ -182,7 +218,8 @@
             inset: 0; 
             width: 100%;
             height: 100dvh;
-            transition: opacity 0.35s ease, transform 0.35s ease; 
+            overflow-x: hidden;
+            transition: opacity 0.3s ease; 
             opacity: 0; 
             pointer-events: none; 
             z-index: 1; 
@@ -285,70 +322,70 @@
             </div>
         </header>
 
-        <!-- Concept 4 Hero Headline -->
+        <!-- Hero Section -->
         <section class="max-w-4xl w-full mx-auto text-center py-20 md:py-28 flex flex-col items-center z-10">
             <h1 class="font-headline font-bold text-5xl md:text-7xl tracking-[-0.04em] text-white leading-[1.08] mb-6">
-                Engage, <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-slate-300 to-slate-500">Seamlessly.</span>
+                Video meetings, <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-slate-300 to-slate-500">made effortless.</span>
             </h1>
             <p class="font-body text-base md:text-lg text-slate-400 max-w-xl mb-10 leading-relaxed font-normal">
-                Plus Jakarta Sans, Instrument Sans. High-fidelity spatial peer-to-peer meetings with zero-latency vector canvas and ambient kinetic controls.
+                Crystal clear calls with an interactive whiteboard, seamless screen sharing, and no downloads required.
             </p>
             <div class="flex items-center gap-4">
-                <button onclick="App.navigate('/join')" class="bg-white text-black font-semibold text-sm px-6 py-3.5 rounded-full hover:bg-slate-200 transition-all flex items-center gap-2 shadow-2xl shadow-white/10">
-                    Start Instant Meeting <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                <button onclick="App.navigate('/join')" class="bg-white text-black font-semibold text-sm px-6 py-3.5 rounded-full hover:bg-slate-200 transition-all flex items-center gap-2 shadow-xl shadow-white/10">
+                    Start a Meeting <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </button>
                 <button onclick="document.getElementById('bento-features').scrollIntoView({behavior: 'smooth'})" class="bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white text-sm font-semibold px-6 py-3.5 rounded-full transition-all">
-                    Architecture
+                    Features
                 </button>
             </div>
         </section>
 
-        <!-- Spatial Feature Cards -->
+        <!-- Feature Cards -->
         <section id="bento-features" class="max-w-5xl w-full mx-auto py-16 z-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div class="spatial-card p-6 md:col-span-2 flex flex-col justify-between min-h-[300px]">
                     <div>
-                        <span class="text-[11px] font-semibold text-accent uppercase tracking-wider mb-2 block">Zero Latency</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Real-time Vector Overlay</h3>
-                        <p class="text-xs text-slate-400">Sketch over shared screens or user tiles in sync without lag or encoding artifacts.</p>
+                        <span class="text-[11px] font-semibold text-accent uppercase tracking-wider mb-2 block">Live Tools</span>
+                        <h3 class="font-headline font-bold text-xl text-white mb-2">Interactive Whiteboard</h3>
+                        <p class="text-xs text-slate-400">Sketch ideas, draw diagrams, and annotate directly over shared screens with everyone.</p>
                     </div>
                     <div class="relative w-full h-[160px] bg-black/40 border border-white/5 rounded-2xl overflow-hidden cursor-crosshair mt-4">
                         <canvas id="sandbox-canvas" class="absolute inset-0 w-full h-full"></canvas>
-                        <button onclick="App.clearSandbox()" class="absolute bottom-3 right-3 bg-white/10 text-white text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/20 transition-all">Clear Canvas</button>
+                        <button onclick="App.clearSandbox()" class="absolute bottom-3 right-3 bg-white/10 text-white text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/20 transition-all">Clear Board</button>
                     </div>
                 </div>
 
                 <div class="spatial-card p-6 flex flex-col justify-between">
                     <div>
-                        <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider mb-2 block">Isolated State</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Dedicated Profile</h3>
-                        <p class="text-xs text-slate-400">Save custom call identities and media preferences without interfering with your YukiChat credentials.</p>
+                        <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider mb-2 block">Personal</span>
+                        <h3 class="font-headline font-bold text-xl text-white mb-2">Custom Profile</h3>
+                        <p class="text-xs text-slate-400">Set your name and photo so attendees know who is in the room.</p>
                     </div>
                     <div class="h-10 border-t border-white/10 flex items-center justify-between mt-6">
-                        <span class="text-[11px] text-slate-500 font-mono">ENCRYPTED STORAGE</span>
-                        <span class="material-symbols-outlined text-slate-500 text-[16px]">lock</span>
+                        <span class="text-[11px] text-slate-500 font-mono">SAVED LOCALLY</span>
+                        <span class="material-symbols-outlined text-slate-500 text-[16px]">account_box</span>
                     </div>
                 </div>
 
                 <div class="spatial-card p-6 flex flex-col justify-between">
                     <div>
-                        <span class="text-[11px] font-semibold text-indigo-400 uppercase tracking-wider mb-2 block">Atmosphere</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Kinetic Aesthetics</h3>
-                        <p class="text-xs text-slate-400 mb-4">A dark-field interface tailored to reduce eye fatigue across multi-hour syncs.</p>
+                        <span class="text-[11px] font-semibold text-indigo-400 uppercase tracking-wider mb-2 block">Comfort</span>
+                        <h3 class="font-headline font-bold text-xl text-white mb-2">Easy on Eyes</h3>
+                        <p class="text-xs text-slate-400 mb-4">Focused dark mode crafted for long meetings and team reviews.</p>
                     </div>
                     <input type="range" id="theme-slider" min="0" max="1" step="1" value="1" class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer" oninput="App.sliderThemeChange(this.value)">
                 </div>
 
                 <div class="spatial-card p-6 md:col-span-2 flex flex-col justify-between">
                     <div>
-                        <span class="text-[11px] font-semibold text-purple-400 uppercase tracking-wider mb-2 block">True P2P</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Zero Client Overhead</h3>
-                        <p class="text-xs text-slate-400">Connect through secure WebSockets and WebRTC mesh pipelines straight inside your browser.</p>
+                        <span class="text-[11px] font-semibold text-purple-400 uppercase tracking-wider mb-2 block">Privacy</span>
+                        <h3 class="font-headline font-bold text-xl text-white mb-2">Direct & Instant</h3>
+                        <p class="text-xs text-slate-400">Calls connect directly between users right in your browser. Nothing to install.</p>
                     </div>
                     <div class="flex gap-4 mt-6">
-                        <span class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> WebRTC STUN/TURN</span>
-                        <span class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> MediaPipe Blur</span>
+                        <span class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Screen Sharing</span>
+                        <span class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Background Blur</span>
                     </div>
                 </div>
             </div>
@@ -356,7 +393,7 @@
 
         <!-- Footer -->
         <footer class="max-w-5xl w-full mx-auto text-center py-12 border-t border-white/5 text-[11px] text-slate-600 z-10 font-mono">
-            YUKIMEET — SPATIAL ENGINE v3.0
+            YUKIMEET
         </footer>
     </main>
 
@@ -368,16 +405,16 @@
         <div class="ambient-core-glow"></div>
 
         <div class="w-full max-w-3xl spatial-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
-            <!-- Left: Device Staging -->
+            <!-- Left: Camera Preview -->
             <div class="flex flex-col justify-between">
                 <div>
-                    <h3 class="font-headline font-bold text-lg text-white mb-1">Hardware Setup</h3>
-                    <p class="text-xs text-slate-400 mb-4">Calibrate your video and audio prior to connecting.</p>
+                    <h3 class="font-headline font-bold text-lg text-white mb-1">Camera & Mic Check</h3>
+                    <p class="text-xs text-slate-400 mb-4">Preview how you'll look before jumping in.</p>
                 </div>
                 <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 mb-4">
                     <video id="preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
                     <div class="absolute bottom-3 left-3 right-3 h-1.5 bg-white/10 backdrop-blur-md rounded-full overflow-hidden">
-                        <div id="preview-volume" class="h-full bg-white transition-all duration-75" style="width: 0%"></div>
+                        <div id="preview-volume" class="h-full bg-emerald-400 transition-all duration-75" style="width: 0%"></div>
                     </div>
                 </div>
                 <div class="space-y-2">
@@ -386,32 +423,32 @@
                 </div>
             </div>
 
-            <!-- Right: Action Form -->
+            <!-- Right: Room Details -->
             <div class="flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8">
                 <div>
                     <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-white text-[20px]">door_open</span>
                     </div>
-                    <h2 class="font-headline font-bold text-xl text-white mb-1">Enter Room</h2>
-                    <p class="text-xs text-slate-400 mb-6">Choose a room ID and your display alias.</p>
+                    <h2 class="font-headline font-bold text-xl text-white mb-1">Join Room</h2>
+                    <p class="text-xs text-slate-400 mb-6">Enter a room name and your name.</p>
                     
                     <div class="space-y-3">
-                        <input id="meet-id" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Meeting ID" type="text"/>
+                        <input id="meet-id" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Room Name (e.g. design-sync)" type="text"/>
                         
                         <div id="guest-name-container">
-                            <input id="guest-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Your Display Name" type="text"/>
+                            <input id="guest-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Your Name" type="text"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-3 pt-6">
-                    <button onclick="App.joinMeeting()" class="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
-                        Enter Meeting Space
-                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    <button id="btn-join-main" onclick="App.joinMeeting()" class="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
+                        <span id="btn-join-text">Join Call</span>
+                        <span id="btn-join-icon" class="material-symbols-outlined text-[16px]">arrow_forward</span>
                     </button>
                     <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
                         <span class="material-symbols-outlined text-[16px]" id="sso-icon">account_circle</span>
-                        <span id="sso-text">Sign in with YukiChat</span>
+                        <span id="sso-text">Sign in to Account</span>
                     </button>
                 </div>
             </div>
@@ -445,21 +482,20 @@
 
             <div class="flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8">
                 <div>
-                    <span class="text-[11px] font-semibold text-accent uppercase tracking-wider mb-2 block">Direct Access Link</span>
-                    <h2 class="font-headline font-bold text-xl text-white mb-1">Join Room</h2>
-                    <p class="text-xs text-slate-400 font-mono mb-6">Target: <span id="deep-link-target" class="text-white font-bold"></span></p>
+                    <span class="text-[11px] font-semibold text-accent uppercase tracking-wider mb-2 block">Invited Room</span>
+                    <h2 class="font-headline font-bold text-xl text-white mb-1">Join Meeting</h2>
+                    <p class="text-xs text-slate-400 mb-6">Room: <span id="deep-link-target" class="text-white font-semibold"></span></p>
 
                     <div id="deep-guest-container">
-                        <input id="deep-guest-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Your Display Name" type="text"/>
+                        <input id="deep-guest-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Your Name" type="text"/>
                     </div>
                 </div>
 
                 <div class="space-y-3 pt-6">
-                    <button onclick="App.joinMeeting(true)" class="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
-                        Enter Meeting Space
-                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    <button id="btn-deep-join" onclick="App.joinMeeting(true)" class="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
+                        <span id="btn-deep-text">Join Call</span>
+                        <span id="btn-deep-icon" class="material-symbols-outlined text-[16px]">arrow_forward</span>
                     </button>
-                    <p id="deep-profile-notice" class="text-center text-[10px] text-slate-500">Connecting via P2P encrypted channel</p>
                 </div>
             </div>
         </div>
@@ -564,50 +600,48 @@
             <button onclick="App.clearDraw()" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-rose-400" title="Clear Canvas"><span class="material-symbols-outlined text-[18px]">delete</span></button>
         </div>
 
-        <!-- Concept 4 Stage: Centered Floating Cards Cluster -->
-        <div class="flex-1 w-full max-w-6xl mx-auto flex items-center justify-center p-6 pb-28 z-10">
-            <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center items-center gap-5">
-                <!-- Local Tile -->
+        <!-- Main Meeting Stage -->
+        <div class="flex-1 w-full max-w-7xl mx-auto flex flex-col justify-center items-center p-3 pt-20 pb-24 md:p-6 md:pt-20 md:pb-24 z-10 min-h-0 overflow-hidden">
+            <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center items-center gap-3 md:gap-4 overflow-hidden">
+                <!-- Local Video Tile -->
                 <div id="wrapper-local" class="video-wrapper" draggable="true" onclick="App.pinVideo('wrapper-local')">
                     <video id="local-video" autoplay playsinline muted class="mirrored"></video>
                     
-                    <!-- Frosted Avatar Fallback -->
                     <div id="avatar-overlay-local" class="absolute inset-0 flex items-center justify-center bg-[#0d0e15] hidden">
-                        <div id="avatar-circle-local" class="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold text-white border border-white/10 overflow-hidden shadow-2xl">
+                        <div id="avatar-circle-local" class="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold text-white border border-white/10 overflow-hidden shadow-2xl">
                             <img id="avatar-img-local" class="w-full h-full object-cover hidden">
                             <span id="avatar-letter-local">Y</span>
                         </div>
                     </div>
                     
-                    <!-- Micro Tile Badge -->
-                    <div id="badge-local" class="absolute bottom-3 left-3 flex items-center gap-1.5 bg-black/50 backdrop-blur-md text-white/90 px-2.5 py-1 rounded-full text-[11px] font-medium border border-white/10">
-                        <span id="local-mic-icon" class="material-symbols-outlined text-[13px] text-emerald-400">mic</span>
+                    <div id="badge-local" class="absolute bottom-2.5 left-2.5 md:bottom-3 md:left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white/90 px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-[11px] font-medium border border-white/10">
+                        <span id="local-mic-icon" class="material-symbols-outlined text-[12px] md:text-[13px] text-emerald-400">mic</span>
                         <span id="local-name-display">You</span>
-                        <span id="local-admin-badge" class="ml-1 bg-white/10 px-1.5 py-0.2 rounded text-[9px] font-mono uppercase hidden">Host</span>
+                        <span id="local-admin-badge" class="ml-1 bg-white/10 px-1 py-0.2 rounded text-[8px] md:text-[9px] font-mono uppercase hidden">Host</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Gemini Copilot Panel -->
-        <div id="ai-copilot" class="absolute right-6 top-6 bottom-28 w-[90%] md:w-[320px] spatial-card z-[60] flex flex-col transition-transform duration-300 translate-x-[130%]">
+        <!-- Assistant Panel -->
+        <div id="ai-copilot" class="absolute right-3 top-20 bottom-24 w-[calc(100vw-24px)] max-w-[340px] spatial-card z-[60] flex flex-col transition-transform duration-300 translate-x-[120%]">
             <div class="p-4 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-accent text-[18px]">temp_preferences_custom</span>
-                    <h3 class="font-headline font-bold text-xs text-white">Copilot Note</h3>
+                    <span class="material-symbols-outlined text-accent text-[18px]">auto_awesome</span>
+                    <h3 class="font-headline font-bold text-xs text-white">Meeting Assistant</h3>
                 </div>
                 <button onclick="App.toggleCopilot()" class="text-slate-400 hover:text-white"><span class="material-symbols-outlined text-[18px]">close</span></button>
             </div>
             
             <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs flex flex-col">
                 <div class="bg-white/5 border border-white/10 text-slate-300 p-3 rounded-2xl self-start max-w-[90%]">
-                    Private session assistant ready. Inquire about topics discussed or ask questions discretely.
+                    Ask questions or get quick notes on topics discussed.
                 </div>
             </div>
             
             <div class="p-3 border-t border-white/10">
                 <div class="relative">
-                    <input id="ai-input" type="text" placeholder="Type prompt..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs text-white focus:outline-none focus:border-accent" onkeypress="if(event.key==='Enter') App.askGemini()">
+                    <input id="ai-input" type="text" placeholder="Type a message..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs text-white focus:outline-none focus:border-accent" onkeypress="if(event.key==='Enter') App.askGemini()">
                     <button onclick="App.askGemini()" class="absolute right-2 top-1/2 -translate-y-1/2 text-accent">
                         <span class="material-symbols-outlined text-[16px]">send</span>
                     </button>
@@ -615,53 +649,51 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- CONCEPT 4: KINETIC FLOATING DOCK & ISLAND   -->
-        <!-- ========================================== -->
-        <div id="dock-container" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 pointer-events-auto">
+        <!-- Floating Meeting Controls -->
+        <div id="dock-container" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 pointer-events-auto max-w-[96vw]">
             
-            <!-- Dynamic Island Context Indicator (As shown in Concept 4: "Cortne") -->
-            <div id="status-pill" class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-glass border border-white/10 backdrop-blur-xl text-[11px] font-medium text-slate-300 shadow-xl transition-all duration-300">
+            <!-- Speaker Indicator -->
+            <div id="status-pill" class="hidden items-center gap-2 px-3 py-1 rounded-full bg-surface-glass border border-white/10 backdrop-blur-xl text-[11px] font-medium text-slate-300 shadow-xl transition-all duration-300">
                 <span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span id="status-text">Encrypted P2P Session</span>
+                <span id="status-text"></span>
             </div>
 
-            <!-- Kinetic Minimal Dock -->
-            <nav id="kinetic-nav" class="kinetic-dock flex items-center gap-1.5 px-3 py-2">
+            <!-- Kinetic Control Bar -->
+            <nav id="kinetic-nav" class="kinetic-dock flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2">
                 <button id="btn-mic" onclick="App.toggleMic()" class="kinetic-btn" title="Toggle Mic">
-                    <span class="material-symbols-outlined text-[20px]">mic</span>
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">mic</span>
                 </button>
 
                 <button id="btn-cam" onclick="App.toggleCam()" class="kinetic-btn" title="Toggle Camera">
-                    <span class="material-symbols-outlined text-[20px]">videocam</span>
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">videocam</span>
                 </button>
 
-                <div class="w-[1px] h-5 bg-white/10 mx-1"></div>
+                <div class="w-[1px] h-4 bg-white/10 mx-0.5 sm:mx-1"></div>
 
                 <button id="btn-share" onclick="App.toggleScreenShare()" class="kinetic-btn" title="Share Screen">
-                    <span class="material-symbols-outlined text-[20px]">present_to_all</span>
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">present_to_all</span>
                 </button>
 
-                <button id="btn-draw" onclick="App.toggleDrawing()" class="kinetic-btn" title="Draw Canvas">
-                    <span class="material-symbols-outlined text-[20px]">gesture</span>
+                <button id="btn-draw" onclick="App.toggleDrawing()" class="kinetic-btn" title="Draw Board">
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">gesture</span>
                 </button>
 
-                <button id="btn-bg" onclick="App.openBgModal()" class="kinetic-btn" title="Virtual Background">
-                    <span class="material-symbols-outlined text-[20px]">blur_on</span>
+                <button id="btn-bg" onclick="App.openBgModal()" class="kinetic-btn" title="Background">
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">blur_on</span>
                 </button>
 
-                <button id="btn-copilot" onclick="App.toggleCopilot()" class="kinetic-btn" title="AI Copilot">
-                    <span class="material-symbols-outlined text-[20px]">temp_preferences_custom</span>
+                <button id="btn-copilot" onclick="App.toggleCopilot()" class="kinetic-btn" title="Assistant">
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">auto_awesome</span>
                 </button>
 
                 <button id="btn-pip" onclick="App.toggleSmartPiP()" class="kinetic-btn" title="Picture in Picture">
-                    <span class="material-symbols-outlined text-[20px]">picture_in_picture_alt</span>
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">picture_in_picture_alt</span>
                 </button>
 
-                <div class="w-[1px] h-5 bg-white/10 mx-1"></div>
+                <div class="w-[1px] h-4 bg-white/10 mx-0.5 sm:mx-1"></div>
 
-                <button onclick="App.leaveMeeting()" class="kinetic-btn is-danger" title="Disconnect">
-                    <span class="material-symbols-outlined text-[20px]">call_end</span>
+                <button onclick="App.leaveMeeting()" class="kinetic-btn is-danger" title="Leave">
+                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">call_end</span>
                 </button>
             </nav>
         </div>
@@ -782,17 +814,15 @@
             updateStatusPill(name, isSpeaking = false) {
                 const pill = document.getElementById('status-pill');
                 const text = document.getElementById('status-text');
-                const dot = document.getElementById('status-dot');
                 if (!pill || !text) return;
                 
-                if (isSpeaking) {
+                if (isSpeaking && name) {
                     text.textContent = `${name} speaking`;
-                    dot.className = "w-1.5 h-1.5 rounded-full bg-accent animate-pulse";
-                    pill.classList.add('border-accent/40');
+                    pill.classList.remove('hidden');
+                    pill.classList.add('flex');
                 } else {
-                    text.textContent = name || "Encrypted P2P Session";
-                    dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400";
-                    pill.classList.remove('border-accent/40');
+                    pill.classList.remove('flex');
+                    pill.classList.add('hidden');
                 }
             }
         };
@@ -1303,7 +1333,7 @@
                 this.updateSmartPiP();
             },
 
-            // --- CALL ROOM INITIALIZATION ---
+            // --- CALL ROOM INITIALIZATION WITH SPINNER ---
             async joinMeeting(isDeep = false) {
                 const queryId = isDeep ? window.location.pathname.split('/j/')[1] : document.getElementById('meet-id').value.trim();
                 const inputName = isDeep ? document.getElementById('deep-guest-name').value.trim() : document.getElementById('guest-name').value.trim();
@@ -1312,8 +1342,23 @@
                 const isGuest = !State.token;
                 const name = isGuest ? inputName : State.profileName;
 
-                if (!room) { UI.toast("Room ID is required"); return; }
-                if (isGuest && !name) { UI.toast("Enter a display name"); return; }
+                if (!room) { UI.toast("Room name is required"); return; }
+                if (isGuest && !name) { UI.toast("Please enter your name"); return; }
+
+                // UI Loading state
+                const btn = isDeep ? document.getElementById('btn-deep-join') : document.getElementById('btn-join-main');
+                const btnText = isDeep ? document.getElementById('btn-deep-text') : document.getElementById('btn-join-text');
+                const btnIcon = isDeep ? document.getElementById('btn-deep-icon') : document.getElementById('btn-join-icon');
+                
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-75', 'cursor-not-allowed');
+                    if (btnText) btnText.textContent = "Connecting...";
+                    if (btnIcon) {
+                        btnIcon.textContent = "progress_activity";
+                        btnIcon.classList.add('animate-spin');
+                    }
+                }
 
                 this.stopPreviewStream();
 
@@ -1366,7 +1411,16 @@
                     this.startQualityMonitor();
                     
                 } catch (e) { 
-                    alert("Unable to join space: " + (e.message || "Timeout"));
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        if (btnText) btnText.textContent = "Join Call";
+                        if (btnIcon) {
+                            btnIcon.textContent = "arrow_forward";
+                            btnIcon.classList.remove('animate-spin');
+                        }
+                    }
+                    alert("Unable to join call: " + (e.message || "Timeout"));
                 }
             },
 
@@ -1410,34 +1464,69 @@
                 window.location.href = '/';
             },
 
-            // --- CONCEPT 4 SCALED STAGE LAYOUT ---
+            // --- RESPONSIVE MOBILE & PINNED LAYOUT ENGINE ---
             updateLayout() {
                 const grid = document.getElementById('video-grid');
-                const wrappers = grid.querySelectorAll('.video-wrapper');
+                const wrappers = Array.from(grid.querySelectorAll('.video-wrapper'));
                 const count = wrappers.length;
-                const pinned = grid.querySelector('.pinned');
+                const pinned = grid.querySelector('.video-wrapper.pinned');
+                const isMobile = window.innerWidth < 768;
 
                 document.getElementById('participant-count').textContent = count;
 
+                let strip = document.getElementById('thumbs-strip');
                 if (pinned) {
+                    grid.classList.add('is-pinned');
+                    if (!strip) {
+                        strip = document.createElement('div');
+                        strip.id = 'thumbs-strip';
+                        strip.className = 'thumbs-strip';
+                        grid.appendChild(strip);
+                    }
                     wrappers.forEach(w => {
                         if (w === pinned) {
-                            w.style.width = '100%'; 
-                            w.style.height = 'calc(100% - 90px)';
+                            grid.appendChild(w);
                         } else {
-                            w.style.width = '120px'; 
-                            w.style.height = '90px';
+                            strip.appendChild(w);
                         }
                     });
                     return;
                 }
 
+                // If not pinned, clean up strip and arrange in responsive grid
+                grid.classList.remove('is-pinned');
+                if (strip) {
+                    Array.from(strip.children).forEach(child => grid.appendChild(child));
+                    strip.remove();
+                }
+
                 wrappers.forEach(wrap => {
-                    wrap.style.height = 'auto';
-                    if (count === 1) wrap.style.width = 'min(100%, 650px)';
-                    else if (count === 2) wrap.style.width = 'min(calc(50% - 12px), 480px)';
-                    else if (count <= 4) wrap.style.width = 'min(calc(50% - 12px), 420px)';
-                    else wrap.style.width = 'min(calc(33.333% - 14px), 360px)';
+                    wrap.style.height = '';
+                    wrap.style.width = '';
+
+                    if (count === 1) {
+                        wrap.style.width = isMobile ? '100%' : 'min(90vw, 760px)';
+                        wrap.style.maxHeight = isMobile ? '70vh' : '72vh';
+                        wrap.style.aspectRatio = '4/3';
+                    } else if (count === 2) {
+                        if (isMobile) {
+                            wrap.style.width = '100%';
+                            wrap.style.maxHeight = '35vh';
+                            wrap.style.aspectRatio = '16/10';
+                        } else {
+                            wrap.style.width = 'calc(50% - 12px)';
+                            wrap.style.maxHeight = '65vh';
+                            wrap.style.aspectRatio = '4/3';
+                        }
+                    } else if (count <= 4) {
+                        wrap.style.width = 'calc(50% - 10px)';
+                        wrap.style.maxHeight = isMobile ? '32vh' : '40vh';
+                        wrap.style.aspectRatio = '4/3';
+                    } else {
+                        wrap.style.width = isMobile ? 'calc(50% - 8px)' : 'calc(33.333% - 12px)';
+                        wrap.style.maxHeight = isMobile ? '24vh' : '32vh';
+                        wrap.style.aspectRatio = '4/3';
+                    }
                 });
             },
 
@@ -1445,9 +1534,12 @@
                 const wrapper = document.getElementById(wrapperId);
                 if(!wrapper) return;
                 
-                if (wrapper.classList.contains('pinned')) wrapper.classList.remove('pinned');
-                else {
-                    document.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('pinned'));
+                const grid = document.getElementById('video-grid');
+                const wasPinned = wrapper.classList.contains('pinned');
+
+                grid.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('pinned'));
+
+                if (!wasPinned) {
                     wrapper.classList.add('pinned');
                 }
                 this.updateLayout();
