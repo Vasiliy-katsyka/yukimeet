@@ -46,17 +46,67 @@
     
     <style>
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        body {
-            background-color: #07070a;
-            color: #f1f5f9;
-            overflow: hidden;
-            user-select: none;
+        /* Eliminate all scrollbars globally */
+        *, *::-webkit-scrollbar {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            display: none;
+        }
+        html, body, div, main, section {
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+        
+        /* Unified Theme Color Tokens */
+        :root {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-glass: rgba(255, 255, 255, 0.85);
+            --border-subtle: rgba(15, 23, 42, 0.08);
+            --border-strong: rgba(15, 23, 42, 0.16);
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --text-dim: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --dock-bg: rgba(255, 255, 255, 0.9);
+            --dock-btn: #334155;
+            --dock-btn-hover: rgba(15, 23, 42, 0.07);
+            --input-bg: rgba(15, 23, 42, 0.04);
+            --grid-line: rgba(15, 23, 42, 0.05);
+            --glow-color: rgba(99, 102, 241, 0.08);
+            --btn-primary-bg: #0f172a;
+            --btn-primary-text: #ffffff;
+        }
+        html.dark {
+            --bg-base: #07070a;
+            --bg-surface: #0d0e15;
+            --bg-surface-glass: rgba(18, 19, 28, 0.7);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.15);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-dim: #64748b;
+            --card-bg: rgba(13, 14, 21, 0.65);
+            --dock-bg: rgba(13, 14, 21, 0.85);
+            --dock-btn: rgba(255, 255, 255, 0.7);
+            --dock-btn-hover: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --grid-line: rgba(255, 255, 255, 0.04);
+            --glow-color: rgba(99, 102, 241, 0.12);
+            --btn-primary-bg: #ffffff;
+            --btn-primary-text: #07070a;
         }
 
-        /* Ambient 3D Perspective Ground Grid */
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow: hidden;
+            user-select: none;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* Ambient 3D Grid */
         .spatial-grid-floor {
             position: absolute;
             bottom: -5%;
@@ -65,8 +115,8 @@
             width: 100%;
             height: 60vh;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
             background-size: 48px 48px;
             transform: perspective(500px) rotateX(60deg);
             transform-origin: bottom center;
@@ -76,7 +126,7 @@
             z-index: 1;
         }
 
-        /* Ambient Core Light Aura */
+        /* Ambient Aura */
         .ambient-core-glow {
             position: absolute;
             top: 45%;
@@ -86,24 +136,21 @@
             max-width: 800px;
             height: 50vh;
             max-height: 500px;
-            background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.04) 45%, transparent 75%);
+            background: radial-gradient(ellipse at center, var(--glow-color) 0%, transparent 70%);
             filter: blur(80px);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Responsive Video Tiles */
+        /* Large Video Tiles */
         .video-wrapper { 
             position: relative; 
-            background: #0d0e15; 
-            border-radius: 20px; 
+            background: #000000; 
+            border-radius: 18px; 
             overflow: hidden; 
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 20px 40px -15px rgba(0, 0, 0, 0.8);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 0 1px var(--border-subtle), 0 12px 32px -8px rgba(0, 0, 0, 0.45);
+            transition: all 0.25s ease;
             cursor: pointer;
-            width: 100%;
-            height: 100%;
-            min-height: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -120,9 +167,9 @@
         .video-wrapper video.mirrored { transform: scaleX(-1); }
         .video-wrapper.screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
         
-        /* Active Speaker Halo */
+        /* Subtle Speaker Indicator (No blinding neon glow) */
         .video-wrapper.is-speaking {
-            box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.9), 0 0 30px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 0 0 2px #6366f1;
         }
 
         /* Pinned Spotlight State */
@@ -154,21 +201,20 @@
             justify-content: center !important;
         }
 
-        /* Mobile-Optimized Floating Dock */
+        /* Floating Dock */
         .kinetic-dock {
-            background: rgba(13, 14, 21, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+            background: var(--dock-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-strong);
+            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.35);
             border-radius: 9999px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s ease;
             max-width: calc(100vw - 24px);
-            overflow-x: auto;
         }
         
         .kinetic-dock.idle-dim {
-            opacity: 0.35;
+            opacity: 0.3;
             transform: translateY(6px);
         }
         .kinetic-dock:hover {
@@ -185,31 +231,31 @@
             height: 40px;
             min-width: 40px;
             border-radius: 9999px;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--dock-btn);
             background: transparent;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.15s ease;
         }
         @media (min-width: 640px) {
             .kinetic-btn { width: 44px; height: 44px; min-width: 44px; }
         }
         .kinetic-btn:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            background: var(--dock-btn-hover);
         }
         .kinetic-btn:active {
             transform: scale(0.92);
         }
         .kinetic-btn.active {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.15);
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.15);
         }
         .kinetic-btn.is-danger {
             color: #f43f5e;
             background: rgba(244, 63, 94, 0.12);
         }
         .kinetic-btn.is-danger:hover {
-            background: rgba(244, 63, 94, 0.25);
-            color: #ffffff;
+            background: rgba(244, 63, 94, 0.22);
+            color: #f43f5e;
         }
 
         /* Screen States */
@@ -219,6 +265,7 @@
             width: 100%;
             height: 100dvh;
             overflow-x: hidden;
+            overflow-y: auto;
             transition: opacity 0.3s ease; 
             opacity: 0; 
             pointer-events: none; 
@@ -235,48 +282,55 @@
         #drawing-canvas.active { pointer-events: auto; cursor: crosshair; }
         .canvas-overlay-grid { background-image: radial-gradient(circle, rgba(99, 102, 241, 0.25) 1.5px, transparent 1.5px); background-size: 32px 32px; }
 
-        /* Minimal Card Containers */
+        /* Unified Card Containers */
         .spatial-card {
-            background: rgba(13, 14, 21, 0.65);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 28px;
+            box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Inputs */
+        input[type="text"], input[type="datetime-local"], select {
+            background-color: var(--input-bg) !important;
+            border-color: var(--border-subtle) !important;
+            color: var(--text-main) !important;
         }
 
         /* Context Menu */
         #ctx-menu { 
             position: fixed; 
-            background: rgba(18, 19, 28, 0.92); 
+            background: var(--bg-surface); 
             backdrop-filter: blur(24px); 
-            border-radius: 16px; 
+            border-radius: 14px; 
             z-index: 9000; 
             display: none; 
             flex-direction: column; 
             min-width: 180px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
             padding: 6px; 
-            border: 1px solid rgba(255,255,255,0.08); 
+            border: 1px solid var(--border-subtle); 
         }
         .ctx-item { 
-            padding: 10px 14px; 
+            padding: 9px 12px; 
             font-size: 13px; 
             font-weight: 500; 
             cursor: pointer; 
             display: flex; 
             align-items: center;
             gap: 10px; 
-            border-radius: 10px;
-            color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            color: var(--text-main);
             transition: all 0.15s ease;
         }
-        .ctx-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .ctx-item:hover { background: var(--dock-btn-hover); }
         .ctx-item.danger { color: #f43f5e; }
-        .ctx-item.danger:hover { background: rgba(244,63,94,0.15); }
+        .ctx-item.danger:hover { background: rgba(244,63,94,0.12); }
     </style>
 </head>
-<body class="font-body h-[100dvh] w-full flex flex-col overflow-hidden bg-void text-slate-200">
+<body class="font-body h-[100dvh] w-full flex flex-col overflow-hidden">
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/15 text-white px-5 py-2.5 rounded-full shadow-2xl z-[10000] font-medium text-xs tracking-tight transition-all duration-300 opacity-0 pointer-events-none">
@@ -306,36 +360,39 @@
         <div class="spatial-grid-floor"></div>
         <div class="ambient-core-glow"></div>
 
-        <!-- Top Navigation -->
-        <header class="max-w-6xl w-full mx-auto flex justify-between items-center py-8 z-10">
+        <!-- Top Navigation with Theme Toggle -->
+        <header class="max-w-6xl w-full mx-auto flex justify-between items-center py-6 md:py-8 z-10">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-accent to-purple-400 flex items-center justify-center shadow-lg shadow-accent/20">
                     <span class="material-symbols-outlined text-white text-[18px]">radio_button_checked</span>
                 </div>
-                <span class="font-headline font-semibold text-lg tracking-tight text-white">YukiMeet</span>
+                <span class="font-headline font-semibold text-lg tracking-tight">YukiMeet</span>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="App.navigate('/join')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold px-4 py-2 rounded-full transition-all">Join Room</button>
-                <button onclick="App.navigate('/me')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all">
+            <div class="flex items-center gap-2 md:gap-3">
+                <button onclick="App.toggleTheme()" class="w-8 h-8 rounded-full border border-subtle flex items-center justify-center text-sub hover:text-main transition-all" title="Toggle Theme">
+                    <span id="theme-icon" class="material-symbols-outlined text-[18px]">light_mode</span>
+                </button>
+                <button onclick="App.navigate('/join')" class="border border-subtle text-xs font-semibold px-4 py-2 rounded-full hover:opacity-80 transition-all">Join Room</button>
+                <button onclick="App.navigate('/me')" class="w-8 h-8 rounded-full border border-subtle flex items-center justify-center text-sub hover:text-main transition-all">
                     <span class="material-symbols-outlined text-[18px]">person</span>
                 </button>
             </div>
         </header>
 
         <!-- Hero Section -->
-        <section class="max-w-4xl w-full mx-auto text-center py-20 md:py-28 flex flex-col items-center z-10">
-            <h1 class="font-headline font-bold text-5xl md:text-7xl tracking-[-0.04em] text-white leading-[1.08] mb-6">
+        <section class="max-w-4xl w-full mx-auto text-center py-16 md:py-24 flex flex-col items-center z-10">
+            <h1 class="font-headline font-bold text-5xl md:text-7xl tracking-[-0.04em] leading-[1.08] mb-6">
                 Video meetings, <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-slate-300 to-slate-500">made effortless.</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">made effortless.</span>
             </h1>
-            <p class="font-body text-base md:text-lg text-slate-400 max-w-xl mb-10 leading-relaxed font-normal">
-                Crystal clear calls with an interactive whiteboard, seamless screen sharing, and no downloads required.
+            <p class="font-body text-base md:text-lg opacity-75 max-w-xl mb-10 leading-relaxed font-normal">
+                Crystal clear calls with an interactive whiteboard, seamless screen sharing, and zero downloads.
             </p>
             <div class="flex items-center gap-4">
-                <button onclick="App.navigate('/join')" class="bg-white text-black font-semibold text-sm px-6 py-3.5 rounded-full hover:bg-slate-200 transition-all flex items-center gap-2 shadow-xl shadow-white/10">
+                <button onclick="App.navigate('/join')" class="bg-slate-900 text-white dark:bg-white dark:text-black font-semibold text-sm px-6 py-3.5 rounded-full hover:opacity-90 transition-all flex items-center gap-2 shadow-xl">
                     Start a Meeting <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                 </button>
-                <button onclick="document.getElementById('bento-features').scrollIntoView({behavior: 'smooth'})" class="bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-white text-sm font-semibold px-6 py-3.5 rounded-full transition-all">
+                <button onclick="document.getElementById('bento-features').scrollIntoView({behavior: 'smooth'})" class="border border-subtle text-sm font-semibold px-6 py-3.5 rounded-full hover:opacity-80 transition-all">
                     Features
                 </button>
             </div>
@@ -600,48 +657,48 @@
             <button onclick="App.clearDraw()" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-rose-400" title="Clear Canvas"><span class="material-symbols-outlined text-[18px]">delete</span></button>
         </div>
 
-        <!-- Main Meeting Stage -->
-        <div class="flex-1 w-full max-w-7xl mx-auto flex flex-col justify-center items-center p-3 pt-20 pb-24 md:p-6 md:pt-20 md:pb-24 z-10 min-h-0 overflow-hidden">
-            <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center items-center gap-3 md:gap-4 overflow-hidden">
+        <!-- Full-Viewport Main Meeting Stage -->
+        <div class="flex-1 w-full h-full flex flex-col justify-center items-center px-2 pt-16 pb-20 md:px-5 md:pt-16 md:pb-22 z-10 min-h-0 overflow-hidden">
+            <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center items-center gap-3 overflow-hidden">
                 <!-- Local Video Tile -->
                 <div id="wrapper-local" class="video-wrapper" draggable="true" onclick="App.pinVideo('wrapper-local')">
                     <video id="local-video" autoplay playsinline muted class="mirrored"></video>
                     
                     <div id="avatar-overlay-local" class="absolute inset-0 flex items-center justify-center bg-[#0d0e15] hidden">
-                        <div id="avatar-circle-local" class="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold text-white border border-white/10 overflow-hidden shadow-2xl">
+                        <div id="avatar-circle-local" class="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold text-white border border-white/10 overflow-hidden shadow-2xl">
                             <img id="avatar-img-local" class="w-full h-full object-cover hidden">
                             <span id="avatar-letter-local">Y</span>
                         </div>
                     </div>
                     
-                    <div id="badge-local" class="absolute bottom-2.5 left-2.5 md:bottom-3 md:left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white/90 px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-[11px] font-medium border border-white/10">
+                    <div id="badge-local" class="absolute bottom-2.5 left-2.5 md:bottom-3 md:left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-[11px] font-medium border border-white/10">
                         <span id="local-mic-icon" class="material-symbols-outlined text-[12px] md:text-[13px] text-emerald-400">mic</span>
                         <span id="local-name-display">You</span>
-                        <span id="local-admin-badge" class="ml-1 bg-white/10 px-1 py-0.2 rounded text-[8px] md:text-[9px] font-mono uppercase hidden">Host</span>
+                        <span id="local-admin-badge" class="ml-1 bg-white/15 px-1 py-0.2 rounded text-[8px] md:text-[9px] font-mono uppercase hidden">Host</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Assistant Panel -->
-        <div id="ai-copilot" class="absolute right-3 top-20 bottom-24 w-[calc(100vw-24px)] max-w-[340px] spatial-card z-[60] flex flex-col transition-transform duration-300 translate-x-[120%]">
-            <div class="p-4 border-b border-white/10 flex justify-between items-center">
+        <div id="ai-copilot" class="absolute right-3 top-16 bottom-24 w-[calc(100vw-24px)] max-w-[340px] spatial-card z-[60] flex flex-col transition-transform duration-300 translate-x-[120%]">
+            <div class="p-4 border-b border-subtle flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-accent text-[18px]">auto_awesome</span>
-                    <h3 class="font-headline font-bold text-xs text-white">Meeting Assistant</h3>
+                    <h3 class="font-headline font-bold text-xs">Meeting Assistant</h3>
                 </div>
-                <button onclick="App.toggleCopilot()" class="text-slate-400 hover:text-white"><span class="material-symbols-outlined text-[18px]">close</span></button>
+                <button onclick="App.toggleCopilot()" class="opacity-60 hover:opacity-100"><span class="material-symbols-outlined text-[18px]">close</span></button>
             </div>
             
             <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs flex flex-col">
-                <div class="bg-white/5 border border-white/10 text-slate-300 p-3 rounded-2xl self-start max-w-[90%]">
+                <div class="bg-black/5 dark:bg-white/5 border border-subtle p-3 rounded-2xl self-start max-w-[90%]">
                     Ask questions or get quick notes on topics discussed.
                 </div>
             </div>
             
-            <div class="p-3 border-t border-white/10">
+            <div class="p-3 border-t border-subtle">
                 <div class="relative">
-                    <input id="ai-input" type="text" placeholder="Type a message..." class="w-full bg-white/5 border border-white/10 rounded-xl pl-3 pr-8 py-2 text-xs text-white focus:outline-none focus:border-accent" onkeypress="if(event.key==='Enter') App.askGemini()">
+                    <input id="ai-input" type="text" placeholder="Type a message..." class="w-full rounded-xl pl-3 pr-8 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-accent" onkeypress="if(event.key==='Enter') App.askGemini()">
                     <button onclick="App.askGemini()" class="absolute right-2 top-1/2 -translate-y-1/2 text-accent">
                         <span class="material-symbols-outlined text-[16px]">send</span>
                     </button>
@@ -650,14 +707,7 @@
         </div>
 
         <!-- Floating Meeting Controls -->
-        <div id="dock-container" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 pointer-events-auto max-w-[96vw]">
-            
-            <!-- Speaker Indicator -->
-            <div id="status-pill" class="hidden items-center gap-2 px-3 py-1 rounded-full bg-surface-glass border border-white/10 backdrop-blur-xl text-[11px] font-medium text-slate-300 shadow-xl transition-all duration-300">
-                <span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span id="status-text"></span>
-            </div>
-
+        <div id="dock-container" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 pointer-events-auto max-w-[96vw]">
             <!-- Kinetic Control Bar -->
             <nav id="kinetic-nav" class="kinetic-dock flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2">
                 <button id="btn-mic" onclick="App.toggleMic()" class="kinetic-btn" title="Toggle Mic">
@@ -812,18 +862,7 @@
                 }
             },
             updateStatusPill(name, isSpeaking = false) {
-                const pill = document.getElementById('status-pill');
-                const text = document.getElementById('status-text');
-                if (!pill || !text) return;
-                
-                if (isSpeaking && name) {
-                    text.textContent = `${name} speaking`;
-                    pill.classList.remove('hidden');
-                    pill.classList.add('flex');
-                } else {
-                    pill.classList.remove('flex');
-                    pill.classList.add('hidden');
-                }
+                // Speaker pill intentionally disabled
             }
         };
 
@@ -847,6 +886,10 @@
 
         const App = {
             init() {
+                // Initialize theme
+                const savedTheme = localStorage.getItem('ym_theme') || 'dark';
+                this.applyTheme(savedTheme);
+
                 const urlParams = new URLSearchParams(window.location.search);
                 const ssoToken = urlParams.get('sso_token');
                 if (ssoToken) {
@@ -877,6 +920,24 @@
                     this.updateLayout();
                     this.resizeCanvas();
                 });
+            },
+
+            toggleTheme() {
+                const isDark = document.documentElement.classList.contains('dark');
+                this.applyTheme(isDark ? 'light' : 'dark');
+            },
+
+            applyTheme(theme) {
+                const icon = document.getElementById('theme-icon');
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    if (icon) icon.textContent = 'light_mode';
+                    localStorage.setItem('ym_theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    if (icon) icon.textContent = 'dark_mode';
+                    localStorage.setItem('ym_theme', 'light');
+                }
             },
 
             // --- CONCEPT 4 KINETIC DOCK ENGINE ---
@@ -1464,7 +1525,7 @@
                 window.location.href = '/';
             },
 
-            // --- RESPONSIVE MOBILE & PINNED LAYOUT ENGINE ---
+            // --- ENLARGED FULL-STAGE VIDEO LAYOUT ENGINE ---
             updateLayout() {
                 const grid = document.getElementById('video-grid');
                 const wrappers = Array.from(grid.querySelectorAll('.video-wrapper'));
@@ -1493,7 +1554,7 @@
                     return;
                 }
 
-                // If not pinned, clean up strip and arrange in responsive grid
+                // Normal unpinned layout
                 grid.classList.remove('is-pinned');
                 if (strip) {
                     Array.from(strip.children).forEach(child => grid.appendChild(child));
@@ -1503,29 +1564,26 @@
                 wrappers.forEach(wrap => {
                     wrap.style.height = '';
                     wrap.style.width = '';
+                    wrap.style.maxHeight = '';
+                    wrap.style.aspectRatio = '';
 
                     if (count === 1) {
-                        wrap.style.width = isMobile ? '100%' : 'min(90vw, 760px)';
-                        wrap.style.maxHeight = isMobile ? '70vh' : '72vh';
-                        wrap.style.aspectRatio = '4/3';
+                        wrap.style.width = isMobile ? '100%' : 'min(94vw, 1200px)';
+                        wrap.style.height = isMobile ? '75vh' : '82vh';
                     } else if (count === 2) {
                         if (isMobile) {
                             wrap.style.width = '100%';
-                            wrap.style.maxHeight = '35vh';
-                            wrap.style.aspectRatio = '16/10';
+                            wrap.style.height = 'calc(50% - 8px)';
                         } else {
-                            wrap.style.width = 'calc(50% - 12px)';
-                            wrap.style.maxHeight = '65vh';
-                            wrap.style.aspectRatio = '4/3';
+                            wrap.style.width = 'calc(50% - 10px)';
+                            wrap.style.height = 'calc(100% - 10px)';
                         }
                     } else if (count <= 4) {
-                        wrap.style.width = 'calc(50% - 10px)';
-                        wrap.style.maxHeight = isMobile ? '32vh' : '40vh';
-                        wrap.style.aspectRatio = '4/3';
+                        wrap.style.width = 'calc(50% - 8px)';
+                        wrap.style.height = 'calc(50% - 8px)';
                     } else {
-                        wrap.style.width = isMobile ? 'calc(50% - 8px)' : 'calc(33.333% - 12px)';
-                        wrap.style.maxHeight = isMobile ? '24vh' : '32vh';
-                        wrap.style.aspectRatio = '4/3';
+                        wrap.style.width = isMobile ? 'calc(50% - 6px)' : 'calc(33.333% - 8px)';
+                        wrap.style.height = isMobile ? 'calc(33.333% - 6px)' : 'calc(50% - 8px)';
                     }
                 });
             },
