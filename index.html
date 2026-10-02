@@ -5,48 +5,57 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
     <title>YukiMeet — Engage, Seamlessly</title>
     <meta name="title" content="YukiMeet — Engage, Seamlessly">
-    <meta name="description" content="Spatial peer-to-peer video meetings with real-time vector drawing, kinetic controls, and zero client installation.">
-    
+    <meta name="description" content="Calm, peer-to-peer video meetings with a live whiteboard, screen sharing, background blur and zero installation.">
+
     <link rel="canonical" href="https://meet.yukichat.lol/">
-    <meta name="theme-color" content="#07070a">
+    <meta id="meta-theme-color" name="theme-color" content="#121416">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <!-- Tailwind & MediaPipe -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
-    
-    <!-- Concept 4 Typography: Plus Jakarta Sans & Instrument Sans -->
+
+    <!-- Typography: Plus Jakarta Sans, Instrument Sans & Instrument Serif -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@200..600,0..1&display=swap" rel="stylesheet"/>
-    
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "void": "#07070a",
-                        "surface": "#0d0e15",
-                        "surface-glass": "rgba(18, 19, 28, 0.65)",
-                        "accent": "#6366f1",
-                        "accent-glow": "rgba(99, 102, 241, 0.25)",
-                        "error": "#f43f5e",
+                        "surface-glass": "var(--bg-surface-glass)",
+                        "accent": "rgb(var(--accent-rgb) / <alpha-value>)",
+                        "warm": "rgb(var(--warm-rgb) / <alpha-value>)",
+                        "calm": "rgb(var(--calm-rgb) / <alpha-value>)",
+                        "coral": "rgb(var(--coral-rgb) / <alpha-value>)",
+                        "main": "var(--text-main)",
+                        "sub": "var(--text-sub)",
+                        "dim": "var(--text-dim)",
+                        "subtle": "var(--border-subtle)",
+                        "strong": "var(--border-strong)",
+                        "soft": "var(--input-bg)",
+                        "page": "var(--bg-base)",
+                        "panel": "var(--bg-surface)",
+                        "error": "#e5675a",
                     },
-                    fontFamily: { 
-                        "headline": ["'Plus Jakarta Sans'", "sans-serif"], 
-                        "body": ["'Instrument Sans'", "sans-serif"] 
+                    fontFamily: {
+                        "headline": ["'Plus Jakarta Sans'", "sans-serif"],
+                        "body": ["'Instrument Sans'", "sans-serif"],
+                        "serif": ["'Instrument Serif'", "serif"]
                     }
                 }
             }
         }
     </script>
-    
+
     <style>
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20; }
-        
+
         /* Eliminate all scrollbars globally */
         * {
             scrollbar-width: none !important;
@@ -57,45 +66,63 @@
             width: 0 !important;
             height: 0 !important;
         }
-        
-        /* Unified Theme Color Tokens */
+
+        /* Unified Theme Color Tokens — warm paper (light) & soft charcoal (dark) */
         :root {
-            --bg-base: #f8fafc;
-            --bg-surface: #ffffff;
-            --bg-surface-glass: rgba(255, 255, 255, 0.85);
-            --border-subtle: rgba(15, 23, 42, 0.08);
-            --border-strong: rgba(15, 23, 42, 0.16);
-            --text-main: #0f172a;
-            --text-sub: #475569;
-            --text-dim: #94a3b8;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --dock-bg: rgba(255, 255, 255, 0.9);
-            --dock-btn: #334155;
-            --dock-btn-hover: rgba(15, 23, 42, 0.07);
-            --input-bg: rgba(15, 23, 42, 0.04);
-            --grid-line: rgba(15, 23, 42, 0.05);
-            --glow-color: rgba(99, 102, 241, 0.08);
-            --btn-primary-bg: #0f172a;
-            --btn-primary-text: #ffffff;
+            color-scheme: light;
+            --bg-base: #f5f2ec;
+            --bg-surface: #fffdf9;
+            --bg-surface-glass: rgba(255, 253, 249, 0.82);
+            --border-subtle: rgba(38, 42, 46, 0.09);
+            --border-strong: rgba(38, 42, 46, 0.16);
+            --text-main: #24282c;
+            --text-sub: #575d63;
+            --text-dim: #8a8f94;
+            --card-bg: rgba(255, 253, 249, 0.8);
+            --dock-bg: rgba(255, 253, 249, 0.94);
+            --dock-btn: #3d4349;
+            --dock-btn-hover: rgba(38, 42, 46, 0.06);
+            --input-bg: rgba(38, 42, 46, 0.045);
+            --grid-line: rgba(38, 42, 46, 0.06);
+            --glow-color: rgba(42, 135, 119, 0.10);
+            --btn-primary-bg: #24282c;
+            --btn-primary-text: #fffdf9;
+            --accent: #2a8777;
+            --accent-rgb: 42 135 119;
+            --on-accent: #ffffff;
+            --warm-rgb: 214 140 69;
+            --calm-rgb: 76 128 176;
+            --coral-rgb: 207 102 92;
+            --shadow-card: 0 18px 40px -22px rgba(70, 55, 30, 0.22);
+            --shadow-pop: 0 40px 80px -36px rgba(70, 55, 30, 0.35);
         }
         html.dark {
-            --bg-base: #07070a;
-            --bg-surface: #0d0e15;
-            --bg-surface-glass: rgba(18, 19, 28, 0.7);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.15);
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --text-dim: #64748b;
-            --card-bg: rgba(13, 14, 21, 0.65);
-            --dock-bg: rgba(13, 14, 21, 0.85);
-            --dock-btn: rgba(255, 255, 255, 0.7);
-            --dock-btn-hover: rgba(255, 255, 255, 0.1);
-            --input-bg: rgba(255, 255, 255, 0.05);
-            --grid-line: rgba(255, 255, 255, 0.04);
-            --glow-color: rgba(99, 102, 241, 0.12);
-            --btn-primary-bg: #ffffff;
-            --btn-primary-text: #07070a;
+            color-scheme: dark;
+            --bg-base: #121416;
+            --bg-surface: #191c1f;
+            --bg-surface-glass: rgba(25, 28, 31, 0.74);
+            --border-subtle: rgba(236, 232, 224, 0.08);
+            --border-strong: rgba(236, 232, 224, 0.15);
+            --text-main: #ece8e0;
+            --text-sub: #a5a9a6;
+            --text-dim: #6f7471;
+            --card-bg: rgba(27, 30, 33, 0.72);
+            --dock-bg: rgba(25, 28, 31, 0.92);
+            --dock-btn: rgba(236, 232, 224, 0.8);
+            --dock-btn-hover: rgba(236, 232, 224, 0.08);
+            --input-bg: rgba(236, 232, 224, 0.05);
+            --grid-line: rgba(236, 232, 224, 0.045);
+            --glow-color: rgba(110, 196, 178, 0.10);
+            --btn-primary-bg: #ece8e0;
+            --btn-primary-text: #121416;
+            --accent: #6ec4b2;
+            --accent-rgb: 110 196 178;
+            --on-accent: #0f1c19;
+            --warm-rgb: 232 177 112;
+            --calm-rgb: 130 170 210;
+            --coral-rgb: 232 128 116;
+            --shadow-card: 0 18px 44px -20px rgba(0, 0, 0, 0.5);
+            --shadow-pop: 0 40px 90px -30px rgba(0, 0, 0, 0.7);
         }
 
         body {
@@ -106,6 +133,54 @@
             transition: background-color 0.25s ease, color 0.25s ease;
         }
 
+        /* Theme-aware building blocks */
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.2s ease;
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-ghost {
+            background: var(--input-bg);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+        }
+        .btn-ghost:hover { background: var(--dock-btn-hover); border-color: var(--border-strong); }
+        .btn-ghost:active { transform: scale(0.98); }
+        .icon-btn {
+            width: 36px; height: 36px;
+            border-radius: 9999px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-sub);
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+        .icon-btn:hover { color: var(--text-main); background: var(--dock-btn-hover); }
+        .text-on-accent { color: var(--on-accent); }
+
+        input.field, select.field {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            border-radius: 14px;
+            padding: 13px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            box-shadow: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        select.field { font-size: 13px; padding: 10px 32px 10px 36px; text-overflow: ellipsis; }
+        input.field::placeholder { color: var(--text-dim); }
+        input.field:focus, select.field:focus {
+            border-color: rgb(var(--accent-rgb) / 0.6);
+            box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.15);
+        }
+        .field-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-sub); margin-bottom: 6px; }
+
         /* Ambient 3D Grid */
         .spatial-grid-floor {
             position: absolute;
@@ -114,7 +189,7 @@
             right: 0;
             width: 100%;
             height: 60vh;
-            background-image: 
+            background-image:
                 linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
             background-size: 48px 48px;
@@ -143,11 +218,11 @@
         }
 
         /* Large Video Tiles */
-        .video-wrapper { 
-            position: relative; 
-            background: #000000; 
-            border-radius: 18px; 
-            overflow: hidden; 
+        .video-wrapper {
+            position: relative;
+            background: #000000;
+            border-radius: 18px;
+            overflow: hidden;
             box-shadow: 0 0 0 1px var(--border-subtle), 0 12px 32px -8px rgba(0, 0, 0, 0.45);
             transition: all 0.25s ease;
             cursor: pointer;
@@ -158,18 +233,18 @@
         @media (min-width: 768px) {
             .video-wrapper { border-radius: 24px; }
         }
-        .video-wrapper video { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: 0.2s ease; 
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.2s ease;
         }
         .video-wrapper video.mirrored { transform: scaleX(-1); }
         .video-wrapper.screen-share video { object-fit: contain; transform: scaleX(1); background: #000; }
-        
-        /* Subtle Speaker Indicator (No blinding neon glow) */
+
+        /* Subtle Speaker Indicator */
         .video-wrapper.is-speaking {
-            box-shadow: 0 0 0 2px #6366f1;
+            box-shadow: 0 0 0 2px rgb(var(--accent-rgb));
         }
 
         /* Pinned Spotlight State */
@@ -201,18 +276,48 @@
             justify-content: center !important;
         }
 
+        /* Meeting stage spacing (leaves room for header + dock + safe areas) */
+        .room-stage {
+            padding: calc(60px + env(safe-area-inset-top)) 8px calc(100px + env(safe-area-inset-bottom));
+        }
+        @media (min-width: 768px) {
+            .room-stage { padding: 72px 20px 96px; }
+        }
+        .room-header {
+            top: calc(12px + env(safe-area-inset-top));
+            left: 12px;
+        }
+        @media (min-width: 768px) {
+            .room-header { top: 24px; left: 24px; }
+        }
+
         /* Floating Dock */
+        .dock-container {
+            position: absolute;
+            left: 50%;
+            bottom: calc(12px + env(safe-area-inset-bottom));
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: calc(100vw - 16px);
+        }
         .kinetic-dock {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px;
             background: var(--dock-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-strong);
-            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.35);
             border-radius: 9999px;
-            transition: all 0.25s ease;
-            max-width: calc(100vw - 24px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            max-width: calc(100vw - 16px);
         }
-        
         .kinetic-dock.idle-dim {
             opacity: 0.3;
             transform: translateY(6px);
@@ -221,23 +326,26 @@
             opacity: 1 !important;
             transform: translateY(0) !important;
         }
+        /* Touch screens have no hover to wake the dock, so never dim it there */
+        @media (hover: none) {
+            .kinetic-dock.idle-dim { opacity: 1; transform: none; }
+        }
 
         .kinetic-btn {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            min-width: 40px;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
             border-radius: 9999px;
             color: var(--dock-btn);
             background: transparent;
-            transition: all 0.15s ease;
+            transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
         }
-        @media (min-width: 640px) {
-            .kinetic-btn { width: 44px; height: 44px; min-width: 44px; }
-        }
+        .kinetic-btn .material-symbols-outlined { font-size: 21px; }
         .kinetic-btn:hover {
             color: var(--text-main);
             background: var(--dock-btn-hover);
@@ -246,41 +354,142 @@
             transform: scale(0.92);
         }
         .kinetic-btn.active {
-            color: #6366f1;
-            background: rgba(99, 102, 241, 0.15);
+            color: rgb(var(--accent-rgb));
+            background: rgb(var(--accent-rgb) / 0.15);
         }
         .kinetic-btn.is-danger {
-            color: #f43f5e;
-            background: rgba(244, 63, 94, 0.12);
+            color: rgb(var(--coral-rgb));
+            background: rgb(var(--coral-rgb) / 0.14);
         }
         .kinetic-btn.is-danger:hover {
-            background: rgba(244, 63, 94, 0.22);
-            color: #f43f5e;
+            background: rgb(var(--coral-rgb) / 0.24);
+            color: rgb(var(--coral-rgb));
+        }
+        .kinetic-btn.leave-btn {
+            width: 56px;
+            color: #fff;
+            background: #d9574a;
+        }
+        .kinetic-btn.leave-btn:hover { background: #c94c40; color: #fff; }
+        .dock-sep { width: 1px; height: 18px; background: var(--border-strong); margin: 0 2px; }
+        .dock-label { display: none; }
+        .sheet-only { display: none; }
+        #btn-more { display: none; }
+        #btn-more.has-active::after {
+            content: '';
+            position: absolute; top: 9px; right: 9px;
+            width: 7px; height: 7px; border-radius: 9999px;
+            background: rgb(var(--accent-rgb));
         }
 
+        /* Desktop: secondary controls sit inline in the dock */
+        #dock-extra { display: contents; }
+
+        /* Mobile: big primary buttons + secondary controls in a "More" sheet */
+        @media (max-width: 639px) {
+            .kinetic-dock { gap: 10px; padding: 8px 10px; }
+            .kinetic-btn { width: 52px; height: 52px; min-width: 52px; background: var(--input-bg); }
+            .kinetic-btn .material-symbols-outlined { font-size: 23px; }
+            .kinetic-btn.leave-btn { width: 64px; background: #d9574a; }
+            .dock-sep { display: none; }
+            #btn-more { display: flex; }
+
+            #dock-extra {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                position: absolute;
+                left: 50%;
+                bottom: calc(100% + 10px);
+                width: min(calc(100vw - 24px), 360px);
+                padding: 12px;
+                background: var(--bg-surface);
+                border: 1px solid var(--border-strong);
+                border-radius: 24px;
+                box-shadow: 0 24px 50px -16px rgba(0, 0, 0, 0.45);
+                opacity: 0;
+                pointer-events: none;
+                transform: translate(-50%, 12px) scale(0.98);
+                transform-origin: bottom center;
+                transition: opacity 0.2s ease, transform 0.25s cubic-bezier(.2,.8,.2,1);
+            }
+            #dock-extra.open {
+                opacity: 1;
+                pointer-events: auto;
+                transform: translate(-50%, 0) scale(1);
+            }
+            #dock-extra .sheet-only { display: block; }
+            #dock-extra .sheet-title {
+                grid-column: 1 / -1;
+                font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+                color: var(--text-dim);
+                padding: 2px 4px 4px;
+            }
+            #dock-extra .kinetic-btn {
+                width: 100%;
+                min-width: 0;
+                height: 72px;
+                border-radius: 18px;
+                flex-direction: column;
+                gap: 4px;
+            }
+            #dock-extra .kinetic-btn.sheet-only { display: flex; }
+            #dock-extra .dock-label {
+                display: block;
+                font-size: 11.5px;
+                font-weight: 600;
+                color: var(--text-sub);
+            }
+            #dock-extra .kinetic-btn.active .dock-label { color: rgb(var(--accent-rgb)); }
+        }
+
+        /* Drawing palette: vertical on desktop, horizontal strip on phones */
+        .draw-sep { width: 100%; height: 1px; background: var(--border-subtle); margin: 4px 0; }
+        @media (max-width: 639px) {
+            #draw-tools {
+                top: calc(64px + env(safe-area-inset-top));
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%);
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                width: max-content;
+                max-width: calc(100vw - 16px);
+            }
+            #draw-tools .tool-btn { width: 38px; height: 38px; }
+            #draw-tools .color-btn { margin: 0 4px; flex-shrink: 0; }
+            .draw-sep { width: 1px; height: 22px; margin: 0 4px; flex-shrink: 0; }
+        }
+        .tool-btn { color: var(--text-sub); }
+        .tool-btn:hover { color: var(--text-main); }
+        .tool-btn.active { color: rgb(var(--accent-rgb)); background: rgb(var(--accent-rgb) / 0.15); }
+        .color-btn.active { box-shadow: 0 0 0 2px var(--bg-surface), 0 0 0 4px rgb(var(--accent-rgb)); }
+
         /* Screen States */
-        .app-screen { 
-            position: absolute; 
-            inset: 0; 
+        .app-screen {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100dvh;
             overflow-x: hidden;
             overflow-y: auto;
-            transition: opacity 0.3s ease; 
-            opacity: 0; 
-            pointer-events: none; 
-            z-index: 1; 
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
         }
-        .app-screen.active { 
-            opacity: 1; 
-            pointer-events: auto; 
-            z-index: 20; 
+        .app-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 20;
         }
 
         /* Drawing Canvas */
         #drawing-canvas { position: absolute; inset: 0; z-index: 40; pointer-events: none; width: 100%; height: 100%; touch-action: none; }
         #drawing-canvas.active { pointer-events: auto; cursor: crosshair; }
-        .canvas-overlay-grid { background-image: radial-gradient(circle, rgba(99, 102, 241, 0.25) 1.5px, transparent 1.5px); background-size: 32px 32px; }
+        .canvas-overlay-grid { background-image: radial-gradient(circle, rgb(var(--accent-rgb) / 0.25) 1.5px, transparent 1.5px); background-size: 32px 32px; }
 
         /* Unified Card Containers */
         .spatial-card {
@@ -288,225 +497,922 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-subtle);
-            border-radius: 28px;
-            box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
         }
 
-        /* Inputs */
-        input[type="text"], input[type="datetime-local"], select {
+        /* Inputs without the .field treatment */
+        input[type="text"]:not(.field), input[type="datetime-local"]:not(.field), select:not(.field) {
             background-color: var(--input-bg) !important;
             border-color: var(--border-subtle) !important;
             color: var(--text-main) !important;
         }
 
         /* Context Menu */
-        #ctx-menu { 
-            position: fixed; 
-            background: var(--bg-surface); 
-            backdrop-filter: blur(24px); 
-            border-radius: 14px; 
-            z-index: 9000; 
-            display: none; 
-            flex-direction: column; 
-            min-width: 180px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
-            padding: 6px; 
-            border: 1px solid var(--border-subtle); 
+        #ctx-menu {
+            position: fixed;
+            background: var(--bg-surface);
+            backdrop-filter: blur(24px);
+            border-radius: 14px;
+            z-index: 9000;
+            display: none;
+            flex-direction: column;
+            min-width: 180px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            padding: 6px;
+            border: 1px solid var(--border-subtle);
         }
-        .ctx-item { 
-            padding: 9px 12px; 
-            font-size: 13px; 
-            font-weight: 500; 
-            cursor: pointer; 
-            display: flex; 
+        .ctx-item {
+            padding: 9px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
             align-items: center;
-            gap: 10px; 
+            gap: 10px;
             border-radius: 8px;
             color: var(--text-main);
             transition: all 0.15s ease;
         }
         .ctx-item:hover { background: var(--dock-btn-hover); }
-        .ctx-item.danger { color: #f43f5e; }
-        .ctx-item.danger:hover { background: rgba(244,63,94,0.12); }
+        .ctx-item.danger { color: rgb(var(--coral-rgb)); }
+        .ctx-item.danger:hover { background: rgb(var(--coral-rgb) / 0.12); }
+
+        /* ================= LANDING PAGE ================= */
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; height: 2px; width: 100%;
+            transform-origin: 0 50%; transform: scaleX(0);
+            background: linear-gradient(90deg, rgb(var(--accent-rgb)), rgb(var(--warm-rgb)));
+            z-index: 60;
+        }
+        .landing-blob {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+            animation: blob-float 18s ease-in-out infinite alternate;
+        }
+        .blob-a { width: 520px; height: 520px; top: -160px; left: -160px; background: rgb(var(--accent-rgb) / 0.18); }
+        .blob-b { width: 460px; height: 460px; top: 80px; right: -180px; background: rgb(var(--warm-rgb) / 0.16); animation-delay: -6s; }
+        .blob-c { width: 420px; height: 420px; top: 1500px; left: 10%; background: rgb(var(--calm-rgb) / 0.12); animation-delay: -11s; }
+        @keyframes blob-float {
+            0% { translate: 0 0; }
+            50% { translate: 40px 30px; }
+            100% { translate: -30px 50px; }
+        }
+
+        .landing-nav {
+            position: sticky; top: 0; z-index: 40;
+            border-bottom: 1px solid transparent;
+            transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+        }
+        .landing-nav.scrolled {
+            background: var(--bg-surface-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-color: var(--border-subtle);
+        }
+        .nav-link { color: var(--text-sub); transition: color 0.15s ease; }
+        .nav-link:hover { color: var(--text-main); }
+
+        .hero-accent {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: 1.12em;
+            letter-spacing: -0.01em;
+            color: rgb(var(--accent-rgb));
+            position: relative;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .hero-underline {
+            position: absolute; left: -2%; bottom: -0.08em;
+            width: 104%; height: 0.32em;
+            overflow: visible;
+        }
+        .hero-underline path {
+            fill: none;
+            stroke: rgb(var(--warm-rgb));
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: draw-line 1.3s 0.7s cubic-bezier(.6,.1,.2,1) forwards;
+        }
+        @keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+        .eyebrow-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 14px 6px 8px;
+            border-radius: 9999px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            font-size: 12.5px; font-weight: 500;
+            color: var(--text-sub);
+        }
+        .live-dot { position: relative; width: 8px; height: 8px; border-radius: 9999px; background: rgb(var(--accent-rgb)); }
+        .live-dot::after {
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            background: rgb(var(--accent-rgb));
+            animation: ping 2s cubic-bezier(0,0,.2,1) infinite;
+        }
+        @keyframes ping { 75%, 100% { transform: scale(2.4); opacity: 0; } }
+
+        .quick-start {
+            display: flex; gap: 8px; padding: 6px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 9999px;
+            box-shadow: var(--shadow-card);
+            width: 100%; max-width: 460px;
+        }
+        .quick-start input[type="text"] {
+            flex: 1; min-width: 0;
+            background: transparent !important; border: none !important;
+            padding: 0 6px 0 14px; font-size: 15px; font-weight: 500;
+            color: var(--text-main) !important; outline: none; box-shadow: none !important;
+        }
+        .quick-start input[type="text"]::placeholder { color: var(--text-dim); }
+        .quick-start:focus-within { border-color: rgb(var(--accent-rgb) / 0.6); box-shadow: 0 0 0 4px rgb(var(--accent-rgb) / 0.12), var(--shadow-card); }
+
+        /* Hero product mock */
+        .mock-stage { perspective: 1600px; }
+        .mock-window {
+            --tilt: 16deg;
+            --mock-scale: 0.92;
+            transform: rotateX(var(--tilt)) scale(var(--mock-scale));
+            transform-origin: 50% 0%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            border-radius: 22px;
+            box-shadow: var(--shadow-pop);
+            overflow: hidden;
+            will-change: transform;
+        }
+        .mock-tile {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            min-height: 0;
+        }
+        .mock-avatar {
+            width: 52px; height: 52px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 18px;
+            color: #fff;
+        }
+        @media (min-width: 768px) { .mock-avatar { width: 72px; height: 72px; font-size: 24px; } }
+        .mock-badge {
+            position: absolute; left: 8px; bottom: 8px;
+            display: flex; align-items: center; gap: 5px;
+            padding: 3px 8px; border-radius: 9999px;
+            background: rgba(0,0,0,0.45); color: #fff;
+            font-size: 10.5px; font-weight: 500;
+            backdrop-filter: blur(6px);
+        }
+        .mock-tile.speaking { animation: speak 2.6s ease-in-out infinite; }
+        @keyframes speak {
+            0%, 100% { box-shadow: 0 0 0 2px rgb(var(--accent-rgb)); }
+            50% { box-shadow: 0 0 0 4px rgb(var(--accent-rgb) / 0.45); }
+        }
+        .eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 10px; }
+        .eq i { width: 2px; background: rgb(var(--accent-rgb)); border-radius: 2px; animation: eq 0.9s ease-in-out infinite; }
+        .eq i:nth-child(2) { animation-delay: -0.3s; }
+        .eq i:nth-child(3) { animation-delay: -0.6s; }
+        @keyframes eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
+        .mock-dot { width: 32px; height: 32px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: var(--input-bg); color: var(--text-sub); }
+        .mock-dot .material-symbols-outlined { font-size: 17px; }
+
+        .doodle path {
+            fill: none; stroke: rgb(var(--warm-rgb)); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round;
+            stroke-dasharray: 1; stroke-dashoffset: 1;
+            transition: stroke-dashoffset 1.6s cubic-bezier(.6,.1,.2,1) 0.5s;
+        }
+        .is-visible .doodle path { stroke-dashoffset: 0; }
+        .is-visible .doodle path + path { transition-delay: 1.5s; }
+
+        /* Reveal-on-scroll */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.8s cubic-bezier(.2,.7,.2,1), transform 0.8s cubic-bezier(.2,.7,.2,1);
+            transition-delay: var(--d, 0ms);
+        }
+        [data-reveal="left"] { transform: translateX(-36px); }
+        [data-reveal="right"] { transform: translateX(36px); }
+        [data-reveal="fade"] { transform: none; }
+        [data-reveal].is-visible { opacity: 1; transform: none; }
+
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+            color: rgb(var(--accent-rgb));
+        }
+        .section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+        .section-title em { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 1.1em; color: rgb(var(--accent-rgb)); }
+
+        .stat-num { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+
+        /* How it works */
+        .how-line { position: absolute; top: 27px; left: 16.66%; right: 16.66%; height: 2px; background: var(--border-subtle); border-radius: 2px; overflow: hidden; }
+        .how-line-fill { height: 100%; width: 100%; transform-origin: 0 50%; transform: scaleX(var(--how, 0)); background: linear-gradient(90deg, rgb(var(--accent-rgb)), rgb(var(--warm-rgb))); }
+        .step-num {
+            position: relative; z-index: 1;
+            width: 56px; height: 56px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-surface); border: 1px solid var(--border-strong);
+            font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px;
+            color: rgb(var(--accent-rgb));
+            box-shadow: 0 0 0 6px var(--bg-base);
+        }
+
+        /* Feature cards */
+        .feature-card {
+            transition: opacity 0.8s cubic-bezier(.2,.7,.2,1) var(--d, 0ms), transform 0.8s cubic-bezier(.2,.7,.2,1) var(--d, 0ms),
+                        translate 0.35s cubic-bezier(.2,.7,.2,1), border-color 0.25s ease, box-shadow 0.35s ease;
+        }
+        @media (hover: hover) {
+            .feature-card:hover { translate: 0 -4px; border-color: var(--border-strong); box-shadow: var(--shadow-pop); }
+        }
+        .feature-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
+        }
+        .tone-accent { background: rgb(var(--accent-rgb) / 0.14); color: rgb(var(--accent-rgb)); }
+        .tone-warm { background: rgb(var(--warm-rgb) / 0.16); color: rgb(var(--warm-rgb)); }
+        .tone-calm { background: rgb(var(--calm-rgb) / 0.16); color: rgb(var(--calm-rgb)); }
+        .tone-coral { background: rgb(var(--coral-rgb) / 0.14); color: rgb(var(--coral-rgb)); }
+        .mini-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 10px; border-radius: 9999px;
+            background: var(--input-bg); border: 1px solid var(--border-subtle);
+            font-size: 11.5px; font-weight: 500; color: var(--text-sub);
+        }
+        .mini-chip .material-symbols-outlined { font-size: 14px; }
+        .sandbox-hint { transition: opacity 0.4s ease; }
+        .sandbox-board {
+            background-color: var(--input-bg);
+            background-image: radial-gradient(circle, var(--border-strong) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .theme-seg { display: inline-flex; padding: 4px; border-radius: 9999px; background: var(--input-bg); border: 1px solid var(--border-subtle); }
+        .theme-seg button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 9999px; font-size: 12.5px; font-weight: 600; color: var(--text-sub); transition: all 0.2s ease; }
+        .theme-seg button.on { background: var(--bg-surface); color: var(--text-main); box-shadow: 0 2px 8px -2px rgba(0,0,0,0.2); }
+        .blur-demo { background: linear-gradient(135deg, rgb(var(--calm-rgb) / 0.5), rgb(var(--warm-rgb) / 0.45), rgb(var(--accent-rgb) / 0.45)); }
+        .blur-demo .blur-layer { position: absolute; inset: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); transition: backdrop-filter 1.2s ease 0.6s, -webkit-backdrop-filter 1.2s ease 0.6s; }
+        .is-visible .blur-demo .blur-layer { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .chat-bubble { padding: 8px 12px; border-radius: 14px; font-size: 12px; line-height: 1.45; max-width: 85%; }
+
+        /* Marquee */
+        .marquee {
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        }
+        .marquee-track { display: flex; gap: 12px; width: max-content; animation: marquee 48s linear infinite; }
+        .marquee-track.reverse { animation-direction: reverse; animation-duration: 56s; }
+        @keyframes marquee { to { transform: translateX(calc(-50% - 6px)); } }
+        .chip {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 16px; border-radius: 9999px;
+            background: var(--card-bg); border: 1px solid var(--border-subtle);
+            font-size: 13.5px; font-weight: 500; color: var(--text-sub); white-space: nowrap;
+        }
+        .chip .material-symbols-outlined { font-size: 17px; color: rgb(var(--accent-rgb)); }
+
+        /* Peer-to-peer diagram */
+        .p2p-link { stroke: rgb(var(--accent-rgb) / 0.7); stroke-width: 2; stroke-dasharray: 4 7; animation: flow 1.4s linear infinite; fill: none; }
+        .p2p-link.alt { stroke: rgb(var(--warm-rgb) / 0.7); animation-direction: reverse; }
+        @keyframes flow { to { stroke-dashoffset: -22; } }
+        .p2p-node { fill: var(--bg-surface); stroke: var(--border-strong); stroke-width: 1.5; }
+        .p2p-signal { stroke: var(--text-dim); stroke-width: 1.2; stroke-dasharray: 2 5; fill: none; opacity: 0.6; }
+
+        /* FAQ */
+        .faq-item { border-bottom: 1px solid var(--border-subtle); }
+        .faq-item summary {
+            list-style: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            padding: 20px 0; font-weight: 600; font-size: 16px; color: var(--text-main);
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-icon { transition: transform 0.25s ease; color: var(--text-dim); flex-shrink: 0; }
+        .faq-item[open] .faq-icon { transform: rotate(45deg); color: rgb(var(--accent-rgb)); }
+        .faq-body { color: var(--text-sub); padding: 0 32px 20px 0; font-size: 15px; line-height: 1.65; }
+        .faq-item[open] .faq-body { animation: faq-in 0.35s ease; }
+        @keyframes faq-in { from { opacity: 0; transform: translateY(-6px); } }
+
+        /* ================= LOBBY (JOIN) SCREENS ================= */
+        .lobby-shell {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: calc(12px + env(safe-area-inset-top)) 16px 0;
+            position: relative;
+            z-index: 10;
+        }
+        @media (min-width: 768px) {
+            .lobby-shell { padding: 24px 32px 32px; }
+        }
+        .lobby-card {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .lobby-card {
+                grid-template-columns: 1.35fr 1fr;
+                gap: 0;
+                background: var(--card-bg);
+                border: 1px solid var(--border-subtle);
+                border-radius: 28px;
+                box-shadow: var(--shadow-card);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                overflow: hidden;
+            }
+            .lobby-preview { padding: 24px; }
+            .lobby-form { padding: 36px 32px; border-left: 1px solid var(--border-subtle); }
+        }
+        .lobby-video {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            max-height: 44dvh;
+            border-radius: 22px;
+            background: #0f1113;
+            overflow: hidden;
+            box-shadow: 0 0 0 1px var(--border-subtle);
+        }
+        @media (min-width: 768px) {
+            .lobby-video { aspect-ratio: 16 / 11; max-height: none; }
+        }
+        .lobby-video video { position: relative; z-index: 1; }
+        .select-wrap { position: relative; min-width: 0; }
+        .select-wrap > .material-symbols-outlined {
+            position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+            font-size: 17px; color: var(--text-dim); pointer-events: none; z-index: 1;
+        }
+        .lobby-actions {
+            position: sticky;
+            bottom: 0;
+            padding: 16px 0 calc(16px + env(safe-area-inset-bottom));
+            margin-top: 8px;
+            background: linear-gradient(to top, var(--bg-base) 72%, transparent);
+            z-index: 5;
+        }
+        @media (min-width: 768px) {
+            .lobby-actions { position: static; background: none; padding: 24px 0 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .marquee-track, .landing-blob, .p2p-link, .mock-tile.speaking, .eq i, .live-dot::after { animation: none !important; }
+            .hero-underline path, .doodle path { stroke-dashoffset: 0; animation: none; transition: none; }
+            .mock-window { --tilt: 0deg !important; --mock-scale: 1 !important; }
+        }
     </style>
 </head>
 <body class="font-body h-[100dvh] w-full flex flex-col overflow-hidden">
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-xl border border-white/15 text-white px-5 py-2.5 rounded-full shadow-2xl z-[10000] font-medium text-xs tracking-tight transition-all duration-300 opacity-0 pointer-events-none">
+    <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-panel text-main border border-strong px-5 py-2.5 rounded-full shadow-2xl z-[10000] font-medium text-xs tracking-tight transition-all duration-300 opacity-0 pointer-events-none">
         Message
     </div>
 
     <!-- Lag Recovery Prompt -->
-    <div id="lag-prompt" class="fixed bottom-24 left-6 z-[10000] hidden opacity-0 transition-opacity duration-300 pointer-events-auto">
-        <div class="spatial-card p-4 w-72 flex flex-col gap-3">
+    <div id="lag-prompt" class="fixed bottom-28 left-3 right-3 sm:right-auto sm:left-6 z-[10000] hidden opacity-0 transition-opacity duration-300 pointer-events-auto">
+        <div class="spatial-card p-4 sm:w-72 flex flex-col gap-3">
             <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px] text-amber-400">wifi_off</span>
-                <h3 class="text-xs font-semibold font-headline text-white">Unstable Connection</h3>
+                <span class="material-symbols-outlined text-[18px] text-warm">wifi_off</span>
+                <h3 class="text-xs font-semibold font-headline text-main">Unstable Connection</h3>
             </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">Bandwidth fluctuates. Disable your camera feed to preserve uninterrupted audio?</p>
+            <p class="text-[12px] text-sub leading-relaxed">Bandwidth fluctuates. Disable your camera feed to preserve uninterrupted audio?</p>
             <div class="flex gap-2 pt-1">
-                <button onclick="App.lagAction(true)" class="flex-1 bg-white text-black font-semibold py-1.5 px-3 rounded-xl text-[11px] hover:bg-slate-200 transition-colors">Disable Video</button>
-                <button onclick="App.lagAction(false)" class="flex-1 bg-white/5 border border-white/10 text-white font-semibold py-1.5 px-3 rounded-xl text-[11px] hover:bg-white/10 transition-colors">Keep On</button>
+                <button onclick="App.lagAction(true)" class="btn-primary flex-1 font-semibold py-2 px-3 rounded-xl text-[12px]">Disable Video</button>
+                <button onclick="App.lagAction(false)" class="btn-ghost flex-1 font-semibold py-2 px-3 rounded-xl text-[12px]">Keep On</button>
             </div>
-            <button onclick="App.dontShowLagAgain()" class="text-center text-[10px] text-slate-500 hover:text-slate-400 underline">Don't remind again</button>
+            <button onclick="App.dontShowLagAgain()" class="text-center text-[11px] text-dim hover:text-sub underline">Don't remind again</button>
         </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- SCREEN 1: MARKETING & CONCEPT 4 HERO (/)  -->
+    <!-- SCREEN 1: MARKETING / LANDING (/)          -->
     <!-- ========================================== -->
-    <main id="screen-marketing" class="app-screen w-full h-[100dvh] overflow-y-auto overflow-x-hidden flex flex-col px-6 md:px-16">
-        <div class="spatial-grid-floor"></div>
-        <div class="ambient-core-glow"></div>
+    <main id="screen-marketing" class="app-screen">
+        <div id="scroll-progress"></div>
+        <div class="absolute inset-x-0 top-0 h-[2200px] overflow-hidden pointer-events-none" aria-hidden="true">
+            <div class="landing-blob blob-a" data-speed="0.25"></div>
+            <div class="landing-blob blob-b" data-speed="0.15"></div>
+            <div class="landing-blob blob-c" data-speed="-0.1"></div>
+        </div>
 
-        <!-- Top Navigation with Theme Toggle -->
-        <header class="max-w-6xl w-full mx-auto flex justify-between items-center py-6 md:py-8 z-10">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-accent to-purple-400 flex items-center justify-center shadow-lg shadow-accent/20">
-                    <span class="material-symbols-outlined text-white text-[18px]">radio_button_checked</span>
+        <!-- Top Navigation -->
+        <header id="landing-nav" class="landing-nav px-5 md:px-10">
+            <div class="max-w-6xl mx-auto flex justify-between items-center h-16 md:h-[72px]">
+                <a href="/" onclick="event.preventDefault(); document.getElementById('screen-marketing').scrollTo({top: 0, behavior: 'smooth'})" class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-[10px] bg-accent flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-accent text-[19px]">ac_unit</span>
+                    </div>
+                    <span class="font-headline font-bold text-[17px] tracking-tight">YukiMeet</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-8 text-[14px] font-medium">
+                    <a href="#bento-features" data-scroll-to="bento-features" class="nav-link">Features</a>
+                    <a href="#how" data-scroll-to="how" class="nav-link">How it works</a>
+                    <a href="#privacy" data-scroll-to="privacy" class="nav-link">Privacy</a>
+                    <a href="#faq" data-scroll-to="faq" class="nav-link">FAQ</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="App.toggleTheme()" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">
+                        <span id="theme-icon" class="theme-icon material-symbols-outlined text-[18px]">light_mode</span>
+                    </button>
+                    <button onclick="App.navigate('/me')" class="icon-btn" title="Profile" aria-label="Profile">
+                        <span class="material-symbols-outlined text-[18px]">person</span>
+                    </button>
+                    <button onclick="App.navigate('/join')" class="btn-primary text-[13px] font-semibold px-4 h-9 rounded-full">Join room</button>
                 </div>
-                <span class="font-headline font-semibold text-lg tracking-tight">YukiMeet</span>
-            </div>
-            <div class="flex items-center gap-2 md:gap-3">
-                <button onclick="App.toggleTheme()" class="w-8 h-8 rounded-full border border-subtle flex items-center justify-center text-sub hover:text-main transition-all" title="Toggle Theme">
-                    <span id="theme-icon" class="material-symbols-outlined text-[18px]">light_mode</span>
-                </button>
-                <button onclick="App.navigate('/join')" class="border border-subtle text-xs font-semibold px-4 py-2 rounded-full hover:opacity-80 transition-all">Join Room</button>
-                <button onclick="App.navigate('/me')" class="w-8 h-8 rounded-full border border-subtle flex items-center justify-center text-sub hover:text-main transition-all">
-                    <span class="material-symbols-outlined text-[18px]">person</span>
-                </button>
             </div>
         </header>
 
-        <!-- Hero Section -->
-        <section class="max-w-4xl w-full mx-auto text-center py-16 md:py-24 flex flex-col items-center z-10">
-            <h1 class="font-headline font-bold text-5xl md:text-7xl tracking-[-0.04em] leading-[1.08] mb-6">
-                Video meetings, <br/>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">made effortless.</span>
-            </h1>
-            <p class="font-body text-base md:text-lg opacity-75 max-w-xl mb-10 leading-relaxed font-normal">
-                Crystal clear calls with an interactive whiteboard, seamless screen sharing, and zero downloads.
-            </p>
-            <div class="flex items-center gap-4">
-                <button onclick="App.navigate('/join')" class="bg-slate-900 text-white dark:bg-white dark:text-black font-semibold text-sm px-6 py-3.5 rounded-full hover:opacity-90 transition-all flex items-center gap-2 shadow-xl">
-                    Start a Meeting <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                </button>
-                <button onclick="document.getElementById('bento-features').scrollIntoView({behavior: 'smooth'})" class="border border-subtle text-sm font-semibold px-6 py-3.5 rounded-full hover:opacity-80 transition-all">
-                    Features
-                </button>
+        <!-- Hero -->
+        <section class="relative z-10 px-5 md:px-10 pt-12 md:pt-20 text-center">
+            <div class="max-w-4xl mx-auto flex flex-col items-center">
+                <div class="eyebrow-pill mb-7" data-reveal>
+                    <span class="live-dot"></span>
+                    Free · No downloads · Works on any device
+                </div>
+                <h1 class="font-headline font-bold text-[42px] leading-[1.06] sm:text-6xl md:text-7xl tracking-[-0.04em] mb-6" data-reveal style="--d: 80ms">
+                    Video meetings,<br/>
+                    <span class="hero-accent">made effortless.<svg class="hero-underline" viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14 C 60 4, 120 4, 170 10 S 260 16, 296 6"/></svg></span>
+                </h1>
+                <p class="text-[16px] md:text-lg text-sub max-w-xl mb-9 leading-relaxed" data-reveal style="--d: 160ms">
+                    Crystal clear calls with a live whiteboard, seamless screen sharing and background blur — straight from your browser, in seconds.
+                </p>
+                <form class="quick-start mb-5" onsubmit="App.quickStart(event)" data-reveal style="--d: 240ms">
+                    <input id="quick-room" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Name your room, e.g. design-sync" aria-label="Room name"/>
+                    <button type="submit" class="btn-primary shrink-0 font-semibold text-[14px] pl-5 pr-4 h-11 rounded-full flex items-center gap-1.5">
+                        <span class="hidden sm:inline">Start meeting</span><span class="sm:hidden">Start</span>
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </button>
+                </form>
+                <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-sub" data-reveal style="--d: 320ms">
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-accent">hub</span> Peer-to-peer</span>
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-accent">encrypted</span> Encrypted in transit</span>
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[17px] text-accent">badge</span> Guests just need a name</span>
+                </div>
+            </div>
+
+            <!-- Product mock -->
+            <div class="mock-stage max-w-5xl mx-auto mt-14 md:mt-20" data-reveal="fade" style="--d: 300ms">
+                <div id="hero-mock" class="mock-window text-left">
+                    <div class="flex items-center justify-between px-4 h-11 border-b border-subtle">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-coral/70"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-warm/70"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-accent/70"></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-[11.5px] text-sub font-medium">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> DESIGN-SYNC <span class="text-dim">/</span> 4 online
+                        </div>
+                        <span class="material-symbols-outlined text-[16px] text-dim">link</span>
+                    </div>
+                    <div class="relative p-3 md:p-4 grid grid-cols-2 gap-2.5 md:gap-3 h-[260px] sm:h-[340px] md:h-[440px]">
+                        <div class="mock-tile speaking" style="background: linear-gradient(140deg, rgb(var(--accent-rgb) / .45), rgb(var(--accent-rgb) / .15))">
+                            <div class="mock-avatar" style="background: rgb(var(--accent-rgb))">AK</div>
+                            <div class="mock-badge"><span class="eq"><i></i><i></i><i></i></span> Aiko</div>
+                        </div>
+                        <div class="mock-tile" style="background: linear-gradient(140deg, rgb(var(--warm-rgb) / .45), rgb(var(--warm-rgb) / .15))">
+                            <div class="mock-avatar" style="background: rgb(var(--warm-rgb))">MR</div>
+                            <div class="mock-badge"><span class="material-symbols-outlined text-[12px]">mic</span> Marco</div>
+                        </div>
+                        <div class="mock-tile" style="background: linear-gradient(140deg, rgb(var(--calm-rgb) / .45), rgb(var(--calm-rgb) / .15))">
+                            <div class="mock-avatar" style="background: rgb(var(--calm-rgb))">SL</div>
+                            <div class="mock-badge"><span class="material-symbols-outlined text-[12px]">mic_off</span> Sana</div>
+                        </div>
+                        <div class="mock-tile" style="background: linear-gradient(140deg, rgb(var(--coral-rgb) / .4), rgb(var(--coral-rgb) / .12))">
+                            <div class="mock-avatar" style="background: rgb(var(--coral-rgb))">JT</div>
+                            <div class="mock-badge"><span class="material-symbols-outlined text-[12px]">mic</span> Jonas</div>
+                        </div>
+                        <!-- Whiteboard doodle drawn over the call -->
+                        <svg class="doodle absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+                            <path pathLength="1" d="M120 150 C 160 120, 210 110, 262 84"/>
+                            <path pathLength="1" d="M246 78 L 264 83 L 256 100"/>
+                        </svg>
+                        <div class="absolute left-1/2 -translate-x-1/2 bottom-5 flex items-center gap-1.5 p-1.5 rounded-full bg-panel border border-strong shadow-lg">
+                            <span class="mock-dot"><span class="material-symbols-outlined">mic</span></span>
+                            <span class="mock-dot"><span class="material-symbols-outlined">videocam</span></span>
+                            <span class="mock-dot hidden sm:flex"><span class="material-symbols-outlined">present_to_all</span></span>
+                            <span class="mock-dot tone-accent"><span class="material-symbols-outlined">gesture</span></span>
+                            <span class="mock-dot hidden sm:flex"><span class="material-symbols-outlined">blur_on</span></span>
+                            <span class="mock-dot" style="background:#d9574a;color:#fff;width:42px"><span class="material-symbols-outlined">call_end</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="relative z-10 px-5 md:px-10 pt-16 md:pt-24">
+            <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-px rounded-3xl overflow-hidden border border-subtle bg-[var(--border-subtle)]">
+                <div class="bg-page p-6 md:p-8" data-reveal>
+                    <div class="stat-num text-4xl md:text-5xl mb-2"><span data-count="0">0</span></div>
+                    <div class="text-[13px] text-sub leading-snug">apps or plugins to install</div>
+                </div>
+                <div class="bg-page p-6 md:p-8" data-reveal style="--d: 80ms">
+                    <div class="stat-num text-4xl md:text-5xl mb-2 text-accent"><span data-count="1">1</span></div>
+                    <div class="text-[13px] text-sub leading-snug">link is all a guest needs to join</div>
+                </div>
+                <div class="bg-page p-6 md:p-8" data-reveal style="--d: 160ms">
+                    <div class="stat-num text-4xl md:text-5xl mb-2"><span data-count="6">6</span></div>
+                    <div class="text-[13px] text-sub leading-snug">whiteboard tools: pen, line, arrow, box, circle, eraser</div>
+                </div>
+                <div class="bg-page p-6 md:p-8" data-reveal style="--d: 240ms">
+                    <div class="stat-num text-4xl md:text-5xl mb-2 text-warm"><span data-count="100">100</span>%</div>
+                    <div class="text-[13px] text-sub leading-snug">of background blur runs on your own device</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section id="how" class="relative z-10 px-5 md:px-10 pt-24 md:pt-32">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-14" data-reveal>
+                    <span class="section-eyebrow mb-3">How it works</span>
+                    <h2 class="section-title text-3xl md:text-5xl">From idea to call in <em>three steps</em></h2>
+                </div>
+                <div class="relative grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+                    <div class="how-line hidden md:block"><div id="how-fill" class="how-line-fill"></div></div>
+                    <div class="flex md:flex-col items-start md:items-center md:text-center gap-5" data-reveal>
+                        <div class="step-num shrink-0">01</div>
+                        <div>
+                            <h3 class="font-headline font-bold text-lg mb-1.5">Name a room</h3>
+                            <p class="text-[14.5px] text-sub leading-relaxed">Pick something memorable like <span class="font-mono text-[13px] text-main">design-sync</span>. The name becomes your meeting link.</p>
+                        </div>
+                    </div>
+                    <div class="flex md:flex-col items-start md:items-center md:text-center gap-5" data-reveal style="--d: 120ms">
+                        <div class="step-num shrink-0">02</div>
+                        <div>
+                            <h3 class="font-headline font-bold text-lg mb-1.5">Check your setup</h3>
+                            <p class="text-[14.5px] text-sub leading-relaxed">Preview your camera, choose a microphone and watch the live level meter before you go in.</p>
+                        </div>
+                    </div>
+                    <div class="flex md:flex-col items-start md:items-center md:text-center gap-5" data-reveal style="--d: 240ms">
+                        <div class="step-num shrink-0">03</div>
+                        <div>
+                            <h3 class="font-headline font-bold text-lg mb-1.5">Share the link</h3>
+                            <p class="text-[14.5px] text-sub leading-relaxed">Send <span class="font-mono text-[13px] text-main">/j/your-room</span> to anyone. Guests type their name and they're in.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Feature Cards -->
-        <section id="bento-features" class="max-w-5xl w-full mx-auto py-16 z-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="spatial-card p-6 md:col-span-2 flex flex-col justify-between min-h-[300px]">
-                    <div>
-                        <span class="text-[11px] font-semibold text-accent uppercase tracking-wider mb-2 block">Live Tools</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Interactive Whiteboard</h3>
-                        <p class="text-xs text-slate-400">Sketch ideas, draw diagrams, and annotate directly over shared screens with everyone.</p>
-                    </div>
-                    <div class="relative w-full h-[160px] bg-black/40 border border-white/5 rounded-2xl overflow-hidden cursor-crosshair mt-4">
-                        <canvas id="sandbox-canvas" class="absolute inset-0 w-full h-full"></canvas>
-                        <button onclick="App.clearSandbox()" class="absolute bottom-3 right-3 bg-white/10 text-white text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/20 transition-all">Clear Board</button>
-                    </div>
+        <section id="bento-features" class="relative z-10 px-5 md:px-10 pt-24 md:pt-32">
+            <div class="max-w-6xl mx-auto">
+                <div class="max-w-2xl mb-12" data-reveal>
+                    <span class="section-eyebrow mb-3">Features</span>
+                    <h2 class="section-title text-3xl md:text-5xl mb-4">Everything a meeting needs. <em>Nothing it doesn't.</em></h2>
+                    <p class="text-sub text-[16px] leading-relaxed">Thoughtful tools that stay out of the way until you reach for them.</p>
                 </div>
 
-                <div class="spatial-card p-6 flex flex-col justify-between">
-                    <div>
-                        <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider mb-2 block">Personal</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Custom Profile</h3>
-                        <p class="text-xs text-slate-400">Set your name and photo so attendees know who is in the room.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+                    <!-- Whiteboard -->
+                    <div class="spatial-card feature-card p-6 md:col-span-2 flex flex-col" data-reveal>
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <div class="feature-icon tone-accent"><span class="material-symbols-outlined">gesture</span></div>
+                                <h3 class="font-headline font-bold text-xl mb-2">Interactive whiteboard</h3>
+                                <p class="text-[14px] text-sub max-w-md leading-relaxed">Sketch ideas, draw diagrams and annotate right over the call — everyone sees every stroke live.</p>
+                            </div>
+                        </div>
+                        <div class="sandbox-board relative w-full h-[180px] border border-subtle rounded-2xl overflow-hidden cursor-crosshair mt-5">
+                            <canvas id="sandbox-canvas" class="absolute inset-0 w-full h-full" style="touch-action: none"></canvas>
+                            <div id="sandbox-hint" class="sandbox-hint absolute inset-0 flex items-center justify-center pointer-events-none text-[13px] text-dim gap-1.5">
+                                <span class="material-symbols-outlined text-[18px]">touch_app</span> Try drawing here
+                            </div>
+                            <button onclick="App.clearSandbox()" class="btn-ghost absolute bottom-3 right-3 text-[11px] font-semibold px-3 py-1.5 rounded-lg">Clear board</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            <span class="mini-chip"><span class="material-symbols-outlined">edit</span>Pen</span>
+                            <span class="mini-chip"><span class="material-symbols-outlined">horizontal_rule</span>Line</span>
+                            <span class="mini-chip"><span class="material-symbols-outlined">north_east</span>Arrow</span>
+                            <span class="mini-chip"><span class="material-symbols-outlined">crop_square</span>Box</span>
+                            <span class="mini-chip"><span class="material-symbols-outlined">radio_button_unchecked</span>Circle</span>
+                            <span class="mini-chip"><span class="material-symbols-outlined">auto_fix_normal</span>Eraser</span>
+                        </div>
                     </div>
-                    <div class="h-10 border-t border-white/10 flex items-center justify-between mt-6">
-                        <span class="text-[11px] text-slate-500 font-mono">SAVED LOCALLY</span>
-                        <span class="material-symbols-outlined text-slate-500 text-[16px]">account_box</span>
+
+                    <!-- Background -->
+                    <div class="spatial-card feature-card p-6 flex flex-col" data-reveal style="--d: 100ms">
+                        <div class="feature-icon tone-calm"><span class="material-symbols-outlined">blur_on</span></div>
+                        <h3 class="font-headline font-bold text-xl mb-2">Background blur</h3>
+                        <p class="text-[14px] text-sub leading-relaxed mb-5">Blur your room or swap in a scene. Segmentation runs on-device with MediaPipe.</p>
+                        <div class="blur-demo relative mt-auto h-[120px] rounded-2xl overflow-hidden flex items-end justify-center">
+                            <div class="absolute left-[18%] top-[22%] w-10 h-14 rounded-md bg-white/40"></div>
+                            <div class="absolute right-[16%] top-[30%] w-14 h-8 rounded-md bg-black/20"></div>
+                            <div class="blur-layer"></div>
+                            <div class="relative flex flex-col items-center">
+                                <div class="w-11 h-11 rounded-full bg-[#f1d6b8] border-2 border-white/70"></div>
+                                <div class="w-24 h-10 -mt-1 rounded-t-[40px] bg-[#3e5f73]"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Screen share -->
+                    <div class="spatial-card feature-card p-6" data-reveal>
+                        <div class="feature-icon tone-warm"><span class="material-symbols-outlined">present_to_all</span></div>
+                        <h3 class="font-headline font-bold text-xl mb-2">Screen sharing</h3>
+                        <p class="text-[14px] text-sub leading-relaxed">Present a tab, a window or your whole screen. Shared screens are shown uncropped and auto-spotlighted.</p>
+                    </div>
+
+                    <!-- PiP -->
+                    <div class="spatial-card feature-card p-6" data-reveal style="--d: 80ms">
+                        <div class="feature-icon tone-accent"><span class="material-symbols-outlined">picture_in_picture_alt</span></div>
+                        <h3 class="font-headline font-bold text-xl mb-2">Picture-in-picture</h3>
+                        <p class="text-[14px] text-sub leading-relaxed">Pop the call into a floating window and keep working in other tabs without losing sight of anyone.</p>
+                    </div>
+
+                    <!-- Host controls -->
+                    <div class="spatial-card feature-card p-6" data-reveal style="--d: 160ms">
+                        <div class="feature-icon tone-coral"><span class="material-symbols-outlined">admin_panel_settings</span></div>
+                        <h3 class="font-headline font-bold text-xl mb-2">Host controls</h3>
+                        <p class="text-[14px] text-sub leading-relaxed">Hosts can mute a noisy mic or remove a participant from a quick context menu.</p>
+                    </div>
+
+                    <!-- Assistant -->
+                    <div class="spatial-card feature-card p-6 md:col-span-2 grid md:grid-cols-2 gap-6 items-center" data-reveal>
+                        <div>
+                            <div class="feature-icon tone-calm"><span class="material-symbols-outlined">auto_awesome</span></div>
+                            <h3 class="font-headline font-bold text-xl mb-2">Meeting assistant</h3>
+                            <p class="text-[14px] text-sub leading-relaxed">Ask questions or get quick notes on topics discussed, in a side panel that never covers the call.</p>
+                        </div>
+                        <div class="flex flex-col gap-2 p-4 rounded-2xl bg-soft border border-subtle">
+                            <div class="chat-bubble bg-accent text-on-accent self-end">Summarise the last 10 minutes?</div>
+                            <div class="chat-bubble bg-panel border border-subtle text-sub self-start">Agreed to ship the new onboarding on Friday. Marco owns QA, Sana drafts the release notes.</div>
+                        </div>
+                    </div>
+
+                    <!-- Scheduler -->
+                    <div class="spatial-card feature-card p-6" data-reveal style="--d: 100ms">
+                        <div class="feature-icon tone-warm"><span class="material-symbols-outlined">event</span></div>
+                        <h3 class="font-headline font-bold text-xl mb-2">Scheduled invites</h3>
+                        <p class="text-[14px] text-sub leading-relaxed">Pick a topic and time, get a ready-to-send invitation, then copy it or share it natively.</p>
+                    </div>
+
+                    <!-- Profile -->
+                    <div class="spatial-card feature-card p-6 flex flex-col" data-reveal>
+                        <div class="feature-icon tone-accent"><span class="material-symbols-outlined">account_circle</span></div>
+                        <h3 class="font-headline font-bold text-xl mb-2">Custom profile</h3>
+                        <p class="text-[14px] text-sub leading-relaxed">Set your name and photo so attendees know who's in the room.</p>
+                        <div class="mt-5 pt-4 border-t border-subtle flex items-center justify-between text-[11px] text-dim font-mono">
+                            SAVED LOCALLY <span class="material-symbols-outlined text-[16px]">lock</span>
+                        </div>
+                    </div>
+
+                    <!-- Comfort / theme -->
+                    <div class="spatial-card feature-card p-6 md:col-span-2 flex flex-col md:flex-row md:items-center justify-between gap-6" data-reveal style="--d: 100ms">
+                        <div>
+                            <div class="feature-icon tone-calm"><span class="material-symbols-outlined">contrast</span></div>
+                            <h3 class="font-headline font-bold text-xl mb-2">Easy on the eyes</h3>
+                            <p class="text-[14px] text-sub leading-relaxed max-w-md">Soft, warm tones in both light and dark mode — made for long meetings and late reviews. Try it:</p>
+                        </div>
+                        <div class="theme-seg self-start md:self-center" role="group" aria-label="Theme">
+                            <button type="button" data-theme-choice="light" onclick="App.applyTheme('light')"><span class="material-symbols-outlined text-[16px]">light_mode</span>Light</button>
+                            <button type="button" data-theme-choice="dark" onclick="App.applyTheme('dark')"><span class="material-symbols-outlined text-[16px]">dark_mode</span>Dark</button>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="spatial-card p-6 flex flex-col justify-between">
-                    <div>
-                        <span class="text-[11px] font-semibold text-indigo-400 uppercase tracking-wider mb-2 block">Comfort</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Easy on Eyes</h3>
-                        <p class="text-xs text-slate-400 mb-4">Focused dark mode crafted for long meetings and team reviews.</p>
-                    </div>
-                    <input type="range" id="theme-slider" min="0" max="1" step="1" value="1" class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer" oninput="App.sliderThemeChange(this.value)">
+        <!-- Marquee of capabilities -->
+        <section class="relative z-10 pt-20 md:pt-28" aria-label="All capabilities">
+            <div class="flex flex-col gap-3" data-reveal="fade">
+                <div class="marquee"><div class="marquee-track" data-marquee>
+                    <span class="chip"><span class="material-symbols-outlined">grid_view</span>Adaptive video grid</span>
+                    <span class="chip"><span class="material-symbols-outlined">push_pin</span>Pin any speaker</span>
+                    <span class="chip"><span class="material-symbols-outlined">graphic_eq</span>Active speaker highlight</span>
+                    <span class="chip"><span class="material-symbols-outlined">tune</span>Camera & mic picker</span>
+                    <span class="chip"><span class="material-symbols-outlined">equalizer</span>Live mic level meter</span>
+                    <span class="chip"><span class="material-symbols-outlined">badge</span>Guest mode</span>
+                    <span class="chip"><span class="material-symbols-outlined">login</span>Account sign-in</span>
+                    <span class="chip"><span class="material-symbols-outlined">wifi_off</span>Audio-first on weak connections</span>
+                </div></div>
+                <div class="marquee"><div class="marquee-track reverse" data-marquee>
+                    <span class="chip"><span class="material-symbols-outlined">link</span>One-tap invite link</span>
+                    <span class="chip"><span class="material-symbols-outlined">ios_share</span>Native share sheet</span>
+                    <span class="chip"><span class="material-symbols-outlined">wallpaper</span>Custom backgrounds</span>
+                    <span class="chip"><span class="material-symbols-outlined">landscape</span>Preset panoramas</span>
+                    <span class="chip"><span class="material-symbols-outlined">mic_off</span>Host force-mute</span>
+                    <span class="chip"><span class="material-symbols-outlined">dark_mode</span>Light & dark themes</span>
+                    <span class="chip"><span class="material-symbols-outlined">smartphone</span>Phone-friendly controls</span>
+                    <span class="chip"><span class="material-symbols-outlined">schedule</span>Scheduled invitations</span>
+                </div></div>
+            </div>
+        </section>
+
+        <!-- Privacy -->
+        <section id="privacy" class="relative z-10 px-5 md:px-10 pt-24 md:pt-32">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+                <div data-reveal="left">
+                    <span class="section-eyebrow mb-3">Privacy</span>
+                    <h2 class="section-title text-3xl md:text-5xl mb-5">Your call goes straight to <em>the people in it.</em></h2>
+                    <p class="text-sub text-[16px] leading-relaxed mb-8">Audio and video flow directly between browsers. Our server only helps participants find each other.</p>
+                    <ul class="space-y-4">
+                        <li class="flex gap-3">
+                            <span class="feature-icon tone-accent !w-9 !h-9 !mb-0 shrink-0"><span class="material-symbols-outlined text-[19px]">hub</span></span>
+                            <div><div class="font-semibold text-[15px]">Direct WebRTC connections</div><div class="text-[14px] text-sub">Media travels peer-to-peer whenever your network allows it.</div></div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="feature-icon tone-warm !w-9 !h-9 !mb-0 shrink-0"><span class="material-symbols-outlined text-[19px]">encrypted</span></span>
+                            <div><div class="font-semibold text-[15px]">Encrypted in transit</div><div class="text-[14px] text-sub">Every stream is protected with DTLS-SRTP, built into WebRTC.</div></div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="feature-icon tone-calm !w-9 !h-9 !mb-0 shrink-0"><span class="material-symbols-outlined text-[19px]">memory</span></span>
+                            <div><div class="font-semibold text-[15px]">Effects stay on your device</div><div class="text-[14px] text-sub">Background blur and replacement are processed locally.</div></div>
+                        </li>
+                    </ul>
                 </div>
+                <div class="spatial-card p-6 md:p-8" data-reveal="right" style="--d: 120ms">
+                    <svg viewBox="0 0 360 300" class="w-full h-auto" role="img" aria-label="Three participants connected directly to each other">
+                        <path class="p2p-signal" d="M180 150 L 180 270"/>
+                        <path class="p2p-link" d="M180 50 L 70 210"/>
+                        <path class="p2p-link alt" d="M180 50 L 290 210"/>
+                        <path class="p2p-link" d="M70 210 L 290 210"/>
+                        <g>
+                            <circle class="p2p-node" cx="180" cy="50" r="30"/>
+                            <circle cx="180" cy="50" r="22" fill="rgb(var(--accent-rgb))"/>
+                            <text x="180" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Plus Jakarta Sans">AK</text>
+                        </g>
+                        <g>
+                            <circle class="p2p-node" cx="70" cy="210" r="30"/>
+                            <circle cx="70" cy="210" r="22" fill="rgb(var(--warm-rgb))"/>
+                            <text x="70" y="215" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Plus Jakarta Sans">MR</text>
+                        </g>
+                        <g>
+                            <circle class="p2p-node" cx="290" cy="210" r="30"/>
+                            <circle cx="290" cy="210" r="22" fill="rgb(var(--calm-rgb))"/>
+                            <text x="290" y="215" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="Plus Jakarta Sans">SL</text>
+                        </g>
+                        <rect x="140" y="262" width="80" height="26" rx="13" class="p2p-node"/>
+                        <text x="180" y="279" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--text-dim)" font-family="Instrument Sans">signalling only</text>
+                        <text x="180" y="138" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-sub)" font-family="Instrument Sans">media, direct</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
 
-                <div class="spatial-card p-6 md:col-span-2 flex flex-col justify-between">
-                    <div>
-                        <span class="text-[11px] font-semibold text-purple-400 uppercase tracking-wider mb-2 block">Privacy</span>
-                        <h3 class="font-headline font-bold text-xl text-white mb-2">Direct & Instant</h3>
-                        <p class="text-xs text-slate-400">Calls connect directly between users right in your browser. Nothing to install.</p>
-                    </div>
-                    <div class="flex gap-4 mt-6">
-                        <span class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Screen Sharing</span>
-                        <span class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Background Blur</span>
-                    </div>
+        <!-- FAQ -->
+        <section id="faq" class="relative z-10 px-5 md:px-10 pt-24 md:pt-32">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-10" data-reveal>
+                    <span class="section-eyebrow mb-3">FAQ</span>
+                    <h2 class="section-title text-3xl md:text-5xl">Questions, <em>answered</em></h2>
+                </div>
+                <div data-reveal>
+                    <details class="faq-item">
+                        <summary>Do I need an account?<span class="material-symbols-outlined faq-icon">add</span></summary>
+                        <div class="faq-body">No. Guests just type a name and join. Signing in keeps your display name and avatar with you across devices.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Do participants have to install anything?<span class="material-symbols-outlined faq-icon">add</span></summary>
+                        <div class="faq-body">Nothing at all. YukiMeet runs in any modern browser — Chrome, Edge, Firefox and Safari, on desktop and mobile.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>How do I invite people?<span class="material-symbols-outlined faq-icon">add</span></summary>
+                        <div class="faq-body">Every room has its own link (<span class="font-mono text-[13px]">/j/room-name</span>). Tap the link icon inside a call to copy it, or create a scheduled invitation from your profile page.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Is my video sent to a server for background blur?<span class="material-symbols-outlined faq-icon">add</span></summary>
+                        <div class="faq-body">No. Blur and background replacement run locally in your browser; only the finished video is sent to the other participants.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary>What happens on a weak connection?<span class="material-symbols-outlined faq-icon">add</span></summary>
+                        <div class="faq-body">If your bandwidth drops, YukiMeet offers to switch your camera off so your voice keeps coming through clearly.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="relative z-10 px-5 md:px-10 pt-24 md:pt-32 pb-16">
+            <div class="max-w-5xl mx-auto relative overflow-hidden rounded-[32px] border border-subtle p-10 md:p-16 text-center bg-panel" data-reveal>
+                <div class="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-accent/20 blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-warm/20 blur-3xl pointer-events-none"></div>
+                <h2 class="section-title relative text-3xl md:text-5xl mb-4">Your next meeting is <em>one link away.</em></h2>
+                <p class="relative text-sub text-[16px] mb-8 max-w-lg mx-auto">Start a room now and send the link — no sign-up required.</p>
+                <div class="relative flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button onclick="App.navigate('/join')" class="btn-primary w-full sm:w-auto font-semibold text-[15px] px-7 h-12 rounded-full flex items-center justify-center gap-2">
+                        Start a meeting <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </button>
+                    <button onclick="App.navigate('/me')" class="btn-ghost w-full sm:w-auto font-semibold text-[15px] px-7 h-12 rounded-full">Schedule for later</button>
                 </div>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer class="max-w-5xl w-full mx-auto text-center py-12 border-t border-white/5 text-[11px] text-slate-600 z-10 font-mono">
-            YUKIMEET
+        <footer class="relative z-10 px-5 md:px-10 pb-10">
+            <div class="max-w-6xl mx-auto pt-8 border-t border-subtle flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-dim">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-[8px] bg-accent flex items-center justify-center"><span class="material-symbols-outlined text-on-accent text-[15px]">ac_unit</span></div>
+                    <span class="font-headline font-semibold text-sub">YukiMeet</span>
+                    <span>· Calm, focused calls.</span>
+                </div>
+                <div class="flex items-center gap-5">
+                    <button onclick="App.navigate('/join')" class="nav-link">Start a meeting</button>
+                    <button onclick="App.navigate('/me')" class="nav-link">Profile</button>
+                    <a href="#faq" data-scroll-to="faq" class="nav-link">FAQ</a>
+                </div>
+            </div>
         </footer>
     </main>
 
     <!-- ========================================== -->
     <!-- SCREEN 2: JOIN / GREEN ROOM LOBBY (/join)  -->
     <!-- ========================================== -->
-    <main id="screen-join" class="app-screen flex items-center justify-center p-6">
-        <div class="spatial-grid-floor"></div>
+    <main id="screen-join" class="app-screen">
         <div class="ambient-core-glow"></div>
+        <div class="lobby-shell">
+            <header class="max-w-[1000px] w-full mx-auto flex items-center justify-between h-12 mb-3 md:mb-8">
+                <button onclick="App.navigate('/')" class="icon-btn" aria-label="Back to home">
+                    <span class="material-symbols-outlined text-[19px]">arrow_back</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-[9px] bg-accent flex items-center justify-center"><span class="material-symbols-outlined text-on-accent text-[17px]">ac_unit</span></div>
+                    <span class="font-headline font-bold text-[15px] tracking-tight">YukiMeet</span>
+                </div>
+                <button onclick="App.toggleTheme()" class="icon-btn" aria-label="Toggle theme">
+                    <span class="theme-icon material-symbols-outlined text-[18px]">light_mode</span>
+                </button>
+            </header>
 
-        <div class="w-full max-w-3xl spatial-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
-            <!-- Left: Camera Preview -->
-            <div class="flex flex-col justify-between">
-                <div>
-                    <h3 class="font-headline font-bold text-lg text-white mb-1">Camera & Mic Check</h3>
-                    <p class="text-xs text-slate-400 mb-4">Preview how you'll look before jumping in.</p>
-                </div>
-                <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 mb-4">
-                    <video id="preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
-                    <div class="absolute bottom-3 left-3 right-3 h-1.5 bg-white/10 backdrop-blur-md rounded-full overflow-hidden">
-                        <div id="preview-volume" class="h-full bg-emerald-400 transition-all duration-75" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="space-y-2">
-                    <select id="preview-video-source" onchange="App.updatePreviewDevices()" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-accent outline-none"></select>
-                    <select id="preview-audio-source" onchange="App.updatePreviewDevices()" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-accent outline-none"></select>
-                </div>
-            </div>
-
-            <!-- Right: Room Details -->
-            <div class="flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8">
-                <div>
-                    <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-                        <span class="material-symbols-outlined text-white text-[20px]">door_open</span>
-                    </div>
-                    <h2 class="font-headline font-bold text-xl text-white mb-1">Join Room</h2>
-                    <p class="text-xs text-slate-400 mb-6">Enter a room name and your name.</p>
-                    
-                    <div class="space-y-3">
-                        <input id="meet-id" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Room Name (e.g. design-sync)" type="text"/>
-                        
-                        <div id="guest-name-container">
-                            <input id="guest-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Your Name" type="text"/>
+            <div class="flex-1 flex md:items-center">
+                <div class="lobby-card">
+                    <!-- Camera Preview -->
+                    <div class="lobby-preview flex flex-col gap-3">
+                        <div class="lobby-video">
+                            <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/40 text-[12px]">
+                                <span class="material-symbols-outlined text-[30px]">videocam_off</span>
+                                Camera preview appears here
+                            </div>
+                            <video id="preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
+                            <div class="absolute top-3 left-3 z-[2] flex items-center gap-1.5 bg-black/50 backdrop-blur-md text-white/90 text-[11px] font-medium px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Preview
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3 z-[2] flex items-center gap-2 bg-black/45 backdrop-blur-md rounded-full px-2.5 py-1.5">
+                                <span class="material-symbols-outlined text-white/80 text-[15px]">mic</span>
+                                <div class="flex-1 h-1.5 bg-white/15 rounded-full overflow-hidden">
+                                    <div id="preview-volume" class="h-full bg-accent transition-all duration-75" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="select-wrap">
+                                <span class="material-symbols-outlined">videocam</span>
+                                <select id="preview-video-source" onchange="App.updatePreviewDevices()" class="field" aria-label="Camera"></select>
+                            </label>
+                            <label class="select-wrap">
+                                <span class="material-symbols-outlined">mic</span>
+                                <select id="preview-audio-source" onchange="App.updatePreviewDevices()" class="field" aria-label="Microphone"></select>
+                            </label>
                         </div>
                     </div>
-                </div>
 
-                <div class="space-y-3 pt-6">
-                    <button id="btn-join-main" onclick="App.joinMeeting()" class="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
-                        <span id="btn-join-text">Join Call</span>
-                        <span id="btn-join-icon" class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                    </button>
-                    <button id="btn-sso" onclick="App.ssoLogin()" class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-all">
-                        <span class="material-symbols-outlined text-[16px]" id="sso-icon">account_circle</span>
-                        <span id="sso-text">Sign in to Account</span>
-                    </button>
+                    <!-- Room Details -->
+                    <form class="lobby-form flex flex-col" onsubmit="event.preventDefault(); App.joinMeeting()">
+                        <span class="section-eyebrow mb-2">Green room</span>
+                        <h2 class="font-headline font-bold text-2xl md:text-[28px] tracking-tight mb-1.5">Join a room</h2>
+                        <p class="text-[14px] text-sub mb-6">Enter a room name — if it doesn't exist yet, you'll be the first one there.</p>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label for="meet-id" class="field-label">Room name</label>
+                                <input id="meet-id" class="field" placeholder="e.g. design-sync" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"/>
+                            </div>
+                            <div id="guest-name-container">
+                                <label for="guest-name" class="field-label">Your name</label>
+                                <input id="guest-name" class="field" placeholder="How others will see you" type="text" autocomplete="name"/>
+                            </div>
+                        </div>
+
+                        <div class="lobby-actions space-y-2.5 md:mt-auto">
+                            <button id="btn-join-main" type="submit" class="btn-primary w-full font-semibold h-[52px] rounded-2xl text-[15px] flex items-center justify-center gap-2">
+                                <span id="btn-join-text">Join call</span>
+                                <span id="btn-join-icon" class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                            </button>
+                            <button id="btn-sso" type="button" onclick="App.ssoLogin()" class="btn-ghost w-full font-semibold h-12 rounded-2xl text-[14px] flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[18px]" id="sso-icon">account_circle</span>
+                                <span id="sso-text">Sign in to account</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -515,44 +1421,76 @@
     <!-- ========================================== -->
     <!-- SCREEN 3: DEEP LINK LOBBY (/j/:meetid)     -->
     <!-- ========================================== -->
-    <main id="screen-deep-link" class="app-screen flex items-center justify-center p-6">
-        <div class="spatial-grid-floor"></div>
+    <main id="screen-deep-link" class="app-screen">
         <div class="ambient-core-glow"></div>
-
-        <div class="w-full max-w-3xl spatial-card p-8 grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
-            <div class="flex flex-col justify-between">
-                <div>
-                    <h3 class="font-headline font-bold text-lg text-white mb-1">Check Appearance</h3>
-                    <p class="text-xs text-slate-400 mb-4">Ensure your microphone and camera are operational.</p>
+        <div class="lobby-shell">
+            <header class="max-w-[1000px] w-full mx-auto flex items-center justify-between h-12 mb-3 md:mb-8">
+                <button onclick="App.navigate('/')" class="icon-btn" aria-label="Back to home">
+                    <span class="material-symbols-outlined text-[19px]">arrow_back</span>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-[9px] bg-accent flex items-center justify-center"><span class="material-symbols-outlined text-on-accent text-[17px]">ac_unit</span></div>
+                    <span class="font-headline font-bold text-[15px] tracking-tight">YukiMeet</span>
                 </div>
-                <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden border border-white/10 mb-4">
-                    <video id="deep-preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
-                    <div class="absolute bottom-3 left-3 right-3 h-1.5 bg-white/10 backdrop-blur-md rounded-full overflow-hidden">
-                        <div id="deep-preview-volume" class="h-full bg-white transition-all duration-75" style="width: 0%"></div>
+                <button onclick="App.toggleTheme()" class="icon-btn" aria-label="Toggle theme">
+                    <span class="theme-icon material-symbols-outlined text-[18px]">light_mode</span>
+                </button>
+            </header>
+
+            <div class="flex-1 flex md:items-center">
+                <div class="lobby-card">
+                    <div class="lobby-preview flex flex-col gap-3">
+                        <div class="lobby-video">
+                            <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/40 text-[12px]">
+                                <span class="material-symbols-outlined text-[30px]">videocam_off</span>
+                                Camera preview appears here
+                            </div>
+                            <video id="deep-preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
+                            <div class="absolute top-3 left-3 z-[2] flex items-center gap-1.5 bg-black/50 backdrop-blur-md text-white/90 text-[11px] font-medium px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Preview
+                            </div>
+                            <div class="absolute bottom-3 left-3 right-3 z-[2] flex items-center gap-2 bg-black/45 backdrop-blur-md rounded-full px-2.5 py-1.5">
+                                <span class="material-symbols-outlined text-white/80 text-[15px]">mic</span>
+                                <div class="flex-1 h-1.5 bg-white/15 rounded-full overflow-hidden">
+                                    <div id="deep-preview-volume" class="h-full bg-accent transition-all duration-75" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="select-wrap">
+                                <span class="material-symbols-outlined">videocam</span>
+                                <select id="deep-preview-video-source" onchange="App.updatePreviewDevices(true)" class="field" aria-label="Camera"></select>
+                            </label>
+                            <label class="select-wrap">
+                                <span class="material-symbols-outlined">mic</span>
+                                <select id="deep-preview-audio-source" onchange="App.updatePreviewDevices(true)" class="field" aria-label="Microphone"></select>
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div class="space-y-2">
-                    <select id="deep-preview-video-source" onchange="App.updatePreviewDevices(true)" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-accent outline-none"></select>
-                    <select id="deep-preview-audio-source" onchange="App.updatePreviewDevices(true)" class="w-full bg-white/5 border border-white/10 text-white rounded-xl py-2 px-3 text-xs focus:ring-1 focus:ring-accent outline-none"></select>
-                </div>
-            </div>
 
-            <div class="flex flex-col justify-between border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8">
-                <div>
-                    <span class="text-[11px] font-semibold text-accent uppercase tracking-wider mb-2 block">Invited Room</span>
-                    <h2 class="font-headline font-bold text-xl text-white mb-1">Join Meeting</h2>
-                    <p class="text-xs text-slate-400 mb-6">Room: <span id="deep-link-target" class="text-white font-semibold"></span></p>
+                    <form class="lobby-form flex flex-col" onsubmit="event.preventDefault(); App.joinMeeting(true)">
+                        <span class="section-eyebrow mb-2">You're invited</span>
+                        <h2 class="font-headline font-bold text-2xl md:text-[28px] tracking-tight mb-3">Join meeting</h2>
+                        <div class="flex items-center gap-2.5 p-3 rounded-2xl bg-soft border border-subtle mb-6 min-w-0">
+                            <div class="feature-icon tone-accent !w-9 !h-9 !mb-0 shrink-0"><span class="material-symbols-outlined text-[19px]">meeting_room</span></div>
+                            <div class="min-w-0">
+                                <div class="text-[11px] text-dim font-medium">Room</div>
+                                <div id="deep-link-target" class="text-[15px] font-semibold text-main truncate"></div>
+                            </div>
+                        </div>
 
-                    <div id="deep-guest-container">
-                        <input id="deep-guest-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white placeholder:text-slate-500 focus:border-white/25 focus:ring-0 outline-none" placeholder="Your Name" type="text"/>
-                    </div>
-                </div>
+                        <div id="deep-guest-container">
+                            <label for="deep-guest-name" class="field-label">Your name</label>
+                            <input id="deep-guest-name" class="field" placeholder="How others will see you" type="text" autocomplete="name"/>
+                        </div>
 
-                <div class="space-y-3 pt-6">
-                    <button id="btn-deep-join" onclick="App.joinMeeting(true)" class="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-slate-200 transition-all flex items-center justify-center gap-2">
-                        <span id="btn-deep-text">Join Call</span>
-                        <span id="btn-deep-icon" class="material-symbols-outlined text-[16px]">arrow_forward</span>
-                    </button>
+                        <div class="lobby-actions md:mt-auto">
+                            <button id="btn-deep-join" type="submit" class="btn-primary w-full font-semibold h-[52px] rounded-2xl text-[15px] flex items-center justify-center gap-2">
+                                <span id="btn-deep-text">Join call</span>
+                                <span id="btn-deep-icon" class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -561,55 +1499,54 @@
     <!-- ========================================== -->
     <!-- SCREEN 4: PROFILE & SCHEDULER (/me)        -->
     <!-- ========================================== -->
-    <main id="screen-profile" class="app-screen flex flex-col p-6 md:p-16 overflow-y-auto">
-        <div class="spatial-grid-floor"></div>
+    <main id="screen-profile" class="app-screen flex flex-col p-4 md:p-16 overflow-y-auto">
         <div class="ambient-core-glow"></div>
 
-        <div class="max-w-4xl w-full mx-auto spatial-card p-8 my-auto grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
+        <div class="max-w-4xl w-full mx-auto spatial-card p-6 md:p-8 my-auto grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
             <div>
                 <div class="flex items-center gap-3 mb-6">
-                    <button onclick="App.navigate('/')" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all">
+                    <button onclick="App.navigate('/')" class="icon-btn" aria-label="Back to home">
                         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                     </button>
-                    <h2 class="font-headline font-bold text-xl text-white">Call Profile</h2>
+                    <h2 class="font-headline font-bold text-xl text-main">Call Profile</h2>
                 </div>
 
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="relative w-16 h-16 bg-white/5 border border-white/10 rounded-full overflow-hidden">
-                        <img id="profile-pfp-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-full h-full object-cover">
+                    <div class="relative w-16 h-16 bg-soft border border-subtle rounded-full overflow-hidden">
+                        <img id="profile-pfp-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238a8f94'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" class="w-full h-full object-cover">
                     </div>
                     <div>
-                        <label class="bg-white/10 hover:bg-white/15 border border-white/10 text-white text-[11px] font-semibold py-1.5 px-3 rounded-lg cursor-pointer transition-all inline-block mb-1">
+                        <label class="btn-ghost text-[12px] font-semibold py-1.5 px-3 rounded-lg cursor-pointer inline-block mb-1">
                             Upload Avatar
                             <input type="file" accept="image/*" class="hidden" onchange="App.uploadMeetAvatar(event)">
                         </label>
-                        <p class="text-[10px] text-slate-500">JPG or PNG formats supported.</p>
+                        <p class="text-[11px] text-dim">JPG or PNG formats supported.</p>
                     </div>
                 </div>
 
                 <div class="space-y-3">
-                    <input id="profile-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white focus:border-white/25 focus:ring-0 outline-none" placeholder="Display Name" type="text"/>
-                    <button onclick="App.saveMeetProfile()" class="w-full bg-white text-black font-semibold py-3 rounded-xl text-xs hover:bg-slate-200 transition-all">Save Changes</button>
+                    <input id="profile-name" class="field" placeholder="Display Name" type="text"/>
+                    <button onclick="App.saveMeetProfile()" class="btn-primary w-full font-semibold py-3 rounded-xl text-[14px]">Save Changes</button>
                 </div>
             </div>
 
-            <div class="border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8 flex flex-col justify-between">
+            <div class="border-t md:border-t-0 md:border-l border-subtle pt-6 md:pt-0 md:pl-8 flex flex-col justify-between">
                 <div>
-                    <h3 class="font-headline font-bold text-lg text-white mb-1">Meeting Scheduler</h3>
-                    <p class="text-xs text-slate-400 mb-6">Create links for scheduled calls.</p>
-                    
+                    <h3 class="font-headline font-bold text-lg text-main mb-1">Meeting Scheduler</h3>
+                    <p class="text-[13px] text-sub mb-6">Create links for scheduled calls.</p>
+
                     <div class="space-y-3">
-                        <input id="sched-title" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white focus:border-white/25 outline-none" placeholder="Meeting Topic" type="text"/>
-                        <input id="sched-datetime" onclick="this.showPicker()" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs font-semibold text-white focus:border-white/25 outline-none" type="datetime-local"/>
-                        <button onclick="App.generateScheduledInvite()" class="w-full bg-white/10 hover:bg-white/15 border border-white/10 text-white font-semibold py-3 rounded-xl text-xs transition-all">Create Invitation</button>
+                        <input id="sched-title" class="field" placeholder="Meeting Topic" type="text"/>
+                        <input id="sched-datetime" onclick="this.showPicker()" class="field" type="datetime-local"/>
+                        <button onclick="App.generateScheduledInvite()" class="btn-ghost w-full font-semibold py-3 rounded-xl text-[14px]">Create Invitation</button>
                     </div>
                 </div>
 
-                <div id="sched-output" class="hidden bg-white/5 border border-white/10 rounded-xl p-3 mt-4">
-                    <textarea id="sched-invite-text" readonly class="w-full bg-transparent border-none text-[11px] h-16 text-slate-300 font-mono resize-none focus:ring-0 select-all"></textarea>
+                <div id="sched-output" class="hidden bg-soft border border-subtle rounded-xl p-3 mt-4">
+                    <textarea id="sched-invite-text" readonly class="w-full bg-transparent border-none text-[12px] h-16 text-sub font-mono resize-none focus:ring-0 select-all"></textarea>
                     <div class="flex gap-2 mt-2">
-                        <button onclick="App.copyInviteToClipboard()" class="flex-1 bg-white text-black text-[10px] font-semibold py-1.5 rounded-lg">Copy</button>
-                        <button onclick="App.shareInviteNative()" class="flex-1 bg-white/10 text-white text-[10px] font-semibold py-1.5 rounded-lg">Share</button>
+                        <button onclick="App.copyInviteToClipboard()" class="btn-primary flex-1 text-[12px] font-semibold py-2 rounded-lg">Copy</button>
+                        <button onclick="App.shareInviteNative()" class="btn-ghost flex-1 text-[12px] font-semibold py-2 rounded-lg">Share</button>
                     </div>
                 </div>
             </div>
@@ -620,57 +1557,56 @@
     <!-- SCREEN 5: SPATIAL MEETING ROOM             -->
     <!-- ========================================== -->
     <main id="screen-room" class="app-screen absolute inset-0 w-full h-[100dvh] flex flex-col overflow-hidden">
-        <div class="spatial-grid-floor"></div>
         <div class="ambient-core-glow"></div>
 
         <!-- Top Status Island -->
-        <header class="absolute top-6 left-6 z-50 flex items-center gap-3">
-            <div class="flex items-center gap-3 bg-surface-glass border border-white/10 backdrop-blur-xl px-4 py-2 rounded-full">
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                <span id="room-id-display" class="font-headline font-semibold text-xs tracking-tight text-white uppercase">ROOM</span>
-                <span class="text-slate-600">/</span>
-                <span class="text-[11px] text-slate-400 font-mono"><span id="participant-count">1</span> online</span>
+        <header class="room-header absolute z-50 flex items-center gap-2 max-w-[calc(100vw-24px)]">
+            <div class="flex items-center gap-2.5 bg-surface-glass border border-subtle backdrop-blur-xl px-3.5 py-2 rounded-full min-w-0">
+                <span class="w-2 h-2 rounded-full bg-accent shrink-0"></span>
+                <span id="room-id-display" class="font-headline font-semibold text-xs tracking-tight text-main uppercase truncate max-w-[38vw] md:max-w-[320px]">ROOM</span>
+                <span class="text-dim">/</span>
+                <span class="text-[11px] text-sub font-mono whitespace-nowrap"><span id="participant-count">1</span> online</span>
             </div>
-            <button onclick="App.copyInvite()" class="w-8 h-8 rounded-full bg-surface-glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all" title="Copy Invite Link">
-                <span class="material-symbols-outlined text-[16px]">link</span>
+            <button onclick="App.copyInvite()" class="w-9 h-9 shrink-0 rounded-full bg-surface-glass border border-subtle backdrop-blur-xl flex items-center justify-center text-sub hover:text-main transition-all" title="Copy Invite Link" aria-label="Copy invite link">
+                <span class="material-symbols-outlined text-[17px]">link</span>
             </button>
         </header>
 
         <!-- Drawing Canvas Layer -->
         <canvas id="drawing-canvas"></canvas>
         <video id="pip-dummy" autoplay playsinline muted class="absolute opacity-0 pointer-events-none w-[1px] h-[1px]"></video>
-        
+
         <!-- Drawing Floating Tool Palette -->
-        <div id="draw-tools" class="absolute top-6 right-6 z-50 bg-surface-glass backdrop-blur-2xl border border-white/10 p-2 rounded-2xl flex flex-col gap-1 hidden">
-            <button onclick="App.setTool('pen')" id="tool-pen" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white tool-btn active"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-            <button onclick="App.setTool('line')" id="tool-line" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white tool-btn"><span class="material-symbols-outlined text-[18px]">horizontal_rule</span></button>
-            <button onclick="App.setTool('arrow')" id="tool-arrow" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white tool-btn"><span class="material-symbols-outlined text-[18px]">north_east</span></button>
-            <button onclick="App.setTool('rect')" id="tool-rect" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white tool-btn"><span class="material-symbols-outlined text-[18px]">crop_square</span></button>
-            <button onclick="App.setTool('circle')" id="tool-circle" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white tool-btn"><span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span></button>
-            <button onclick="App.setTool('eraser')" id="tool-eraser" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/60 hover:text-white tool-btn"><span class="material-symbols-outlined text-[18px]">auto_fix_normal</span></button>
-            <div class="h-[1px] bg-white/10 my-1"></div>
+        <div id="draw-tools" class="absolute top-6 right-6 z-50 bg-surface-glass backdrop-blur-2xl border border-subtle p-2 rounded-2xl flex flex-col gap-1 hidden">
+            <button onclick="App.setTool('pen')" id="tool-pen" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 tool-btn active"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+            <button onclick="App.setTool('line')" id="tool-line" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 tool-btn"><span class="material-symbols-outlined text-[18px]">horizontal_rule</span></button>
+            <button onclick="App.setTool('arrow')" id="tool-arrow" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 tool-btn"><span class="material-symbols-outlined text-[18px]">north_east</span></button>
+            <button onclick="App.setTool('rect')" id="tool-rect" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 tool-btn"><span class="material-symbols-outlined text-[18px]">crop_square</span></button>
+            <button onclick="App.setTool('circle')" id="tool-circle" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 tool-btn"><span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span></button>
+            <button onclick="App.setTool('eraser')" id="tool-eraser" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 tool-btn"><span class="material-symbols-outlined text-[18px]">auto_fix_normal</span></button>
+            <div class="draw-sep"></div>
             <button onclick="App.setColor('#3b82f6')" id="col-[#3b82f6]" class="w-5 h-5 mx-auto rounded-full bg-blue-500 color-btn active"></button>
             <button onclick="App.setColor('#ef4444')" id="col-[#ef4444]" class="w-5 h-5 mx-auto rounded-full bg-rose-500 color-btn"></button>
             <button onclick="App.setColor('#22c55e')" id="col-[#22c55e]" class="w-5 h-5 mx-auto rounded-full bg-emerald-500 color-btn"></button>
-            <button onclick="App.setColor('#ffffff')" id="col-[#ffffff]" class="w-5 h-5 mx-auto rounded-full bg-white color-btn"></button>
-            <div class="h-[1px] bg-white/10 my-1"></div>
-            <button onclick="App.clearDraw()" class="w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-rose-400" title="Clear Canvas"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+            <button onclick="App.setColor('#ffffff')" id="col-[#ffffff]" class="w-5 h-5 mx-auto rounded-full bg-white border border-strong color-btn"></button>
+            <div class="draw-sep"></div>
+            <button onclick="App.clearDraw()" class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-dim hover:text-coral" title="Clear Canvas"><span class="material-symbols-outlined text-[18px]">delete</span></button>
         </div>
 
         <!-- Full-Viewport Main Meeting Stage -->
-        <div class="flex-1 w-full h-full flex flex-col justify-center items-center px-2 pt-16 pb-20 md:px-5 md:pt-16 md:pb-22 z-10 min-h-0 overflow-hidden">
+        <div class="room-stage flex-1 w-full h-full flex flex-col justify-center items-center z-10 min-h-0 overflow-hidden">
             <div id="video-grid" class="w-full h-full flex flex-wrap content-center justify-center items-center gap-3 overflow-hidden">
                 <!-- Local Video Tile -->
                 <div id="wrapper-local" class="video-wrapper" draggable="true" onclick="App.pinVideo('wrapper-local')">
                     <video id="local-video" autoplay playsinline muted class="mirrored"></video>
-                    
-                    <div id="avatar-overlay-local" class="absolute inset-0 flex items-center justify-center bg-[#0d0e15] hidden">
+
+                    <div id="avatar-overlay-local" class="absolute inset-0 flex items-center justify-center bg-[#16191c] hidden">
                         <div id="avatar-circle-local" class="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center text-xl md:text-3xl font-bold text-white border border-white/10 overflow-hidden shadow-2xl">
                             <img id="avatar-img-local" class="w-full h-full object-cover hidden">
                             <span id="avatar-letter-local">Y</span>
                         </div>
                     </div>
-                    
+
                     <div id="badge-local" class="absolute bottom-2.5 left-2.5 md:bottom-3 md:left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-[11px] font-medium border border-white/10">
                         <span id="local-mic-icon" class="material-symbols-outlined text-[12px] md:text-[13px] text-emerald-400">mic</span>
                         <span id="local-name-display">You</span>
@@ -681,69 +1617,75 @@
         </div>
 
         <!-- Assistant Panel -->
-        <div id="ai-copilot" class="absolute right-3 top-16 bottom-24 w-[calc(100vw-24px)] max-w-[340px] spatial-card z-[60] flex flex-col transition-transform duration-300 translate-x-[120%]">
+        <div id="ai-copilot" class="absolute right-3 top-16 bottom-28 w-[calc(100vw-24px)] max-w-[340px] spatial-card !bg-panel z-[60] flex flex-col transition-transform duration-300 translate-x-[130%]">
             <div class="p-4 border-b border-subtle flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-accent text-[18px]">auto_awesome</span>
-                    <h3 class="font-headline font-bold text-xs">Meeting Assistant</h3>
+                    <h3 class="font-headline font-bold text-[13px]">Meeting Assistant</h3>
                 </div>
-                <button onclick="App.toggleCopilot()" class="opacity-60 hover:opacity-100"><span class="material-symbols-outlined text-[18px]">close</span></button>
+                <button onclick="App.toggleCopilot()" class="icon-btn !w-8 !h-8 !border-0" aria-label="Close assistant"><span class="material-symbols-outlined text-[18px]">close</span></button>
             </div>
-            
-            <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 space-y-3 text-xs flex flex-col">
-                <div class="bg-black/5 dark:bg-white/5 border border-subtle p-3 rounded-2xl self-start max-w-[90%]">
+
+            <div id="ai-chat-box" class="flex-1 overflow-y-auto p-4 space-y-3 text-[13px] flex flex-col">
+                <div class="bg-soft border border-subtle text-sub p-3 rounded-2xl self-start max-w-[90%]">
                     Ask questions or get quick notes on topics discussed.
                 </div>
             </div>
-            
+
             <div class="p-3 border-t border-subtle">
                 <div class="relative">
-                    <input id="ai-input" type="text" placeholder="Type a message..." class="w-full rounded-xl pl-3 pr-8 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-accent" onkeypress="if(event.key==='Enter') App.askGemini()">
-                    <button onclick="App.askGemini()" class="absolute right-2 top-1/2 -translate-y-1/2 text-accent">
-                        <span class="material-symbols-outlined text-[16px]">send</span>
+                    <input id="ai-input" type="text" placeholder="Type a message..." class="field !py-2.5 !pr-10 !text-[14px]" onkeypress="if(event.key==='Enter') App.askGemini()">
+                    <button onclick="App.askGemini()" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-accent" aria-label="Send">
+                        <span class="material-symbols-outlined text-[18px]">send</span>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Floating Meeting Controls -->
-        <div id="dock-container" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 pointer-events-auto max-w-[96vw]">
-            <!-- Kinetic Control Bar -->
-            <nav id="kinetic-nav" class="kinetic-dock flex items-center gap-1 sm:gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2">
-                <button id="btn-mic" onclick="App.toggleMic()" class="kinetic-btn" title="Toggle Mic">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">mic</span>
+        <div id="dock-container" class="dock-container pointer-events-auto">
+            <nav id="kinetic-nav" class="kinetic-dock">
+                <button id="btn-mic" onclick="App.toggleMic()" class="kinetic-btn" title="Toggle Mic" aria-label="Toggle microphone">
+                    <span class="material-symbols-outlined">mic</span>
                 </button>
 
-                <button id="btn-cam" onclick="App.toggleCam()" class="kinetic-btn" title="Toggle Camera">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">videocam</span>
+                <button id="btn-cam" onclick="App.toggleCam()" class="kinetic-btn" title="Toggle Camera" aria-label="Toggle camera">
+                    <span class="material-symbols-outlined">videocam</span>
                 </button>
 
-                <div class="w-[1px] h-4 bg-white/10 mx-0.5 sm:mx-1"></div>
+                <div class="dock-sep"></div>
 
-                <button id="btn-share" onclick="App.toggleScreenShare()" class="kinetic-btn" title="Share Screen">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">present_to_all</span>
+                <!-- Secondary controls: inline on desktop, "More" sheet on phones -->
+                <div id="dock-extra">
+                    <div class="sheet-only sheet-title">More controls</div>
+                    <button id="btn-share" onclick="App.toggleScreenShare()" class="kinetic-btn" title="Share Screen">
+                        <span class="material-symbols-outlined">present_to_all</span><span class="dock-label">Share</span>
+                    </button>
+                    <button id="btn-draw" onclick="App.toggleDrawing()" class="kinetic-btn" title="Draw Board">
+                        <span class="material-symbols-outlined">gesture</span><span class="dock-label">Draw</span>
+                    </button>
+                    <button id="btn-bg" onclick="App.openBgModal()" class="kinetic-btn" title="Background">
+                        <span class="material-symbols-outlined">blur_on</span><span class="dock-label">Background</span>
+                    </button>
+                    <button id="btn-copilot" onclick="App.toggleCopilot()" class="kinetic-btn" title="Assistant">
+                        <span class="material-symbols-outlined">auto_awesome</span><span class="dock-label">Assistant</span>
+                    </button>
+                    <button id="btn-pip" onclick="App.toggleSmartPiP()" class="kinetic-btn" title="Picture in Picture">
+                        <span class="material-symbols-outlined">picture_in_picture_alt</span><span class="dock-label">Pop out</span>
+                    </button>
+                    <button onclick="App.copyInvite()" class="kinetic-btn sheet-only" title="Copy Invite Link">
+                        <span class="material-symbols-outlined">link</span><span class="dock-label">Invite</span>
+                    </button>
+                </div>
+
+                <button id="btn-more" onclick="App.toggleDockMore()" class="kinetic-btn" title="More" aria-label="More controls" aria-expanded="false">
+                    <span class="material-symbols-outlined">more_horiz</span>
                 </button>
 
-                <button id="btn-draw" onclick="App.toggleDrawing()" class="kinetic-btn" title="Draw Board">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">gesture</span>
-                </button>
+                <div class="dock-sep"></div>
 
-                <button id="btn-bg" onclick="App.openBgModal()" class="kinetic-btn" title="Background">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">blur_on</span>
-                </button>
-
-                <button id="btn-copilot" onclick="App.toggleCopilot()" class="kinetic-btn" title="Assistant">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">auto_awesome</span>
-                </button>
-
-                <button id="btn-pip" onclick="App.toggleSmartPiP()" class="kinetic-btn" title="Picture in Picture">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">picture_in_picture_alt</span>
-                </button>
-
-                <div class="w-[1px] h-4 bg-white/10 mx-0.5 sm:mx-1"></div>
-
-                <button onclick="App.leaveMeeting()" class="kinetic-btn is-danger" title="Leave">
-                    <span class="material-symbols-outlined text-[19px] sm:text-[20px]">call_end</span>
+                <button onclick="App.leaveMeeting()" class="kinetic-btn leave-btn" title="Leave" aria-label="Leave call">
+                    <span class="material-symbols-outlined">call_end</span>
                 </button>
             </nav>
         </div>
@@ -755,28 +1697,28 @@
         <div class="ctx-item danger" onclick="App.adminAction('kick')"><span class="material-symbols-outlined text-[16px]">person_remove</span> Kick Participant</div>
     </div>
 
-    <!-- AI Background Studio Modal -->
-    <div id="bg-modal" class="fixed inset-0 bg-black/70 z-[9999] hidden items-center justify-center backdrop-blur-md opacity-0 transition-opacity duration-300">
-        <div class="spatial-card p-6 w-[90%] max-w-md transform scale-95 transition-transform duration-300" id="bg-modal-content">
+    <!-- Background Studio Modal -->
+    <div id="bg-modal" class="fixed inset-0 bg-black/60 z-[9999] hidden items-center justify-center backdrop-blur-md opacity-0 transition-opacity duration-300">
+        <div class="spatial-card !bg-panel p-6 w-[92%] max-w-md transform scale-95 transition-transform duration-300" id="bg-modal-content">
             <div class="flex justify-between items-center mb-5">
-                <h2 class="text-sm font-bold font-headline text-white">Spatial Background</h2>
-                <button onclick="App.closeBgModal()" class="material-symbols-outlined text-slate-400 hover:text-white text-[18px]">close</button>
+                <h2 class="text-[15px] font-bold font-headline text-main">Background</h2>
+                <button onclick="App.closeBgModal()" class="icon-btn !w-8 !h-8 !border-0" aria-label="Close"><span class="material-symbols-outlined text-[18px]">close</span></button>
             </div>
-            
+
             <div class="grid grid-cols-3 gap-2.5 mb-5">
-                <button onclick="App.setBgMode('none')" class="bg-white/5 border border-white/10 text-xs font-semibold py-3 rounded-xl flex flex-col items-center gap-1 hover:bg-white/10">
+                <button onclick="App.setBgMode('none')" class="btn-ghost text-[12px] font-semibold py-3 rounded-xl flex flex-col items-center gap-1">
                     <span class="material-symbols-outlined text-[20px]">block</span> None
                 </button>
-                <button onclick="App.setBgMode('blur')" class="bg-accent/15 border border-accent/30 text-accent text-xs font-semibold py-3 rounded-xl flex flex-col items-center gap-1 hover:bg-accent/25">
+                <button onclick="App.setBgMode('blur')" class="bg-accent/15 border border-accent/30 text-accent text-[12px] font-semibold py-3 rounded-xl flex flex-col items-center gap-1 hover:bg-accent/25">
                     <span class="material-symbols-outlined text-[20px]">blur_on</span> Blur
                 </button>
-                <label class="bg-white/5 border border-white/10 text-xs font-semibold py-3 rounded-xl flex flex-col items-center gap-1 hover:bg-white/10 cursor-pointer">
+                <label class="btn-ghost text-[12px] font-semibold py-3 rounded-xl flex flex-col items-center gap-1 cursor-pointer">
                     <span class="material-symbols-outlined text-[20px]">upload</span> Custom
                     <input type="file" accept="image/*" class="hidden" onchange="App.uploadBg(event)">
                 </label>
             </div>
-    
-            <p class="text-[10px] text-slate-500 font-mono uppercase tracking-wider mb-2">Preset Panoramas</p>
+
+            <p class="text-[10px] text-dim font-mono uppercase tracking-wider mb-2">Preset Panoramas</p>
             <div class="grid grid-cols-4 gap-2">
                 <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80')" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=150&q=80" class="w-full h-14 object-cover rounded-xl cursor-pointer hover:ring-2 ring-accent transition-all">
                 <img onclick="App.setPresetBg('https://images.unsplash.com/photo-1600607688969-a5bfcd64bd40?w=800&q=80')" src="https://images.unsplash.com/photo-1600607688969-a5bfcd64bd40?w=150&q=80" class="w-full h-14 object-cover rounded-xl cursor-pointer hover:ring-2 ring-accent transition-all">
@@ -785,7 +1727,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Application Logic -->
     <script>
         const API_URL = 'https://vps.yukichat.lol:8443';
@@ -915,6 +1857,7 @@
                 this.initCanvas();
                 this.initSandboxCanvas();
                 this.setupKineticDock();
+                this.initLanding();
                 
                 window.addEventListener('resize', () => {
                     this.updateLayout();
@@ -928,16 +1871,12 @@
             },
 
             applyTheme(theme) {
-                const icon = document.getElementById('theme-icon');
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    if (icon) icon.textContent = 'light_mode';
-                    localStorage.setItem('ym_theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    if (icon) icon.textContent = 'dark_mode';
-                    localStorage.setItem('ym_theme', 'light');
-                }
+                const isDark = theme === 'dark';
+                document.documentElement.classList.toggle('dark', isDark);
+                localStorage.setItem('ym_theme', isDark ? 'dark' : 'light');
+                document.querySelectorAll('.theme-icon').forEach(icon => icon.textContent = isDark ? 'light_mode' : 'dark_mode');
+                document.querySelectorAll('[data-theme-choice]').forEach(b => b.classList.toggle('on', b.dataset.themeChoice === (isDark ? 'dark' : 'light')));
+                document.getElementById('meta-theme-color')?.setAttribute('content', isDark ? '#121416' : '#f5f2ec');
             },
 
             // --- CONCEPT 4 KINETIC DOCK ENGINE ---
@@ -946,11 +1885,14 @@
                 const dock = document.getElementById('kinetic-nav');
                 const room = document.getElementById('screen-room');
 
+                const extra = document.getElementById('dock-extra');
+                const moreBtn = document.getElementById('btn-more');
+
                 const wakeDock = () => {
                     dock.classList.remove('idle-dim');
                     clearTimeout(idleTimer);
                     idleTimer = setTimeout(() => {
-                        if (room.classList.contains('active')) {
+                        if (room.classList.contains('active') && !extra.classList.contains('open')) {
                             dock.classList.add('idle-dim');
                         }
                     }, 3500);
@@ -959,6 +1901,130 @@
                 room.addEventListener('mousemove', wakeDock);
                 room.addEventListener('touchstart', wakeDock);
                 room.addEventListener('keydown', wakeDock);
+
+                // Picking an action from the mobile "More" sheet closes it
+                extra.addEventListener('click', (e) => {
+                    if (e.target.closest('.kinetic-btn')) this.closeDockMore();
+                });
+                // Tapping anywhere outside the dock closes it too
+                document.addEventListener('pointerdown', (e) => {
+                    if (extra.classList.contains('open') && !e.target.closest('#kinetic-nav')) this.closeDockMore();
+                });
+                // Flag the "More" button while any control hidden inside it is active
+                new MutationObserver(() => {
+                    moreBtn.classList.toggle('has-active', !!extra.querySelector('.kinetic-btn.active'));
+                }).observe(extra, { subtree: true, attributes: true, attributeFilter: ['class'] });
+            },
+
+            toggleDockMore() {
+                const extra = document.getElementById('dock-extra');
+                const open = !extra.classList.contains('open');
+                extra.classList.toggle('open', open);
+                const moreBtn = document.getElementById('btn-more');
+                moreBtn.setAttribute('aria-expanded', open);
+                moreBtn.querySelector('span').textContent = open ? 'close' : 'more_horiz';
+            },
+
+            closeDockMore() {
+                if (document.getElementById('dock-extra').classList.contains('open')) this.toggleDockMore();
+            },
+
+            // --- LANDING PAGE: quick start + scroll animations ---
+            quickStart(e) {
+                e.preventDefault();
+                const room = document.getElementById('quick-room').value.trim().toLowerCase()
+                    .replace(/\s+/g, '-').replace(/[^a-z0-9_-]/g, '');
+                if (room) this.navigate(`/j/${room}`);
+                else this.navigate('/join');
+            },
+
+            initLanding() {
+                const scroller = document.getElementById('screen-marketing');
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                // Duplicate marquee rows so the loop is seamless
+                document.querySelectorAll('[data-marquee]').forEach(track => {
+                    Array.from(track.children).forEach(chip => {
+                        const clone = chip.cloneNode(true);
+                        clone.setAttribute('aria-hidden', 'true');
+                        track.appendChild(clone);
+                    });
+                });
+
+                // Smooth in-page links (the landing page scrolls inside its own container)
+                scroller.querySelectorAll('[data-scroll-to]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = document.getElementById(link.dataset.scrollTo);
+                        if (target) scroller.scrollTo({ top: target.offsetTop - 72, behavior: reduceMotion ? 'auto' : 'smooth' });
+                    });
+                });
+
+                const countUp = (el) => {
+                    const target = parseInt(el.dataset.count, 10);
+                    if (reduceMotion || target === 0) { el.textContent = target; return; }
+                    const start = performance.now(), duration = 1400;
+                    const tick = (now) => {
+                        const t = Math.min(1, (now - start) / duration);
+                        el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3)));
+                        if (t < 1) requestAnimationFrame(tick);
+                    };
+                    requestAnimationFrame(tick);
+                };
+
+                const revealEls = scroller.querySelectorAll('[data-reveal]');
+                if (!('IntersectionObserver' in window)) {
+                    revealEls.forEach(el => el.classList.add('is-visible'));
+                    scroller.querySelectorAll('[data-count]').forEach(countUp);
+                } else {
+                    const io = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (!entry.isIntersecting) return;
+                            entry.target.classList.add('is-visible');
+                            entry.target.querySelectorAll('[data-count]').forEach(countUp);
+                            io.unobserve(entry.target);
+                        });
+                    }, { root: scroller, threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+                    revealEls.forEach(el => io.observe(el));
+                }
+
+                if (reduceMotion) return;
+
+                // Scroll-linked effects, batched into one frame
+                const nav = document.getElementById('landing-nav');
+                const progress = document.getElementById('scroll-progress');
+                const mock = document.getElementById('hero-mock');
+                const howFill = document.getElementById('how-fill');
+                const blobs = scroller.querySelectorAll('[data-speed]');
+                let ticking = false;
+
+                const update = () => {
+                    ticking = false;
+                    const y = scroller.scrollTop;
+                    const vh = scroller.clientHeight;
+                    const max = scroller.scrollHeight - vh;
+
+                    nav.classList.toggle('scrolled', y > 8);
+                    progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+                    blobs.forEach(b => b.style.transform = `translate3d(0, ${y * parseFloat(b.dataset.speed)}px, 0)`);
+
+                    // Hero mock flattens out as it scrolls into view
+                    const mr = mock.getBoundingClientRect();
+                    const mt = Math.min(1, Math.max(0, (vh - mr.top) / (vh * 0.75)));
+                    mock.style.setProperty('--tilt', `${16 * (1 - mt)}deg`);
+                    mock.style.setProperty('--mock-scale', `${0.92 + 0.08 * mt}`);
+
+                    // "How it works" connector fills as you pass through the section
+                    const hr = howFill.parentElement.getBoundingClientRect();
+                    const ht = Math.min(1, Math.max(0, (vh * 0.8 - hr.top) / (vh * 0.45)));
+                    howFill.style.setProperty('--how', ht);
+                };
+
+                scroller.addEventListener('scroll', () => {
+                    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+                }, { passive: true });
+                window.addEventListener('resize', update);
+                update();
             },
 
             // --- SPA ROUTER ---
@@ -1245,6 +2311,7 @@
                     const evt = e.touches ? e.touches[0] : e;
                     const r = canvas.getBoundingClientRect();
                     lastX = evt.clientX - r.left; lastY = evt.clientY - r.top;
+                    document.getElementById('sandbox-hint')?.classList.add('opacity-0');
                 };
 
                 const scribble = (e) => {
@@ -1252,7 +2319,7 @@
                     e.preventDefault();
                     const evt = e.touches ? e.touches[0] : e;
                     const r = canvas.getBoundingClientRect();
-                    ctx.strokeStyle = '#6366f1';
+                    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
                     ctx.lineWidth = 2.5;
                     ctx.lineCap = 'round';
                     ctx.beginPath();
@@ -1267,12 +2334,14 @@
                 canvas.addEventListener('touchstart', startScribble, {passive: false}); canvas.addEventListener('touchmove', scribble, {passive: false});
                 canvas.addEventListener('touchend', () => isScribbling = false);
 
-                App.clearSandbox = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+                App.clearSandbox = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    document.getElementById('sandbox-hint')?.classList.remove('opacity-0');
+                };
             },
 
             sliderThemeChange(val) {
-                if (val == 0) document.documentElement.classList.remove('dark');
-                else document.documentElement.classList.add('dark');
+                this.applyTheme(val == 0 ? 'light' : 'dark');
             },
 
             // --- SMART PIP & COPILOT ---
@@ -1310,18 +2379,18 @@
                 const text = input.value.trim();
                 if (!text) return;
             
-                box.innerHTML += `<div class="bg-accent text-white p-3 rounded-2xl self-end max-w-[90%] ml-auto">${text}</div>`;
+                box.innerHTML += `<div class="bg-accent text-on-accent p-3 rounded-2xl self-end max-w-[90%] ml-auto">${text}</div>`;
                 input.value = '';
                 box.scrollTop = box.scrollHeight;
             
                 const thinkId = 'think-' + Date.now();
-                box.innerHTML += `<div id="${thinkId}" class="text-slate-500 text-[10px] font-mono mt-1 ml-1">Analyzing meeting context...</div>`;
+                box.innerHTML += `<div id="${thinkId}" class="text-dim text-[11px] font-mono mt-1 ml-1">Analyzing meeting context...</div>`;
                 box.scrollTop = box.scrollHeight;
             
                 try {
                     const res = await api('/api/meet/ai', { prompt: text });
                     document.getElementById(thinkId).remove();
-                    box.innerHTML += `<div class="bg-white/5 border border-white/10 text-slate-200 p-3 rounded-2xl self-start max-w-[90%] mt-2">${res.reply}</div>`;
+                    box.innerHTML += `<div class="bg-soft border border-subtle text-main p-3 rounded-2xl self-start max-w-[90%] mt-2">${res.reply}</div>`;
                     box.scrollTop = box.scrollHeight;
                 } catch(e) {
                     document.getElementById(thinkId).innerText = "Copilot offline.";
@@ -1569,7 +2638,7 @@
 
                     if (count === 1) {
                         wrap.style.width = isMobile ? '100%' : 'min(94vw, 1200px)';
-                        wrap.style.height = isMobile ? '75vh' : '82vh';
+                        wrap.style.height = isMobile ? '100%' : '82vh';
                     } else if (count === 2) {
                         if (isMobile) {
                             wrap.style.width = '100%';
