@@ -1,0 +1,198 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="fonts.css" rel="stylesheet">
+<style>
+:root{--bg:#121416;--surf:#191c1f;--txt:#ece8e0;--sub:#a5a9a6;--dim:#6f7471;--acc:#6ec4b2;--warm:#e8b170;--calm:#82aad2;--coral:#e88074;--line:rgba(236,232,224,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--txt);font-family:'Instrument Sans',sans-serif}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden}
+.grid{position:absolute;inset:-100px;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.5}
+.glow{position:absolute;width:1400px;height:1400px;border-radius:50%;background:radial-gradient(circle,rgba(110,196,178,.16),transparent 60%);left:260px;top:-160px}
+.glow2{position:absolute;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle,rgba(232,177,112,.08),transparent 60%);right:-300px;bottom:-400px}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0}
+.h{font-family:'Plus Jakarta Sans';font-weight:700;letter-spacing:-.04em;text-align:center;line-height:1.05}
+em,.serif{font-family:'Instrument Serif';font-style:italic;font-weight:400;letter-spacing:-.01em}
+em{color:var(--acc)}
+.w{display:inline-block;will-change:transform,opacity}
+.logo{width:120px;height:120px;border-radius:34px;background:var(--acc);display:flex;align-items:center;justify-content:center;box-shadow:0 30px 80px -20px rgba(110,196,178,.55)}
+.pill{display:inline-flex;align-items:center;gap:14px;padding:14px 26px;border-radius:999px;border:1px solid rgba(236,232,224,.15);background:rgba(25,28,31,.75);font-size:24px;color:var(--sub)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 6px rgba(110,196,178,.18)}
+/* browser */
+.win{width:1180px;border-radius:28px;background:var(--surf);border:1px solid rgba(236,232,224,.12);box-shadow:0 60px 120px -40px rgba(0,0,0,.8);overflow:hidden}
+.bar{height:64px;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--line)}
+.tl{width:14px;height:14px;border-radius:50%;background:#2b2f33}
+.url{flex:1;margin-left:20px;height:40px;border-radius:12px;background:rgba(236,232,224,.05);display:flex;align-items:center;padding:0 18px;font-size:20px;color:var(--sub);font-family:'Instrument Sans'}
+.input{display:flex;align-items:center;gap:16px;width:860px;height:96px;border-radius:999px;background:rgba(236,232,224,.05);border:1px solid rgba(236,232,224,.15);padding:0 12px 0 40px;font-size:34px}
+.btn{height:72px;padding:0 36px;border-radius:999px;background:var(--txt);color:var(--bg);font-family:'Plus Jakarta Sans';font-weight:700;font-size:28px;display:flex;align-items:center;gap:10px;margin-left:auto}
+.caret{display:inline-block;width:3px;height:40px;background:var(--acc);vertical-align:middle;margin-left:4px}
+/* call */
+.call{position:relative;width:1500px;height:860px;border-radius:32px;background:#0e1012;border:1px solid rgba(236,232,224,.1);padding:28px;box-shadow:0 60px 140px -40px rgba(0,0,0,.9)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:20px;height:700px}
+.tile{position:relative;border-radius:24px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.av{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans';font-weight:700;font-size:58px;color:#121416}
+.name{position:absolute;left:18px;bottom:16px;padding:8px 16px;border-radius:999px;background:rgba(0,0,0,.45);font-size:20px;display:flex;align-items:center;gap:8px}
+.ring{position:absolute;inset:0;border-radius:24px;border:4px solid var(--acc);box-shadow:inset 0 0 40px rgba(110,196,178,.25)}
+.dock{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:14px;padding:12px 18px;border-radius:999px;background:rgba(25,28,31,.92);border:1px solid rgba(236,232,224,.1)}
+.db{width:68px;height:68px;border-radius:50%;background:rgba(236,232,224,.07);display:flex;align-items:center;justify-content:center}
+.db.end{background:var(--coral);width:96px;border-radius:999px}
+.cap{position:absolute;right:-60px;top:80px;padding:20px 30px;border-radius:22px;background:rgba(25,28,31,.95);border:1px solid rgba(236,232,224,.14);font-family:'Plus Jakarta Sans';font-weight:700;font-size:34px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);display:flex;align-items:center;gap:14px}
+/* features */
+.cards{display:flex;gap:36px}
+.card{width:520px;height:560px;border-radius:32px;background:var(--surf);border:1px solid rgba(236,232,224,.1);padding:40px;display:flex;flex-direction:column;box-shadow:0 40px 90px -40px rgba(0,0,0,.8)}
+.card h3{font-family:'Plus Jakarta Sans';font-weight:700;font-size:38px;letter-spacing:-.03em;margin-top:auto}
+.card p{color:var(--sub);font-size:23px;margin-top:10px;line-height:1.35}
+.vis{height:300px;border-radius:20px;background:#0e1012;border:1px solid var(--line);position:relative;overflow:hidden}
+.bubble{position:absolute;left:24px;right:24px;padding:18px 22px;border-radius:18px;font-size:21px;line-height:1.35}
+.priv{display:flex;gap:40px;margin-top:70px}
+.pi{display:flex;align-items:center;gap:18px;font-size:32px;color:var(--txt);font-family:'Plus Jakarta Sans';font-weight:600}
+.pic{width:72px;height:72px;border-radius:22px;background:rgba(110,196,178,.12);display:flex;align-items:center;justify-content:center}
+</style></head>
+<body><div id="stage">
+<div class="grid" id="grid"></div><div class="glow" id="glow"></div><div class="glow2"></div>
+
+<!-- S1 hook -->
+<div class="scene" id="s1">
+  <div class="h" style="font-size:140px" id="s1t"></div>
+</div>
+
+<!-- S2 brand -->
+<div class="scene" id="s2">
+  <div class="logo" id="s2logo"><svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#0f1c19" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M12 2l-2.5 2.5M12 2l2.5 2.5M12 22l-2.5-2.5M12 22l2.5-2.5M3.3 7l3.4 0.9M3.3 7l0.9 3.4M20.7 17l-3.4-0.9M20.7 17l-0.9-3.4M3.3 17l0.9-3.4M3.3 17l3.4-0.9M20.7 7l-0.9 3.4M20.7 7l-3.4 0.9"/></svg></div>
+  <div class="h" style="font-size:150px;margin-top:44px" id="s2n">YukiMeet</div>
+  <div class="h" style="font-size:96px;margin-top:10px;font-weight:600" id="s2s">Video meetings, <em>made effortless.</em></div>
+</div>
+
+<!-- S3 start -->
+<div class="scene" id="s3">
+  <div class="h" style="font-size:84px;margin-bottom:70px" id="s3t">From idea to call <em>in seconds.</em></div>
+  <div class="win" id="s3w">
+    <div class="bar"><div class="tl"></div><div class="tl"></div><div class="tl"></div><div class="url">meet.yukichat.lol</div></div>
+    <div style="height:380px;display:flex;align-items:center;justify-content:center">
+      <div class="input"><span id="s3type" style="color:var(--txt)"></span><span class="caret" id="caret"></span><span id="s3ph" style="color:var(--dim)">Name your room…</span>
+        <div class="btn" id="s3btn">Start meeting <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S4 call -->
+<div class="scene" id="s4">
+  <div class="call" id="s4c">
+    <div class="tiles">
+      <div class="tile" style="background:linear-gradient(135deg,#1d3a35,#16211f)"><div class="av" style="background:var(--acc)">S</div><div class="name">Sana</div><div class="ring" id="r0"></div></div>
+      <div class="tile" style="background:linear-gradient(135deg,#3a2e1f,#1f1b16)"><div class="av" style="background:var(--warm)">M</div><div class="name">Marco</div><div class="ring" id="r1"></div></div>
+      <div class="tile" style="background:linear-gradient(135deg,#1f2c3a,#161b21)"><div class="av" style="background:var(--calm)">A</div><div class="name">Aiko</div><div class="ring" id="r2"></div></div>
+      <div class="tile" style="background:linear-gradient(135deg,#3a2220,#1f1716)"><div class="av" style="background:var(--coral)">J</div><div class="name">Jonah</div><div class="ring" id="r3"></div></div>
+    </div>
+    <div class="dock">
+      <div class="db"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ece8e0" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div>
+      <div class="db"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ece8e0" stroke-width="1.8"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg></div>
+      <div class="db"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ece8e0" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <div class="db"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ece8e0" stroke-width="1.8"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg></div>
+      <div class="db end"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 14c5-5 13-5 18 0l-2 3-4-1v-3a10 10 0 0 0-6 0v3l-4 1z"/></svg></div>
+    </div>
+    <div class="cap" id="cap0"><span class="dot"></span>No downloads</div>
+    <div class="cap" id="cap1" style="top:190px"><span class="dot"></span>No sign-up</div>
+    <div class="cap" id="cap2" style="top:300px"><span class="dot"></span>Any device</div>
+  </div>
+</div>
+
+<!-- S5 features -->
+<div class="scene" id="s5">
+  <div class="h" style="font-size:80px;margin-bottom:60px" id="s5t">Everything a meeting needs. <em>Nothing it doesn't.</em></div>
+  <div class="cards">
+    <div class="card" id="c0"><div class="vis"><svg width="100%" height="100%" viewBox="0 0 440 300"><path id="wb1" d="M40 210 C 90 90, 150 80, 190 160 S 290 250, 330 120" fill="none" stroke="#6ec4b2" stroke-width="7" stroke-linecap="round" pathLength="1"/><path id="wb2" d="M260 230 l 120 0 M 360 210 l 20 20 -20 20" fill="none" stroke="#e8b170" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/><circle id="wb3" cx="110" cy="80" r="34" fill="none" stroke="#82aad2" stroke-width="6" pathLength="1"/></svg></div><h3>Live whiteboard</h3><p>Sketch ideas together, in real time.</p></div>
+    <div class="card" id="c1"><div class="vis" id="blurvis"><div id="blurbg" style="position:absolute;inset:-20px;background:linear-gradient(120deg,#3a2e1f 0 30%,#2a4a44 30% 55%,#3a2220 55% 75%,#1f2c3a 75%)"></div><div style="position:absolute;left:50%;bottom:-40px;transform:translateX(-50%);width:200px;height:260px"><div style="width:110px;height:110px;border-radius:50%;background:#e8b170;margin:0 auto"></div><div style="width:200px;height:160px;border-radius:100px 100px 0 0;background:#6ec4b2;margin-top:12px"></div></div></div><h3>Background blur</h3><p>Processed on your device. Always.</p></div>
+    <div class="card" id="c2"><div class="vis"><div class="bubble" style="top:24px;background:rgba(236,232,224,.06);color:var(--sub);left:auto;width:300px">Summarise the last 10 minutes?</div><div class="bubble" id="aiB" style="top:112px;background:rgba(110,196,178,.12);color:var(--txt);right:auto;width:360px"><span id="aiT"></span></div></div><h3>Meeting assistant</h3><p>Catch up in a single tap.</p></div>
+  </div>
+</div>
+
+<!-- S6 privacy -->
+<div class="scene" id="s6">
+  <div class="h" style="font-size:100px" id="s6t">Your call goes straight to<br><em>the people in it.</em></div>
+  <div class="priv">
+    <div class="pi" id="p0"><div class="pic"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6ec4b2" stroke-width="1.8"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11l9.4-5M7.3 13l9.4 5M19 7.5v9"/></svg></div>Peer-to-peer</div>
+    <div class="pi" id="p1"><div class="pic"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6ec4b2" stroke-width="1.8"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>Encrypted in transit</div>
+    <div class="pi" id="p2"><div class="pic"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6ec4b2" stroke-width="1.8"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>Effects stay on-device</div>
+  </div>
+</div>
+
+<!-- S7 end -->
+<div class="scene" id="s7">
+  <div class="logo" id="s7logo" style="width:96px;height:96px;border-radius:28px"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0f1c19" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M12 2l-2.5 2.5M12 2l2.5 2.5M12 22l-2.5-2.5M12 22l2.5-2.5M3.3 7l3.4 0.9M3.3 7l0.9 3.4M20.7 17l-3.4-0.9M20.7 17l-0.9-3.4M3.3 17l0.9-3.4M3.3 17l3.4-0.9M20.7 7l-0.9 3.4M20.7 7l-3.4 0.9"/></svg></div>
+  <div class="h" style="font-size:120px;margin-top:40px" id="s7t">Your next meeting is<br><em>one link away.</em></div>
+  <div style="margin-top:60px;display:flex;gap:24px;align-items:center" id="s7c">
+    <div class="btn" style="height:92px;font-size:36px;padding:0 48px;margin:0">meet.yukichat.lol</div>
+  </div>
+  <div class="pill" style="margin-top:36px" id="s7p"><span class="dot"></span>Free · No downloads · Works on any device</div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=clamp(x);return 1-Math.pow(1-x,3)};
+const easeIO=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=clamp(x);const c=1.5;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const prog=(t,a,b)=>clamp((t-a)/(b-a));
+// scene windows [in, out]
+const S={s1:[0,3.2],s2:[3.2,6.8],s3:[6.8,11],s4:[11,16],s5:[16,21.2],s6:[21.2,24.6],s7:[24.6,30]};
+function sceneAlpha(id,t){const[a,b]=S[id];const fi=prog(t,a,a+.45),fo=id==='s7'?0:prog(t,b-.4,b);return fi*(1-fo)}
+function words(el,html){el.innerHTML=html.split('|').map(w=>w==='/'?'<br>':`<span class="w">${w}</span>`).join(' ');return [...el.querySelectorAll('.w')]}
+const s1w=words($('s1t'),'Meetings|shouldn’t|feel|like|<em>work.</em>');
+const s2s=words($('s2s'),'Video|meetings,|<em>made|effortless.</em>');
+const s3w=words($('s3t'),'From|idea|to|call|<em>in|seconds.</em>');
+const s5w=words($('s5t'),'Everything|a|meeting|needs.|<em>Nothing|it|doesn’t.</em>');
+const s6w=words($('s6t'),'Your|call|goes|straight|to|/|<em>the|people|in|it.</em>');
+const s7w=words($('s7t'),'Your|next|meeting|is|/|<em>one|link|away.</em>');
+function wordIn(ws,t,start,step=.09,dur=.55){ws.forEach((w,i)=>{const p=ease(prog(t,start+i*step,start+i*step+dur));w.style.opacity=p;w.style.transform=`translateY(${(1-p)*50}px)`;w.style.filter=`blur(${(1-p)*10}px)`})}
+function pop(el,t,start,dur=.6,from=.85){const p=back(prog(t,start,start+dur));const o=ease(prog(t,start,start+dur*.6));el.style.opacity=o;el.style.transform=`translateY(${(1-p)*40}px) scale(${from+(1-from)*p})`}
+const room='weekly-standup';
+const aiText='Agreed to ship onboarding on Friday. Marco owns QA, Sana drafts release notes.';
+function render(t){
+  for(const id in S){const a=sceneAlpha(id,t);$(id).style.opacity=a;$(id).style.visibility=a>0?'visible':'hidden'}
+  $('grid').style.transform=`translate(${-t*6}px,${-t*4}px)`;
+  $('glow').style.transform=`translate(${Math.sin(t*.4)*120}px,${Math.cos(t*.3)*60}px)`;
+  // s1
+  wordIn(s1w,t,.2,.14,.7);
+  $('s1t').style.transform=`scale(${1+t*.012})`;
+  // s2
+  const lp=back(prog(t,3.3,4.1));$('s2logo').style.transform=`scale(${lp}) rotate(${(1-lp)*-90}deg)`;$('s2logo').style.opacity=ease(prog(t,3.3,3.7));
+  pop($('s2n'),t,3.6,.7,.9);
+  wordIn(s2s,t,4.2,.1);
+  // s3
+  wordIn(s3w,t,6.9,.07);
+  pop($('s3w'),t,7.2,.8,.92);
+  const n=Math.floor(clamp((t-8.1)/1.2)*room.length);$('s3type').textContent=room.slice(0,n);
+  $('s3ph').style.display=n>0?'none':'inline';
+  $('caret').style.opacity=(Math.floor(t*2.5)%2===0||(t>8.1&&t<9.3))?1:0;
+  const press=prog(t,9.7,9.9),rel=prog(t,9.9,10.1);$('s3btn').style.transform=`scale(${1-.08*press+.08*rel})`;
+  $('s3btn').style.background=t>9.8?'#6ec4b2':'';
+  const zoom=easeIO(prog(t,10.3,11));$('s3w').style.transform+=` scale(${1+zoom*.4})`;
+  // s4
+  const cz=ease(prog(t,10.9,11.7));$('s4c').style.transform=`scale(${.8+.2*cz})`;
+  const speakers=[[11.6,12.9,1],[12.9,14.2,0],[14.2,16,2]];
+  for(let i=0;i<4;i++){let o=0;for(const[a,b,k]of speakers)if(k===i)o=Math.max(o,prog(t,a,a+.25)*(1-prog(t,b-.2,b)));$('r'+i).style.opacity=o}
+  [12,12.9,13.8].forEach((s,i)=>{const el=$('cap'+i);const p=back(prog(t,s,s+.6));el.style.opacity=ease(prog(t,s,s+.35));el.style.transform=`translateX(${(1-p)*120}px)`});
+  // s5
+  wordIn(s5w,t,16.1,.07);
+  ['c0','c1','c2'].forEach((c,i)=>pop($(c),t,16.6+i*.18,.8,.9));
+  const d=(id,a,b)=>{$(id).style.strokeDasharray=1;$(id).style.strokeDashoffset=1-easeIO(prog(t,a,b));$(id).style.opacity=t>a?1:0};
+  d('wb1',17.3,18.6);d('wb3',18.4,19.2);d('wb2',19,19.8);
+  $('blurbg').style.filter=`blur(${easeIO(prog(t,17.8,18.8))*18}px)`;
+  const an=Math.floor(clamp((t-18)/2.2)*aiText.length);$('aiT').textContent=aiText.slice(0,an);$('aiB').style.opacity=t>17.9?1:0;
+  // s6
+  wordIn(s6w,t,21.3,.07);
+  ['p0','p1','p2'].forEach((p,i)=>pop($(p),t,22.4+i*.22,.7,.8));
+  // s7
+  const l7=back(prog(t,24.7,25.4));$('s7logo').style.transform=`scale(${l7})`;$('s7logo').style.opacity=ease(prog(t,24.7,25));
+  wordIn(s7w,t,25,.08);
+  pop($('s7c'),t,26.1,.7,.85);
+  pop($('s7p'),t,26.5,.7,.9);
+  const pulse=t>27.2?(1+Math.sin((t-27.2)*4)*.02):1;$('s7c').style.transform+=` scale(${pulse})`;
+  // final fade to black
+  $('stage').style.opacity=1-prog(t,29.4,30);
+}
+window.render=render;window.DURATION=30;
+if(!navigator.webdriver){const t0=performance.now();(function loop(){render(((performance.now()-t0)/1000)%30);requestAnimationFrame(loop)})()}
+</script>
+</body></html>
